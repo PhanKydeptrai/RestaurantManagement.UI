@@ -12,8 +12,8 @@ export const GetAllCategories = async (pageSize: number, pageIndex: number) => {
     const res = await baseUrl.get<CategoryDto[]>(`${Category}?page=${pageIndex}&pageSize=${pageSize}`)
         //const res = await baseUrl.get<CategoryDto[]>(`https://localhost:7057/api/category?page=${pageIndex}&pageSize=${pageSize}`)
         .then((response: AxiosResponse) => {
-            console.log(response.data.value.items);
-            return response.data.value.items;
+            console.log(response.data.value);
+            return response.data.value;
         }).catch((error) => {
             console.log(error);
             return error;
