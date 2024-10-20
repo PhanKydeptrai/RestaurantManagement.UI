@@ -6,34 +6,42 @@ import { GetAllCategories } from "../../services/category-service";
 
 const CategoryPage = () => {
     const [categories, setCategories] = useState<CategoryDto[]>([]);
-    const [pageIndex, setPageIndex] = useState(1);
-    const [pageSize] = useState(8); // Setting page size to 8
-    const [hasNextPage, setHasNextPage] = useState(false);
-    const [hasPreviousPage, setHasPreviousPage] = useState(false);
-    const [totalCount, setTotalCount] = useState(17);
+    // const [pageIndex, setPageIndex] = useState(1);
+    // const [pageSize] = useState(8); // Setting page size to 8
+    // const [hasNextPage, setHasNextPage] = useState(false);
+    // const [hasPreviousPage, setHasPreviousPage] = useState(false);
+    // const [totalCount, setTotalCount] = useState(17);
+
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         const result = await GetAllCategories(pageIndex, pageSize);
+    //         setCategories(result.items);
+    //         setHasNextPage(result.hasNextPage);
+    //         setHasPreviousPage(result.hasPreviousPage);
+    //         setTotalCount(result.totalCount);
+    //     };
+    //     fetchData();
+    // }, [pageIndex, pageSize]); // Include pageSize in the dependency array
 
     useEffect(() => {
         const fetchData = async () => {
-            const result = await GetAllCategories(pageIndex, pageSize);
-            setCategories(result.items);
-            setHasNextPage(result.hasNextPage);
-            setHasPreviousPage(result.hasPreviousPage);
-            setTotalCount(result.totalCount);
+            const result = await GetAllCategories();
+            setCategories(result);
         };
         fetchData();
-    }, [pageIndex, pageSize]); // Include pageSize in the dependency array
+    })
 
-    const handlePreviousPage = () => {
-        if (hasPreviousPage) {
-            setPageIndex(pageIndex - 1);
-        }
-    };
+    // const handlePreviousPage = () => {
+    //     if (hasPreviousPage) {
+    //         setPageIndex(pageIndex - 1);
+    //     }
+    // };
 
-    const handleNextPage = () => {
-        if (hasNextPage) {
-            setPageIndex(pageIndex + 1);
-        }
-    };
+    // const handleNextPage = () => {
+    //     if (hasNextPage) {
+    //         setPageIndex(pageIndex + 1);
+    //     }
+    // };
 
     return (
         <>
@@ -81,7 +89,7 @@ const CategoryPage = () => {
                                 })}
                             </div>
                             <div className="row mt-5">
-                                <nav aria-label="Page navigation example">
+                                {/* <nav aria-label="Page navigation example">
                                     <ul className="pagination">
                                         <li className={`page-item ${!hasPreviousPage && 'disabled'}`}>
                                             <button className="page-link" onClick={handlePreviousPage}>Previous</button>
@@ -93,7 +101,7 @@ const CategoryPage = () => {
                                             <button className="page-link" onClick={handleNextPage}>Next</button>
                                         </li>
                                     </ul>
-                                </nav>
+                                </nav> */}
                             </div>
                         </div>
                     </div>

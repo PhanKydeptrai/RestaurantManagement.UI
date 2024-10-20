@@ -11,7 +11,7 @@ function Controller() {
                 <Route path="/" element={<Home />} />
                 <Route path="/categories" element={<CategoryPage />} />
                 <Route path="/createcategory" element={<CreateCategoryPage />} />
-               
+
             </Routes>
         </>
     )
