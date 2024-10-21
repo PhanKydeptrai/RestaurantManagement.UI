@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
 import { CreateCategory } from "../../services/createcategoryservice";
-
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
@@ -23,6 +24,32 @@ const CreateCategoryPage = () => {
         }
     };
 
+    const notifySucess = () => {
+        toast.success('Thành công!', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored"
+        });
+    }
+
+    const notifyError = () => {
+        toast.error('Vui lòng kiểm tra lại!', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored"
+        });
+    }
+
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         const formData = new FormData();
@@ -32,13 +59,16 @@ const CreateCategoryPage = () => {
             formData.append('image', fileInputRef.current.files[0]);
         }
 
-        try {
             const response = await CreateCategory(formData);
             console.log(response);
-            // Xử lý phản hồi từ server nếu cần thiết
-        } catch (error) {
-            console.error('Error creating category:', error);
-        }
+            //Show toast success
+            if (response) {
+                notifySucess();
+            }
+            else{
+                notifyError();  
+            }
+        
     }
 
     const handleFileSelect = () => {
@@ -99,6 +129,7 @@ const CreateCategoryPage = () => {
                         </div>
                     </div>
                 </main>
+                <ToastContainer />
             </form>
         </>
     )
