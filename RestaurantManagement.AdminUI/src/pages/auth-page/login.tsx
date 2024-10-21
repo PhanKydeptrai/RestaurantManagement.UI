@@ -1,7 +1,24 @@
-
+import React, { useState } from 'react';
+import { EmployeeLogin } from '../../services/loginservice';
+import { useNavigate } from 'react-router-dom';
 const Login = () => {
 
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+    const handleLogin = async (event: React.FormEvent) => {
+        event.preventDefault();
+        try {
+            const token = await EmployeeLogin(email, password);
+            navigate('/dashboard');
+        } catch (error) {
+            console.error('Login failed:', error);
+        }
+    };
+
+
     return (
+
         <>
             <div className="container">
                 <div className="row">
@@ -11,7 +28,7 @@ const Login = () => {
                             <div className="card-body">
 
                                 <h5 className="card-title text-center">Login</h5>
-                                <form>
+                                <form onSubmit={handleLogin}>
                                     <div className="mb-2">
 
                                         <label htmlFor="exampleInputEmail1" className="form-label">
@@ -22,7 +39,9 @@ const Login = () => {
                                             className="form-control"
                                             id="exampleInputEmail1"
                                             aria-describedby="emailHelp"
-                                            value="email"
+                                            // value="email" Tầm bậy
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            placeholder="Nhập email hoặc số điện thoại"
                                         />
                                     </div>
 
@@ -35,7 +54,10 @@ const Login = () => {
                                             type="password"
                                             className="form-control"
                                             id="exampleInputPassword1"
-                                            value="password"
+                                            // value="password" Tầm bậy
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            placeholder="Nhập mật khẩu"
+                                            autoComplete="current-password"
                                         />
                                     </div>
                                     <a href="#" className="card-link text-success">
@@ -45,7 +67,7 @@ const Login = () => {
                                         Bạn chưa có tài khoản? Đăng ký tại đây
                                     </a>
                                     <div className="text-center pt-3">
-                                        <button type="submit" className="btn btn-success">
+                                        <button type="submit" className="btn btn-success" >
                                             Đăng nhập
                                         </button>
                                     </div>
@@ -63,6 +85,7 @@ const Login = () => {
                 </div>
             </div>
         </>
+
     )
 }
 export default Login;
