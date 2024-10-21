@@ -52,7 +52,7 @@ const CategoryPage = () => {
                 <div className="row">
                     <div className="row">
                         <div className="col-md-2">
-                            <Link to="/createcategory"><button className="btn btn-success w-100">Create</button></Link>
+                            <Link to="/categories/createcategory"><button className="btn btn-success w-100">Create</button></Link>
                         </div>
                         <div className="col-md-6"></div>
                         {/* <div className="col-md-4"><SreachComponent /></div> */}
