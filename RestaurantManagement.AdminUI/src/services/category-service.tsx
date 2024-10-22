@@ -4,10 +4,10 @@ import { CategoryDto } from "../models/categoryDto";
 
 export const Category = "category";
 export const sreachTerm = '';
-// export const pageIndex = 1;
-// export const pageSize = 8;
+export const pageIndex = 1;
+export const pageSize = 8;
 
-export const GetAllCategories = async (pageSize: number, pageIndex: number) => {
+export const GetAllCategories = async () => {
     //console.log(`${baseUrl}/${Category}?page=${pageIndex}&pageSize=${pageSize}`);
     const res = await baseUrl.get<CategoryDto[]>(`${Category}?page=${pageIndex}&pageSize=${pageSize}`)
         //const res = await baseUrl.get<CategoryDto[]>(`https://localhost:7057/api/category?page=${pageIndex}&pageSize=${pageSize}`)
