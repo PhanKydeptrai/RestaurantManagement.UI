@@ -9,10 +9,6 @@ function Controller() {
     return (
         <>
             <Routes>
-
-                <Route path="/" element={<Home />} />
-                <Route path="/categories" element={<CategoryPage />} />
-                <Route path="/createcategory" element={<CreateCategoryPage />} />
                 <Route path="/" element={<Login />} />
                 <Route path="/dashboard" element={
                     <ProtectedRoute>
@@ -29,7 +25,6 @@ function Controller() {
                         <CreateCategoryPage />
                     </ProtectedRoute>
                 }/>
-
             </Routes>
         </>
     )
