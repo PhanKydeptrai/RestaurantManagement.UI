@@ -15,7 +15,7 @@ library.add(fas);
 
 function App() {
   const location = useLocation();
-  const isLoginPage = location.pathname === '/Login';
+  const isLoginPage = location.pathname === '/';
   return (
     <>
       {!isLoginPage && <Header />}

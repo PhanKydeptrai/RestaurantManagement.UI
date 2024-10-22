@@ -6,6 +6,7 @@ import { GetAllCategories } from "../../services/category-service";
 
 const CategoryPage = () => {
     const [categories, setCategories] = useState<CategoryDto[]>([]);
+
     // const [pageIndex, setPageIndex] = useState(1);
     // const [pageSize] = useState(8); // Setting page size to 8
     // const [hasNextPage, setHasNextPage] = useState(false);
@@ -27,6 +28,21 @@ const CategoryPage = () => {
         const fetchData = async () => {
             const result = await GetAllCategories();
             setCategories(result);
+
+    const [pageIndex, setPageIndex] = useState(1);
+    const [pageSize] = useState(8); // Setting page size to 8
+    const [hasNextPage, setHasNextPage] = useState(false);
+    const [hasPreviousPage, setHasPreviousPage] = useState(false);
+    const [totalCount, setTotalCount] = useState();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            console.log("fetching data");
+            const result = await GetAllCategories(pageSize, pageIndex);
+            setCategories(result.items);
+            setHasNextPage(result.hasNextPage);
+            setHasPreviousPage(result.haspreviousPage);
+            setTotalCount(result.totalCount);
         };
         fetchData();
     })
@@ -59,7 +75,7 @@ const CategoryPage = () => {
                 <div className="row">
                     <div className="row">
                         <div className="col-md-2">
-                            <Link to="/createcategory"><button className="btn btn-success w-100">Create</button></Link>
+                            <Link to="/categories/createcategory"><button className="btn btn-success w-100">Create</button></Link>
                         </div>
                         <div className="col-md-6"></div>
                         {/* <div className="col-md-4"><SreachComponent /></div> */}
@@ -71,7 +87,7 @@ const CategoryPage = () => {
                                     return (
                                         <div className="col-md-3" key={category.categoryId}>
                                             <div className="card">
-                                                <img src={category.image} className="card-img-top" alt={category.categoryName} />
+                                                <img src={category.imageUrl} className="card-img-top" alt={category.categoryName} />
                                                 <div className="card-body">
                                                     <h5 className="card-title">{category.categoryName}</h5>
                                                     <p className="card-text">
