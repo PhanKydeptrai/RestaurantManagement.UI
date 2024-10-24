@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { CategoryDto } from "../../models/categoryDto";
 import { useEffect, useState } from "react";
 import { GetAllCategories } from "../../services/category-service";
+import SreachComponent from "../../components/sreach-input/sreach";
 // import { SreachComponent } from "../../components/sreach-input/sreach";
 
 const CategoryPage = () => {
@@ -55,7 +56,7 @@ const CategoryPage = () => {
                             <Link to="/categories/createcategory"><button className="btn btn-success w-100">Create</button></Link>
                         </div>
                         <div className="col-md-6"></div>
-                        {/* <div className="col-md-4"><SreachComponent /></div> */}
+                        <div className="col-md-4"><SreachComponent /></div>
                     </div>
                     <div className="container mt-5">
                         <div className="row">
@@ -73,7 +74,8 @@ const CategoryPage = () => {
                                                         </span>
                                                     </p>
                                                     <div className="row">
-                                                        <a href="/AdminLayout/BossLayout/deletecategory.html" className=" btn btn-danger">Delete</a>
+                                                        <Link to={`/categories/updatecategory/${category.categoryId}`} className="btn btn-primary">Edit</Link>
+                                                        <a href="" className="btn btn-danger">Delete</a>
                                                     </div>
                                                 </div>
                                             </div>

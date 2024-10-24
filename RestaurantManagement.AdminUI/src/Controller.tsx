@@ -4,6 +4,7 @@ import CategoryPage from "./pages/category-page/categories";
 import CreateCategoryPage from "./pages/category-page/createcategory";
 import Login from "./pages/auth-page/login";
 import ProtectedRoute from "./components/protectedroute/protectedroute";
+import UpdateCategory from "./pages/category-page/updatecategory";
 
 function Controller() {
     return (
@@ -15,16 +16,21 @@ function Controller() {
                         <Home />
                     </ProtectedRoute>
                 } />
-                <Route path="/categories"element={
+                <Route path="/categories" element={
                     <ProtectedRoute>
                         <CategoryPage />
                     </ProtectedRoute>
-                }/>
+                } />
                 <Route path="/categories/createcategory" element={
                     <ProtectedRoute>
                         <CreateCategoryPage />
                     </ProtectedRoute>
-                }/>
+                } />
+                <Route path="/categories/updatecategory/:categoryId" element={
+                    <ProtectedRoute>
+                        <UpdateCategory />
+                    </ProtectedRoute>
+                } />
             </Routes>
         </>
     )
