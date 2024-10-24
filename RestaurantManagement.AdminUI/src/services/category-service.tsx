@@ -4,8 +4,7 @@ import { CategoryDto } from "../models/categoryDto";
 
 export const Category = "category";
 export const sreachTerm = '';
-// export const pageIndex = 1;
-// export const pageSize = 8;
+
 
 export const GetAllCategories = async (pageSize: number, pageIndex: number) => {
     //console.log(`${baseUrl}/${Category}?page=${pageIndex}&pageSize=${pageSize}`);
@@ -21,18 +20,19 @@ export const GetAllCategories = async (pageSize: number, pageIndex: number) => {
     return res;
 }
 
-// export const SearchCategory = async (searchTerm = '') => {
-//     const url = `${baseUrl}/${Category}?seachTerm=${searchTerm}&page=${pageIndex}&pageSize=${pageSize}`;
-//     // const res = await baseUrl.get<CategoryDto[]>(`${Category}?seachTerm=${searchTerm}&page=${pageIndex}&pageSize=${pageSize}`)
-//     try {
-//         const response = await axios.get<{ values: { items: CategoryDto[] } }>(url);
-//         console.log(response.data.values.items);
-//         return response.data.values.items;
-//     } catch (error) {
-//         console.log(error);
-//         return error;
-//     }
-// }
+export const SearchCategory = async (searchTerm: string) => {
+    const res = await baseUrl.get<CategoryDto[]>(`${Category}?searchTerm=${searchTerm}`)
+        .then((response: AxiosResponse) => {
+            const data = response.data.value.items;
+            const find = data.filter((item) => item.categoryName.toLowerCase().includes(searchTerm.toLowerCase()));
+            console.log(data);
+            return find;
+        }).catch((error) => {
+            console.log(error);
+            return error;
+        });
+    return res;
+}
 
 export const SreachForStatus = async (sreachTerm: string) => {
     const res = await baseUrl.get<CategoryDto[]>(`${Category}?searchTerm=${sreachTerm}`)
@@ -58,3 +58,7 @@ export const GetCategoryById = async (id: string) => {
     return res;
 }
 
+export const CreateCategory = async (formData: FormData) => {
+    const res = await baseUrl.postForm('/category', formData);
+    return res.data;
+}

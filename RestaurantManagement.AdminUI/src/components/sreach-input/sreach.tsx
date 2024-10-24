@@ -3,6 +3,7 @@ import { SearchCategory } from "../../services/category-service";
 
 export const SreachComponent = () => {
     const [sreach, setSreach] = useState('');
+
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSreach(event.target.value);
     };

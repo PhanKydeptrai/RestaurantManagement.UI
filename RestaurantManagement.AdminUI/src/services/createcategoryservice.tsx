@@ -17,6 +17,12 @@ export const CreateCategory = async (formData: FormData) => {
       
 }
 
+export const UpdateCategory = async (categoryId: string ,formData: FormData) => {
+
+    const res = await baseUrl.put('/category/${categoryId}', formData);
+    return res.data;
+
+}
 // export const CreateCategory = async (formData: FormData) => {
    
 //       const token = sessionStorage.getItem('token');
