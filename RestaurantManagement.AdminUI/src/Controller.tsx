@@ -5,6 +5,12 @@ import CreateCategoryPage from "./pages/category-page/createcategory";
 import Login from "./pages/auth-page/login";
 import ProtectedRoute from "./components/protectedroute/protectedroute";
 import UpdateCategory from "./pages/category-page/updatecategory";
+import EmployeePage from "./pages/employee-page/empolyees";
+import CreateEmployee from "./pages/employee-page/createemployee";
+import CustomerPage from "./pages/customer-page/customers";
+import UpdateCategoryPage from "./pages/category-page/updatecategory";
+import MealPage from "./pages/meal-page/meals";
+import CreateMealPage from "./pages/meal-page/createmeal";
 
 function Controller() {
     return (
@@ -28,7 +34,32 @@ function Controller() {
                 } />
                 <Route path="/categories/updatecategory/:categoryId" element={
                     <ProtectedRoute>
-                        <UpdateCategory />
+                        <UpdateCategoryPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/employees" element={
+                    <ProtectedRoute>
+                        <EmployeePage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/createemployee" element={
+                    <ProtectedRoute>
+                        <CreateEmployee />
+                    </ProtectedRoute>
+                } />
+                <Route path="/customers" element={
+                    <ProtectedRoute>
+                        <CustomerPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/meals" element={
+                    <ProtectedRoute>
+                        <MealPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/createmeal" element={
+                    <ProtectedRoute>
+                        <CreateMealPage />
                     </ProtectedRoute>
                 } />
             </Routes>

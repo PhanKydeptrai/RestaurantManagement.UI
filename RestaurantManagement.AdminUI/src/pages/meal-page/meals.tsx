@@ -1,11 +1,10 @@
-import { json, Link } from "react-router-dom";
-import { CategoryDto } from "../../models/categoryDto";
 import { useEffect, useState } from "react";
-import { DeleteCategory, GetAllCategories } from "../../services/category-service";
+import { MealDto } from "../../models/mealDto";
+import { DeleteMeal, GetAllMeals } from "../../services/meal-services";
+import { Link } from "react-router-dom";
 
-
-const CategoryPage = () => {
-    const [categories, setCategories] = useState<CategoryDto[]>([]);
+const MealPage = () => {
+    const [meals, setMeals] = useState<MealDto[]>([]);
     const [pageIndex, setPageIndex] = useState(1);
     const [pageSize] = useState(8); // Setting page size to 8
     const [hasNextPage, setHasNextPage] = useState(false);
@@ -15,9 +14,9 @@ const CategoryPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             console.log("fetching data");
-            const result = await GetAllCategories(pageSize, pageIndex, searchTerm);
+            const result = await GetAllMeals(pageSize, pageIndex, searchTerm);
             console.log(result.items);
-            setCategories(result.items);
+            setMeals(result.items);
             setHasNextPage(result.hasNextPage);
             setHasPreviousPage(result.haspreviousPage);
             setTotalCount(result.totalCount);
@@ -39,7 +38,6 @@ const CategoryPage = () => {
         }
     };
     //#endregion
-
     //#region Search
     //truyền tham số cho searchTerm
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,9 +47,9 @@ const CategoryPage = () => {
     //Thực hiện search
     const handleSearchSubmit = async (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
-            const results = await GetAllCategories(8, 1, searchTerm);
+            const results = await GetAllMeals(8, 1, searchTerm);
             setPageIndex(1);
-            setCategories(results.items);
+            setMeals(results.items);
             setSearchTerm(searchTerm);
             setHasNextPage(results.hasNextPage);
             setHasPreviousPage(results.haspreviousPage);
@@ -59,15 +57,14 @@ const CategoryPage = () => {
         };
     }
     //#endregion
-
     const handleDelete = async (id: string) => {
         try {
             console.log('Deleting category with id:', id);
-            await DeleteCategory(id);
-            const results = await GetAllCategories(8, pageIndex, searchTerm);
+            await DeleteMeal(id);
+            const results = await GetAllMeals(8, pageIndex, searchTerm);
 
             setPageIndex(pageIndex);
-            setCategories(results.items);
+            setMeals(results.items);
             setSearchTerm(searchTerm);
             setHasNextPage(results.hasNextPage);
             setHasPreviousPage(results.haspreviousPage);
@@ -77,6 +74,7 @@ const CategoryPage = () => {
             console.error('Failed to delete category:', error);
         }
     };
+
     return (
         <>
             <main className="">
@@ -85,7 +83,7 @@ const CategoryPage = () => {
                         <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4 ">
                             <ol className="breadcrumb mb-0 ">
                                 <li className="breadcrumb-item"><Link to="/"><dt>Dashboard</dt></Link></li>
-                                <li className="breadcrumb-item active" aria-current="page">Categories</li>
+                                <li className="breadcrumb-item active" aria-current="page">Meals</li>
                             </ol>
                         </nav>
                     </div>
@@ -93,7 +91,7 @@ const CategoryPage = () => {
                 <div className="row">
                     <div className="row">
                         <div className="col-md-2">
-                            <Link to="/categories/createcategory"><button className="btn btn-success w-100">Create</button></Link>
+                            <Link to="/createmeal"><button className="btn btn-success w-100">Create</button></Link>
                         </div>
                         <div className="col-md-6"></div>
                         {/* Component for search */}
@@ -110,21 +108,30 @@ const CategoryPage = () => {
                         <div className="row">
                             <div className="row">
                                 {
-                                    categories.map((category) => {
+                                    meals.map((meal) => {
                                         return (
-                                            <div className="col-md-3" key={category.categoryId}>
+                                            <div className="col-md-3" key={meal.categoryId}>
                                                 <div className="card">
-                                                    <img src={category.imageUrl} className="card-img-top" alt={category.categoryName} />
+                                                    <img src={meal.imageUrl} className="card-img-top" alt={meal.mealName} />
                                                     <div className="card-body">
-                                                        <h5 className="card-title">{category.categoryName}</h5>
+                                                        <div className="row">
+                                                            <div className="col-md-7"><h5 className="card-title">{meal.mealName}</h5>
+                                                                <h6 className="card-subtitle mb-2 text-muted">{meal.categoryName}</h6>
+                                                            </div>
+                                                            <div className="col-md-5"><h3 className="card-subtitle mb-2 text-muted">{meal.price}</h3></div>
+                                                        </div>
+
+
+
+
                                                         <p className="card-text">
                                                             <span>
-                                                                Trạng thái món: <span className={category.categoryStatus === 'kd' ? 'text-success' : 'text-danger'}>{category.categoryStatus === 'kd' ? 'Active' : 'Inactive'}</span>
+                                                                Trạng thái món: <span className={meal.mealStatus === 'kd' ? 'text-success' : 'text-danger'}>{meal.mealStatus === 'kd' ? 'Active' : 'Inactive'}</span>
                                                             </span>
                                                         </p>
                                                         <div className="row">
-                                                            <Link to={`/categories/updatecategory/${category.categoryId}`} className="btn btn-primary">Edit</Link>
-                                                            <button className="btn btn-danger" onClick={() => handleDelete(category.categoryId)}>Delete</button>
+                                                            <Link to={`/categories/updatecategory/${meal.categoryId}`} className="btn btn-primary">Edit</Link>
+                                                            <button className="btn btn-danger" onClick={() => handleDelete(meal.mealId)}>Delete</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -154,7 +161,7 @@ const CategoryPage = () => {
                 </div>
             </main>
         </>
-    );
-};
+    )
+}
 
-export default CategoryPage;
+export default MealPage
