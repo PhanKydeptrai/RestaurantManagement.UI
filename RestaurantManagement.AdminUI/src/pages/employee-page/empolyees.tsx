@@ -124,7 +124,7 @@ const EmployeePage = () => {
                                             {employee.employeeStatus}</td>
                                         <td>{employee.role}</td>
                                         <td>
-                                            <a href=""><button className="btn btn-primary">Edit</button></a>
+                                            <a href=""><button className="btn btn-primary">Detail</button></a>
                                             <a href=""><button className="btn btn-danger">Delete</button></a>
                                         </td>
                                     </tr>

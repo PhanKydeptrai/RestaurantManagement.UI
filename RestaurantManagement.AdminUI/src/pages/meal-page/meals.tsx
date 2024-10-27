@@ -130,7 +130,7 @@ const MealPage = () => {
                                                             </span>
                                                         </p>
                                                         <div className="row">
-                                                            <Link to={`/categories/updatecategory/${meal.categoryId}`} className="btn btn-primary">Edit</Link>
+                                                            <Link to={`updatemeal/${meal.mealId}`} className="btn btn-primary">Edit</Link>
                                                             <button className="btn btn-danger" onClick={() => handleDelete(meal.mealId)}>Delete</button>
                                                         </div>
                                                     </div>

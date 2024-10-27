@@ -22,6 +22,17 @@ export const GetAllCategories = async (pageSize: number, pageIndex: number, srea
     return res;
 }
 
+export const GetCategoryInfo = async () => {
+    const res = await baseUrl.get(`${Category}/category-info`)
+        .then((response: AxiosResponse) => {
+            return response.data.value;
+        }).catch((error) => {
+            console.log(error)
+            return error;
+        });
+    return res;
+}
+
 export const SreachForStatus = async (sreachTerm: string) => {
     const res = await baseUrl.get<CategoryDto[]>(`${Category}?searchTerm=${sreachTerm}`)
         .then((response: AxiosResponse) => {

@@ -1,17 +1,36 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom";
 import { CreateMeal } from "../../services/meal-services";
 import { toast } from "react-toastify";
 
+export interface CategoryInfo {
+    categoryId: string;
+    categoryName: string;
+}
+
 const CreateMealPage = () => {
 
-    const [mealname, setName] = useState('');
+    const [mealname, setMealName] = useState('');
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const [categoryId, setCategoryId] = useState('');
     const [categoryName, setCategoryName] = useState('');
     const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+    const [categoryinfo, setCategoryInfo] = useState<CategoryInfo[]>([]);
+    useEffect(() => {
+        fetch('https://localhost:7057/api/category/category-info')
+            .then(response => response.json())
+            .then(data => setCategoryInfo(data.value))
+            .catch(error => console.log(error))
+    })
+    const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedCategory = categoryinfo.find(category => category.categoryId === event.target.value);
+        setCategoryId(event.target.value);
+        setCategoryName(selectedCategory ? selectedCategory.categoryName : '');
+    };
+
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -44,6 +63,8 @@ const CreateMealPage = () => {
         formData.append('categoryId', categoryId);
         formData.append('categoryName', categoryName);
 
+        console.log(categoryId)
+        console.log(categoryName)
         if (fileInputRef.current && fileInputRef.current.files) {
             formData.append('imageUrl', fileInputRef.current.files[0]);
         }
@@ -61,7 +82,7 @@ const CreateMealPage = () => {
     };
     return (
         <>
-            <form>
+            <form onSubmit={handleSubmit}>
                 <main className="container">
                     <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                         <div className="col ">
@@ -97,31 +118,34 @@ const CreateMealPage = () => {
                                         <div className="row mt-3">
                                             <div className="col-md-9 m-lg-3">
                                                 <label className="labels">Tên món</label>
-                                                <input type="text" className="form-control" placeholder="Nhập tên món" value={mealname} />
+                                                <input type="text" className="form-control" placeholder="Nhập tên món" value={mealname} onChange={(e) => setMealName(e.target.value)} />
                                             </div>
                                         </div>
                                         <div className="row mt-3">
                                             <div className="col-md-9 m-lg-3">
                                                 <label className="labels">Giá</label>
-                                                <input type="text" className="form-control" placeholder="Nhập giá" value={price} />
+                                                <input type="text" className="form-control" placeholder="Nhập giá" value={price} onChange={(e) => setPrice(e.target.value)} />
                                             </div>
                                         </div>
                                         <div className="row mt-3">
                                             <div className="col-md-9 m-lg-3">
                                                 <label className="labels">Mô tả</label>
-                                                <textarea typeof="text" className="form-control" placeholder="Nhập mô tả" value={description} />
+                                                <textarea typeof="text" className="form-control" placeholder="Nhập mô tả" value={description} onChange={(e) => setDescription(e.target.value)} />
                                             </div>
                                         </div>
                                         <div className="row mt-3">
                                             <div className="col-md-9 m-lg-3">
                                                 <label className="labels">Tên loại món</label>
-                                                <select className="form-select" aria-label="Default select example" value={categoryId}>
-                                                    <option selected>Open this select menu</option>
-                                                    <option value={categoryId}>{categoryName}</option>
+                                                <select id="categorySelect" className="form-control" value={categoryId} onChange={handleCategoryChange}>
+                                                    <option value="">Select Category</option>
+                                                    {Array.isArray(categoryinfo) && categoryinfo.map((category: CategoryInfo) => (
+                                                        <option key={category.categoryId} value={category.categoryId}>{category.categoryName}</option>
+                                                    ))}
 
                                                 </select>
                                             </div>
                                         </div>
+                                        <button type="submit" className="btn btn-primary mt-3">Create Meal</button>
                                     </div>
                                 </div>
                             </div>

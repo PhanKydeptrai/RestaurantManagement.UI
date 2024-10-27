@@ -56,7 +56,7 @@ const SliderBar = () => {
                                                     </a>
                                                 </li>
                                                 <li className="nav-item m-3 shadow-sm">
-                                                    <a className="nav-link d-flex align-items-center" href="/AdminLayout/BossLayout/listtable.html">
+                                                    <a className="nav-link d-flex align-items-center" href="/tables">
                                                         <FontAwesomeIcon icon={faSolarPanel} className="me-2 p-1" />
                                                         Table
                                                     </a>

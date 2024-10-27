@@ -11,7 +11,8 @@ import CustomerPage from "./pages/customer-page/customers";
 import UpdateCategoryPage from "./pages/category-page/updatecategory";
 import MealPage from "./pages/meal-page/meals";
 import CreateMealPage from "./pages/meal-page/createmeal";
-
+import UpdateMealPage from "./pages/meal-page/updatemeal";
+import TablePage from "./pages/table-page/tables";
 function Controller() {
     return (
         <>
@@ -60,6 +61,16 @@ function Controller() {
                 <Route path="/createmeal" element={
                     <ProtectedRoute>
                         <CreateMealPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="meals/updatemeal/:mealId" element={
+                    <ProtectedRoute>
+                        <UpdateMealPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/tables" element={
+                    <ProtectedRoute>
+                        <TablePage />
                     </ProtectedRoute>
                 } />
             </Routes>
