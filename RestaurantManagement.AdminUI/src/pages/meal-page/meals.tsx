@@ -129,8 +129,10 @@ const MealPage = () => {
                                                                 Trạng thái món: <span className={meal.mealStatus === 'kd' ? 'text-success' : 'text-danger'}>{meal.mealStatus === 'kd' ? 'Active' : 'Inactive'}</span>
                                                             </span>
                                                         </p>
-                                                        <div className="row">
+                                                        <div className="btn-group">
                                                             <Link to={`updatemeal/${meal.mealId}`} className="btn btn-primary">Edit</Link>
+                                                            <Link to={`detailmeal/${meal.mealId}`} className="btn btn-info">Detail</Link>
+
                                                             <button className="btn btn-danger" onClick={() => handleDelete(meal.mealId)}>Delete</button>
                                                         </div>
                                                     </div>

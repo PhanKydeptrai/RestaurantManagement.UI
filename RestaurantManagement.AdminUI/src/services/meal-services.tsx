@@ -20,6 +20,18 @@ export const GetAllMeals = async (pageSize: number, pageIndex: number, sreachTer
         });
     return res;
 }
+export const GetDetailMeal = async (mealId: string) => {
+    const res = await baseUrl.get<MealDto>(`${Meal}/${mealId}`)
+        .then((response: AxiosResponse) => {
+            console.log(response.data);
+            return response.data;
+        }).catch((error) => {
+            console.log(error);
+            return error;
+        });
+    return res;
+}
+
 export const CreateMeal = async (formData: FormData) => {
     const res = await baseUrlPost.postForm(`${Meal}`, formData);
     return res.data;

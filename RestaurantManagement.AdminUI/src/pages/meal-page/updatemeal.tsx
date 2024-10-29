@@ -81,7 +81,7 @@ const UpdateMealPage = () => {
         <>
             <main className="container">
                 <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 className="h2">Update Category</h1>
+                    <h1 className="h2">Update Meal</h1>
                 </div>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">

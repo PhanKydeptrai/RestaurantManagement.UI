@@ -15,6 +15,7 @@ import UpdateMealPage from "./pages/meal-page/updatemeal";
 import TableTypePage from "./pages/table-page/tables";
 import DetailEmployeePage from "./pages/employee-page/detailemployee";
 import DetailCategoryPage from "./pages/category-page/detailcategory";
+import DetailMealPage from "./pages/meal-page/detailmeal";
 
 function Controller() {
     return (
@@ -84,6 +85,11 @@ function Controller() {
                 <Route path="meals/updatemeal/:mealId" element={
                     <ProtectedRoute>
                         <UpdateMealPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="meals/detailmeal/:mealId" element={
+                    <ProtectedRoute>
+                        <DetailMealPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/tabletype" element={
