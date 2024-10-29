@@ -116,7 +116,7 @@ const CustomerPage = () => {
                                                     {customer.customerStatus}</td>
                                                 <td>{customer.customerType}</td>
                                                 <td>
-                                                    <Link to={""}><button className="btn btn-primary">Detail</button></Link>
+                                                    <Link to={`detailcustomer/${customer.userId}`}><button className="btn btn-primary">Detail</button></Link>
                                                 </td>
                                             </tr>
                                         )

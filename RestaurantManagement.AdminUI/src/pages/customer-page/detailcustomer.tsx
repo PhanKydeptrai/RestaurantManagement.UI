@@ -1,26 +1,24 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom"
-import { EmployeeDto } from "../../models/employeeDto";
-import { GetDetailEmployee } from "../../services/employee-service";
+import { Link, useParams } from "react-router-dom";
+import { GetDetailCustomer } from "../../services/customer-services";
 
-const DetailEmployeePage = () => {
+const DetailCustomerPage = () => {
 
     const { userId } = useParams<{ userId: string }>();
-    const [employee, setEmployee] = useState<any>();
-
+    const [customer, setCustomer] = useState<any>();
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await GetDetailEmployee(userId as string);
+                const result = await GetDetailCustomer(userId as string);
                 console.log(result);
-                setEmployee(result);
-            }
-            catch (e) {
+                setCustomer(result);
+            } catch (e) {
                 console.log(e);
             }
         };
         fetchData();
-    }, [userId]);
+    }, [userId]
+    );
 
     return (
         <>
@@ -41,8 +39,8 @@ const DetailEmployeePage = () => {
                         <div className="row" key={userId}>
                             <div className="col-md-3 border-right">
                                 <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-                                    <img className="rounded-circle mt-5" width="200" src={employee?.value.userImage || 'https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg'} alt="" />
-                                    <input type="file" ref={employee?.value.userImage} style={{ display: "none" }} accept="image/*" />
+                                    <img className="rounded-circle mt-5" width="200" src={customer?.value.userImage || 'https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg'} alt="" />
+                                    <input type="file" ref={customer?.userImage} style={{ display: "none" }} accept="image/*" />
                                 </div>
                             </div>
                             <div className="col-md-9 border-right">
@@ -50,33 +48,33 @@ const DetailEmployeePage = () => {
                                     <div className="row mt-2">
                                         <div className="col-md-6">
                                             <label className="labels">First Name</label>
-                                            <input type="text" className="form-control" placeholder="Nhập tên" value={employee?.value.firstName} />
+                                            <input type="text" className="form-control" placeholder="Nhập tên" value={customer?.value.firstName} />
                                         </div>
                                         <div className="col-md-6">
                                             <label className="labels">Last Name</label>
-                                            <input type="text" className="form-control" placeholder="Nhập họ" value={employee?.value.lastName} />
+                                            <input type="text" className="form-control" placeholder="Nhập họ" value={customer?.value.lastName} />
                                         </div>
                                     </div>
                                     <div className="row mt-3">
                                         <div className="col-md-12">
                                             <label className="labels">Email</label>
-                                            <input type="text" className="form-control" placeholder="Nhập email" value={employee?.value.email} />
+                                            <input type="text" className="form-control" placeholder="Nhập email" value={customer?.value.email} />
                                         </div>
                                         <div className="col-md-12">
                                             <label className="labels">Phone Number</label>
-                                            <input type="text" className="form-control" placeholder="Nhập số điện thoại" value={employee?.value.phoneNumber} />
+                                            <input type="text" className="form-control" placeholder="Nhập số điện thoại" value={customer?.value.phoneNumber} />
                                         </div>
                                     </div>
 
                                     <div className="row mt-2">
                                         <div className="col-md-6">
                                             <label className="labels">Gender</label>
-                                            <input type="text" className="form-control" value={employee?.value.gender} />
+                                            <input type="text" className="form-control" value={customer?.value.gender} />
 
                                         </div>
                                         <div className="col-md-6">
                                             <label className="labels">Role</label>
-                                            <input type="text" className="form-control" value={employee?.value.role} />
+                                            <input type="text" className="form-control" value={customer?.value.role} />
                                         </div>
                                     </div>
 
@@ -89,6 +87,4 @@ const DetailEmployeePage = () => {
         </>
     )
 }
-
-
-export default DetailEmployeePage
+export default DetailCustomerPage;

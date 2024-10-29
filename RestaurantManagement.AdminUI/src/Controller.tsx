@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Router } from "react-router-dom";
 import Home from "./pages/dashboard/home";
 import CategoryPage from "./pages/category-page/categories";
 import CreateCategoryPage from "./pages/category-page/createcategory";
@@ -12,7 +12,10 @@ import UpdateCategoryPage from "./pages/category-page/updatecategory";
 import MealPage from "./pages/meal-page/meals";
 import CreateMealPage from "./pages/meal-page/createmeal";
 import UpdateMealPage from "./pages/meal-page/updatemeal";
-import TablePage from "./pages/table-page/tables";
+import TableTypePage from "./pages/table-page/tables";
+import DetailEmployeePage from "./pages/employee-page/detailemployee";
+import DetailCategoryPage from "./pages/category-page/detailcategory";
+
 function Controller() {
     return (
         <>
@@ -38,6 +41,11 @@ function Controller() {
                         <UpdateCategoryPage />
                     </ProtectedRoute>
                 } />
+                <Route path="/categories/detailcategory/:categoryId" element={
+                    <ProtectedRoute>
+                        <DetailCategoryPage />
+                    </ProtectedRoute>
+                } />
                 <Route path="/employees" element={
                     <ProtectedRoute>
                         <EmployeePage />
@@ -48,9 +56,19 @@ function Controller() {
                         <CreateEmployee />
                     </ProtectedRoute>
                 } />
+                <Route path="employees/detailemployee/:userId" element={
+                    <ProtectedRoute>
+                        <DetailEmployeePage />
+                    </ProtectedRoute>
+                } />
                 <Route path="/customers" element={
                     <ProtectedRoute>
                         <CustomerPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/customers/detailcustomer/:userId" element={
+                    <ProtectedRoute>
+                        <DetailEmployeePage />
                     </ProtectedRoute>
                 } />
                 <Route path="/meals" element={
@@ -68,11 +86,12 @@ function Controller() {
                         <UpdateMealPage />
                     </ProtectedRoute>
                 } />
-                <Route path="/tables" element={
+                <Route path="/tabletype" element={
                     <ProtectedRoute>
-                        <TablePage />
+                        <TableTypePage />
                     </ProtectedRoute>
                 } />
+
             </Routes>
         </>
     )

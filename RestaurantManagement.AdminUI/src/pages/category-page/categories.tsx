@@ -114,19 +114,27 @@ const CategoryPage = () => {
                                         return (
                                             <div className="col-md-3" key={category.categoryId}>
                                                 <div className="card">
+
                                                     <img src={category.imageUrl} className="card-img-top" alt={category.categoryName} />
                                                     <div className="card-body">
                                                         <h5 className="card-title">{category.categoryName}</h5>
                                                         <p className="card-text">
                                                             <span>
-                                                                Trạng thái món: <span className={category.categoryStatus === 'kd' ? 'text-success' : 'text-danger'}>{category.categoryStatus === 'kd' ? 'Active' : 'Inactive'}</span>
+                                                                Trạng thái món: <span className={category.categoryStatus === 'Active' ? 'text-success' : 'text-danger'}>{category.categoryStatus}</span>
                                                             </span>
                                                         </p>
-                                                        <div className="row">
+                                                        <div className="container">
+                                                            <div className="row">
+
+                                                            </div>
+                                                        </div>
+                                                        <div className="btn-group m-2">
                                                             <Link to={`/categories/updatecategory/${category.categoryId}`} className="btn btn-primary">Edit</Link>
+                                                            <Link to={`/categories/detailcategory/${category.categoryId}`} className="btn btn-info">Detail</Link>
                                                             <button className="btn btn-danger" onClick={() => handleDelete(category.categoryId)}>Delete</button>
                                                         </div>
                                                     </div>
+
                                                 </div>
                                             </div>
                                         )

@@ -17,3 +17,15 @@ export const GetAllCustomers = async (pageSize: number, pageIndex: number, sreac
         });
     return res;
 }
+
+export const GetDetailCustomer = async (id: string) => {
+    const res = await baseUrl.get<CustomerDto>(`${Customer}/${id}`)
+        .then((response: AxiosResponse) => {
+            console.log(response.data);
+            return response.data;
+        }).catch((error) => {
+            console.log(error);
+            return error;
+        });
+    return res;
+}

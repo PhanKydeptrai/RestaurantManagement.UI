@@ -45,11 +45,11 @@ export const SreachForStatus = async (sreachTerm: string) => {
     return res;
 }
 
-export const GetCategoryById = async (id: string) => {
+export const GetDetailCategory = async (id: string) => {
     const res = await baseUrl.get<CategoryDto>(`${Category}/${id}`)
         .then((response: AxiosResponse) => {
-            console.log(response.data.value.items);
-            return response.data.value.items;
+            console.log(response.data);
+            return response.data;
         }).catch((error) => {
             console.log(error);
             return error;

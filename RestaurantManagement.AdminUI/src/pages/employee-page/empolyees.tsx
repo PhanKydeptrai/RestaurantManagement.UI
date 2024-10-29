@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { EmployeeDto } from "../../models/employeeDto";
 import { DeleteEmployee, GetAllEmployees } from "../../services/employee-service";
 
@@ -124,7 +124,7 @@ const EmployeePage = () => {
                                             {employee.employeeStatus}</td>
                                         <td>{employee.role}</td>
                                         <td>
-                                            <a href=""><button className="btn btn-primary">Detail</button></a>
+                                            <Link to={`detailemployee/${employee.userId}`} ><button className="btn btn-primary">Detail</button></Link>
                                             <a href=""><button className="btn btn-danger">Delete</button></a>
                                         </td>
                                     </tr>

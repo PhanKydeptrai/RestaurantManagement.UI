@@ -3,4 +3,6 @@ export interface TableDto {
     quantity: number;
     tableTypeId: string;
     tableTypeName: string;
+    tableStatus: string;
+    activeStatus: string;
 }

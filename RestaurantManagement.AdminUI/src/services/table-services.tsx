@@ -6,7 +6,7 @@ import baseUrlDelete from "../apis/basedelete";
 export const Table = "table";
 export const searchTerm = "";
 
-export const GetAllTable = async (pageSize: number, pageIndex: number, sreachTerm: string) => {
+export const GetAllTables = async (pageSize: number, pageIndex: number, sreachTerm: string) => {
     const res = await baseUrl.get<TableDto[]>(`${Table}?page=${pageIndex}&pageSize=${pageSize}&searchTerm=${sreachTerm}`)
         .then((response: AxiosResponse) => {
             console.log(response.data.value);
@@ -21,5 +21,10 @@ export const GetAllTable = async (pageSize: number, pageIndex: number, sreachTer
 
 export const DeleteTable = async (tableId: string) => {
     const res = await baseUrlDelete.delete(`${Table}/${tableId}`);
+    return res.data;
+}
+
+export const CreateTable = async (formData: FormData) => {
+    const res = await baseUrl.post(`${Table}`, formData);
     return res.data;
 }

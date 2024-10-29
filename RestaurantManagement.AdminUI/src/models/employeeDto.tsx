@@ -1,5 +1,5 @@
 export interface EmployeeDto {
-    employeeId: string;
+    // employeeId: string;
     userId: string;
     firstName: string;
     lastName: string;

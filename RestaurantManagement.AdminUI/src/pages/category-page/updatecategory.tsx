@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useRef, useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 const UpdateCategoryPage = () => {
     const { categoryId } = useParams<{ categoryId: string }>();
@@ -74,8 +74,17 @@ const UpdateCategoryPage = () => {
         <>
             <main className="container">
                 <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 className="h2">Update Category</h1>
+                    <div className="col ">
+                        <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4 ">
+                            <ol className="breadcrumb mb-0 ">
+                                <li className="breadcrumb-item"><Link to="/"><dt>Dashboard</dt></Link></li>
+                                <li className="breadcrumb-item"><Link to="/categories">Categories</Link></li>
+                                <li className="breadcrumb-item active" aria-current="page">Update</li>
+                            </ol>
+                        </nav>
+                    </div>
                 </div>
+
                 <div className="row" key={categoryId}>
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">

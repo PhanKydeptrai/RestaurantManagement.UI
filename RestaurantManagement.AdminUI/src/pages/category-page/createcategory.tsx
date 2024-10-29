@@ -9,7 +9,7 @@ import { CreateCategory } from "../../services/category-service";
 const CreateCategoryPage = () => {
     const [name, setName] = useState('');
     const [imageUrl, setImageUrl] = useState<string | null>(null);
-    // const [description, setDescription] = useState('');
+    const [description, setDescription] = useState('');
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
 
@@ -54,6 +54,7 @@ const CreateCategoryPage = () => {
         event.preventDefault();
         const formData = new FormData();
         formData.append('name', name);
+        formData.append('description', description);
 
         if (fileInputRef.current && fileInputRef.current.files) {
             formData.append('image', fileInputRef.current.files[0]);
@@ -117,6 +118,14 @@ const CreateCategoryPage = () => {
                                                 <input type="text" className="form-control" placeholder="Nhập tên loại danh mục"
                                                     value={name}
                                                     onChange={(e) => setName(e.target.value)} /></div>
+                                        </div>
+                                        <div className="row mt-3">
+                                            <div className="col-md-9 m-lg-3"><label className="labels">Mô tả</label>
+                                                <textarea className="form-control" placeholder="Nhập mô tả"
+                                                    value={description}
+                                                    onChange={(e) => setDescription(e.target.value)}>
+                                                </textarea>
+                                            </div>
                                         </div>
                                         <div className="row mt-2">
                                             <span className="col-md-3"></span>

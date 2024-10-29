@@ -30,3 +30,7 @@ export const DeleteEmployee = async (id: string) => {
     const res = await baseUrlDelete.delete(`${Employee}/${id}`);
     return res.data;
 }
+export const GetDetailEmployee = async (employeeId: string) => {
+    const res = await baseUrl.get<EmployeeDto>(`${Employee}/${employeeId}`);
+    return res.data;
+}
