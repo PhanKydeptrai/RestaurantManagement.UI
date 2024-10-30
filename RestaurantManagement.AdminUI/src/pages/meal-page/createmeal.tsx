@@ -1,16 +1,35 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { CreateCategory } from "../../services/category-service";
+import { CreateMeal } from "../../services/meal-services";
+import { toast } from "react-toastify";
 
+export interface CategoryInfo {
+    categoryId: string;
+    categoryName: string;
+}
 
+const CreateMealPage = () => {
 
-const CreateCategoryPage = () => {
-    const [name, setName] = useState('');
-    const [imageUrl, setImageUrl] = useState<string | null>(null);
+    const [mealname, setMealName] = useState('');
+    const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
+    const [imageUrl, setImageUrl] = useState<string | null>(null);
+    const [categoryId, setCategoryId] = useState('');
+    const [categoryName, setCategoryName] = useState('');
     const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+    const [categoryinfo, setCategoryInfo] = useState<CategoryInfo[]>([]);
+    useEffect(() => {
+        fetch('https://localhost:7057/api/category/category-info')
+            .then(response => response.json())
+            .then(data => setCategoryInfo(data.value))
+            .catch(error => console.log(error))
+    })
+    const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedCategory = categoryinfo.find(category => category.categoryId === event.target.value);
+        setCategoryId(event.target.value);
+        setCategoryName(selectedCategory ? selectedCategory.categoryName : '');
+    };
 
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,7 +42,6 @@ const CreateCategoryPage = () => {
             reader.readAsDataURL(file);
         }
     };
-
     const notifySucess = () => {
         toast.success('Thành công!', {
             position: "top-center",
@@ -36,48 +54,32 @@ const CreateCategoryPage = () => {
             theme: "colored"
         });
     }
-
-    const notifyError = () => {
-        toast.error('Vui lòng kiểm tra lại!', {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored"
-        });
-    }
-
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         const formData = new FormData();
-        formData.append('name', name);
+        formData.append('mealname', mealname);
+        formData.append('price', price);
         formData.append('description', description);
+        formData.append('categoryId', categoryId);
+        formData.append('categoryName', categoryName);
 
+        console.log(categoryId)
+        console.log(categoryName)
         if (fileInputRef.current && fileInputRef.current.files) {
-            formData.append('image', fileInputRef.current.files[0]);
+            formData.append('imageUrl', fileInputRef.current.files[0]);
         }
-
-        const response = await CreateCategory(formData);
+        const response = await CreateMeal(formData);
         console.log(response);
-        //Show toast success
+
         if (response) {
             notifySucess();
         }
-        else {
-            notifyError();
-        }
-
     }
-
     const handleFileSelect = () => {
         if (fileInputRef.current) {
             fileInputRef.current.click();
         }
     };
-
     return (
         <>
             <form onSubmit={handleSubmit}>
@@ -87,7 +89,7 @@ const CreateCategoryPage = () => {
                             <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4 ">
                                 <ol className="breadcrumb mb-0 ">
                                     <li className="breadcrumb-item"><Link to="/"><dt>Dashboard</dt></Link></li>
-                                    <li className="breadcrumb-item"><Link to="/categories">Categories</Link></li>
+                                    <li className="breadcrumb-item"><Link to="/meals">Meals</Link></li>
                                     <li className="breadcrumb-item active" aria-current="page">Create</li>
                                 </ol>
                             </nav>
@@ -114,36 +116,45 @@ const CreateCategoryPage = () => {
                                 <div className="col-md-9 border-right">
                                     <div className="p-3 py-5">
                                         <div className="row mt-3">
-                                            <div className="col-md-9 m-lg-3"><label className="labels">Tên loại món</label>
-                                                <input type="text" className="form-control" placeholder="Nhập tên loại danh mục"
-                                                    value={name}
-                                                    onChange={(e) => setName(e.target.value)} /></div>
-                                        </div>
-                                        <div className="row mt-3">
-                                            <div className="col-md-9 m-lg-3"><label className="labels">Mô tả</label>
-                                                <textarea className="form-control" placeholder="Nhập mô tả"
-                                                    value={description}
-                                                    onChange={(e) => setDescription(e.target.value)}>
-                                                </textarea>
+                                            <div className="col-md-9 m-lg-3">
+                                                <label className="labels">Tên món</label>
+                                                <input type="text" className="form-control" placeholder="Nhập tên món" value={mealname} onChange={(e) => setMealName(e.target.value)} />
                                             </div>
                                         </div>
-                                        <div className="row mt-2">
-                                            <span className="col-md-3"></span>
-                                            <div className="col-md-3"></div>
-                                            <span className="col-md-6"><button className="btn btn-success mt-3" type="submit">Lưu thay đổi</button></span>
+                                        <div className="row mt-3">
+                                            <div className="col-md-9 m-lg-3">
+                                                <label className="labels">Giá</label>
+                                                <input type="text" className="form-control" placeholder="Nhập giá" value={price} onChange={(e) => setPrice(e.target.value)} />
+                                            </div>
                                         </div>
+                                        <div className="row mt-3">
+                                            <div className="col-md-9 m-lg-3">
+                                                <label className="labels">Mô tả</label>
+                                                <textarea typeof="text" className="form-control" placeholder="Nhập mô tả" value={description} onChange={(e) => setDescription(e.target.value)} />
+                                            </div>
+                                        </div>
+                                        <div className="row mt-3">
+                                            <div className="col-md-9 m-lg-3">
+                                                <label className="labels">Tên loại món</label>
+                                                <select id="categorySelect" className="form-control" value={categoryId} onChange={handleCategoryChange}>
+                                                    <option value="">Select Category</option>
+                                                    {Array.isArray(categoryinfo) && categoryinfo.map((category: CategoryInfo) => (
+                                                        <option key={category.categoryId} value={category.categoryId}>{category.categoryName}</option>
+                                                    ))}
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <button type="submit" className="btn btn-primary mt-3">Create Meal</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </main>
-                <ToastContainer />
             </form>
         </>
     )
-
 }
-export default CreateCategoryPage;
 
-
+export default CreateMealPage

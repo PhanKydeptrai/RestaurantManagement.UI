@@ -2,6 +2,7 @@ import axios, { Axios, AxiosResponse } from "axios";
 import baseUrl from "../apis/base";
 import { CategoryDto } from "../models/categoryDto";
 import baseUrlPost from "../apis/basepost";
+import baseUrlDelete from "../apis/basedelete";
 
 export const Category = "category";
 export const sreachTerm = '';
@@ -21,6 +22,17 @@ export const GetAllCategories = async (pageSize: number, pageIndex: number, srea
     return res;
 }
 
+export const GetCategoryInfo = async () => {
+    const res = await baseUrl.get(`${Category}/category-info`)
+        .then((response: AxiosResponse) => {
+            return response.data.value;
+        }).catch((error) => {
+            console.log(error)
+            return error;
+        });
+    return res;
+}
+
 export const SreachForStatus = async (sreachTerm: string) => {
     const res = await baseUrl.get<CategoryDto[]>(`${Category}?searchTerm=${sreachTerm}`)
         .then((response: AxiosResponse) => {
@@ -33,11 +45,11 @@ export const SreachForStatus = async (sreachTerm: string) => {
     return res;
 }
 
-export const GetCategoryById = async (id: string) => {
+export const GetDetailCategory = async (id: string) => {
     const res = await baseUrl.get<CategoryDto>(`${Category}/${id}`)
         .then((response: AxiosResponse) => {
-            console.log(response.data.value.items);
-            return response.data.value.items;
+            console.log(response.data);
+            return response.data;
         }).catch((error) => {
             console.log(error);
             return error;
@@ -45,12 +57,18 @@ export const GetCategoryById = async (id: string) => {
     return res;
 }
 
-export const UpdateCategory = async (GetCategoryById: string, formData: FormData) => {
-    const res = await baseUrl.put(`${Category}/${GetCategoryById}`, formData);
+export const UpdateCategory = async (categoryId: string, formData: FormData) => {
+    const res = await baseUrlPost.putForm(`${Category}/${categoryId}`, formData);
+    console.log(res.data);
+    console.log(`${Category}/${categoryId}`);
     return res.data;
 }
 
 export const CreateCategory = async (formData: FormData) => {
     const res = await baseUrlPost.postForm('/category', formData);
+    return res.data;
+}
+export const DeleteCategory = async (categoryId: string) => {
+    const res = await baseUrlDelete.delete(`${Category}/${categoryId}`);
     return res.data;
 }

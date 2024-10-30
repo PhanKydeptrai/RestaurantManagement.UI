@@ -1,9 +1,10 @@
+import axios from 'axios';
 import React, { useRef, useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
-const UpdateCategory = () => {
+const UpdateCategoryPage = () => {
     const { categoryId } = useParams<{ categoryId: string }>();
-    const [categoryName, setCategoryName] = useState('');
+    const [categoryName, setCategoryName] = useState<string>('');
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -13,8 +14,10 @@ const UpdateCategory = () => {
             try {
                 const response = await fetch(`https://localhost:7057/api/category/${categoryId}`);
                 const data = await response.json();
-                setCategoryName(data.categoryName);
-                setImageUrl(data.imageUrl);
+                console.log(data);
+                setCategoryName(data.value.categoryName);
+                setImageUrl(data.value.imageUrl);
+                console.log(categoryName);
             } catch (error) {
                 console.error('Error fetching category data:', error);
             }
@@ -37,33 +40,51 @@ const UpdateCategory = () => {
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         const formData = new FormData();
+
+
         formData.append('categoryName', categoryName);
         if (fileInputRef.current && fileInputRef.current.files) {
-            formData.append('image', fileInputRef.current.files[0]);
+            formData.append('categoryImage', fileInputRef.current.files[0]);
         }
-
         try {
-            const response = await fetch(`/api/category     /${categoryId}`, {
-                method: 'PUT',
-                body: formData,
+            const response = await axios.putForm(`https://localhost:7057/api/category/${categoryId}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                },
             });
-            if (response.ok) {
-                console.log('Category updated successfully');
-                // Optionally, redirect or show a success message
-            } else {
-                console.error('Error updating category');
-            }
+            console.log('Category updated successfully:', response.data);
+            // Optionally, handle success (e.g., redirect or show a success message)
         } catch (error) {
-            console.error('Error updating category:', error);
+            console.error('Failed to update category:', error);
+            // Optionally, handle error (e.g., show an error message)
         }
+        // try {
+        //     const response = await UpdateCategory(categoryId, formData);
+        //     console.log('Category updated successfully:', response.data);
+        //     // Optionally, handle success (e.g., redirect or show a success message)
+        // } catch (error) {
+        //     console.error('Failed to update category:', error);
+        //     // Optionally, handle error (e.g., show an error message)
+        // }
+
     };
 
     return (
         <>
             <main className="container">
                 <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 className="h2">Update Category</h1>
+                    <div className="col ">
+                        <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4 ">
+                            <ol className="breadcrumb mb-0 ">
+                                <li className="breadcrumb-item"><Link to="/"><dt>Dashboard</dt></Link></li>
+                                <li className="breadcrumb-item"><Link to="/categories">Categories</Link></li>
+                                <li className="breadcrumb-item active" aria-current="page">Update</li>
+                            </ol>
+                        </nav>
+                    </div>
                 </div>
+
                 <div className="row" key={categoryId}>
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
@@ -99,4 +120,4 @@ const UpdateCategory = () => {
     );
 };
 
-export default UpdateCategory;
+export default UpdateCategoryPage;
