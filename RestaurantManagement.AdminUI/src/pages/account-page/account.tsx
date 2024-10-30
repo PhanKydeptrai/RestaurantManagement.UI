@@ -1,30 +1,46 @@
 import { Link } from "react-router-dom";
 import axios from 'axios';
 import { useEffect, useState } from "react";
+import { EmployeeDto } from "../../models/employeeDto";
 
-const Account = () => {
+import { FC } from "react";
 
-    const [userInfo, setUserInfo] = useState<any>();
+interface AccountProps {
+    userInfo: EmployeeDto;
+}
 
+const Account: FC<AccountProps> = ({ userInfo }) => {
+    const [userDetails, setUserDetails] = useState<EmployeeDto | null>(null);
 
-    //gọi api để lấy thông tin của user
     useEffect(() => {
         const fetchUserInfo = async () => {
-            const token = sessionStorage.getItem('token');
-
-            const response = await axios.get('https://localhost:7057/api/account/account-info', {
-                headers: {
-                    'Authorization': `Bearer ${token}`, // Thêm header Authorization
-                    'Content-Type': 'application/json'
+            try {
+                const token = sessionStorage.getItem('token');
+                if (!token) {
+                    console.error('No token found');
+                    return;
                 }
-            });
+                const response = await axios.get('https://localhost:7057/api/account/account-info', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
 
-            setUserInfo(response.data.value);
+                setUserDetails(response.data.value);
+                console.log(userDetails);
+                return response.data.value;
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
 
-
-        }; fetchUserInfo();
-        console.log(userInfo);
+        fetchUserInfo();
     }, []);
+
+    if (!userInfo) {
+        return <h1>Loading...</h1>;
+    }
 
     return (
         <>
@@ -39,12 +55,12 @@ const Account = () => {
                         </nav>
                     </div>
                 </div>
-                {/* <div className="row">
-                    <div className="col-12">
-                        <div className="row" key={userInfo.value.userId}>
+                <div className="row">
+                    <div className="col-12" key={userInfo?.userId}>
+                        <div className="row">
                             <div className="col-md-3 border-right">
                                 <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-                                    <img className="rounded-circle mt-5" width="200" src={userInfo.value.userImage || 'https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg'} alt="" />
+                                    <img className="rounded-circle mt-5" width="200" src={userInfo?.userImage || 'https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg'} alt="" />
                                     <input type="file" ref={userInfo?.userImage} style={{ display: "none" }} accept="image/*" />
                                 </div>
                             </div>
@@ -52,34 +68,35 @@ const Account = () => {
                                 <div className="p-3 py-5">
                                     <div className="row mt-2">
                                         <div className="col-md-6">
+
                                             <label className="labels">First Name</label>
-                                            <input type="text" className="form-control" placeholder="Nhập tên" value={userInfo.value.firstName} />
+                                            <input type="text" className="form-control" placeholder="Nhập tên" value={userInfo?.firstName} />
                                         </div>
                                         <div className="col-md-6">
                                             <label className="labels">Last Name</label>
-                                            <input type="text" className="form-control" placeholder="Nhập họ" value={userInfo.value.lastName} />
+                                            <input type="text" className="form-control" placeholder="Nhập họ" value={userInfo?.lastName} />
                                         </div>
                                     </div>
                                     <div className="row mt-3">
                                         <div className="col-md-12">
                                             <label className="labels">Email</label>
-                                            <input type="text" className="form-control" placeholder="Nhập email" value={userInfo.value.email} />
+                                            <input type="text" className="form-control" placeholder="Nhập email" value={userInfo?.email} />
                                         </div>
                                         <div className="col-md-12">
                                             <label className="labels">Phone Number</label>
-                                            <input type="text" className="form-control" placeholder="Nhập số điện thoại" value={userInfo.value.phoneNumber} />
+                                            <input type="text" className="form-control" placeholder="Nhập số điện thoại" value={userInfo?.phoneNumber} />
                                         </div>
                                     </div>
 
                                     <div className="row mt-2">
                                         <div className="col-md-6">
                                             <label className="labels">Gender</label>
-                                            <input type="text" className="form-control" value={userInfo.value.gender} />
+                                            <input type="text" className="form-control" value={userInfo?.gender} />
 
                                         </div>
                                         <div className="col-md-6">
                                             <label className="labels">Role</label>
-                                            <input type="text" className="form-control" value={userInfo.value.role} />
+                                            <input type="text" className="form-control" value={userInfo?.role} />
                                         </div>
                                     </div>
 
@@ -87,7 +104,7 @@ const Account = () => {
                             </div>
                         </div>
                     </div>
-                </div> */}
+                </div>
             </form>
         </>
     );

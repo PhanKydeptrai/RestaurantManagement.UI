@@ -60,24 +60,24 @@ const Login = () => {
                                             autoComplete="current-password"
                                         />
                                     </div>
-                                    <a href="#" className="card-link text-success">
+                                    {/* <a href="#" className="card-link text-success">
                                         Quên mật khẩu?
                                     </a>
                                     <a href="#" className="card-link float-end text-success">
                                         Bạn chưa có tài khoản? Đăng ký tại đây
-                                    </a>
+                                    </a> */}
                                     <div className="text-center pt-3">
                                         <button type="submit" className="btn btn-success" >
                                             Đăng nhập
                                         </button>
                                     </div>
                                 </form>
-                                <div className="border-top m-3"></div>
+                                {/* <div className="border-top m-3"></div>
                                 <div className="text-center mt-2">
                                     <button className="btn btn-primary">
                                         <i className="bi bi-google"></i> Đăng nhập bằng Google
                                     </button>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </div>
