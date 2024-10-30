@@ -58,13 +58,21 @@ const EmployeePage = () => {
     }
     //#endregion
 
-    // const handleDelete = async (id: string) => {
-    //     try {
-    //         await DeleteEmployee(id);
-    //     }
-    //     catch (error) {
-    //         console.log(error);
-    //     }
+    const handleDelete = async (id: string) => {
+        try {
+            console.log('Deleting empolyee with id: ', id);
+            await DeleteEmployee(id);
+            const results = await GetAllEmployees(8, pageIndex, searchTerm);
+            setPageIndex(pageIndex);
+            setEmployees(results.items);
+            setSearchTerm(searchTerm);
+            setHasNextPage(results.hasNextPage);
+            setHasPreviousPage(results.haspreviousPage);
+            setTotalCount(results.totalCount);
+        } catch (error) {
+            console.log(error);
+        }
+    }
     return (
         <>
             <main className="">
@@ -125,7 +133,7 @@ const EmployeePage = () => {
                                         <td>{employee.role}</td>
                                         <td>
                                             <Link to={`detailemployee/${employee.userId}`} ><button className="btn btn-primary">Detail</button></Link>
-                                            <a href=""><button className="btn btn-danger">Delete</button></a>
+                                            <button className="btn btn-danger" onClick={() => handleDelete(employee.userId)}>Delete</button>
                                         </td>
                                     </tr>
                                 )
