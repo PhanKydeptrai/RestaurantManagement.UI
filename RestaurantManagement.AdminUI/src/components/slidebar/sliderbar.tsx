@@ -62,7 +62,7 @@ const SliderBar = () => {
                                                     </a>
                                                 </li>
                                                 <li className="nav-item m-3 shadow-sm">
-                                                    <a className="nav-link d-flex align-items-center" href="/AdminLayout/BossLayout/listvoucher.html">
+                                                    <a className="nav-link d-flex align-items-center" href="/vouchers">
                                                         <FontAwesomeIcon icon={faPercent} className="me-2 p-1" />
                                                         Voucher
                                                     </a>

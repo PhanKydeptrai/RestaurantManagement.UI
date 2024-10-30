@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { TableDto } from "../../models/tableDto";
-import { DeleteTable, GetAllTables } from "../../services/table-services";
 import { Link } from "react-router-dom";
+import { VoucherDto } from "../../models/voucherDto";
+import { DeleteVoucher, GetAllVouchers } from "../../services/voucher-services";
 
-const TableTypePage = () => {
-    const [tables, setTables] = useState<TableDto[]>([]);
+const VoucherPage = () => {
+
+    const [vouchers, setVouchers] = useState<VoucherDto[]>([]);
     const [pageIndex, setPageIndex] = useState(1);
     const [pageSize] = useState(8); // Setting page size to 8
     const [hasNextPage, setHasNextPage] = useState(false);
@@ -14,15 +15,15 @@ const TableTypePage = () => {
     useEffect(() => {
         const fetchData = async () => {
             console.log("fetching data");
-            const result = await GetAllTables(pageSize, pageIndex, searchTerm);
+            const result = await GetAllVouchers(pageSize, pageIndex, searchTerm);
             console.log(result.items);
-            setTables(result.items);
+            setVouchers(result.items);
             setHasNextPage(result.hasNextPage);
             setHasPreviousPage(result.haspreviousPage);
             setTotalCount(result.totalCount);
         };
         fetchData();
-    }, [pageIndex, pageSize]); // Include pageSize in the dependency array
+    }, [pageIndex, pageSize]); // Include pageSize in the dependency array  
     const handlePreviousPage = () => {
         if (hasPreviousPage) { //nếu có trang trước đó
             setPageIndex(pageIndex - 1);
@@ -44,9 +45,9 @@ const TableTypePage = () => {
     //Thực hiện search
     const handleSearchSubmit = async (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
-            const results = await GetAllTables(8, 1, searchTerm);
+            const results = await GetAllVouchers(8, 1, searchTerm);
             setPageIndex(1);
-            setTables(results.items);
+            setVouchers(results.items);
             setSearchTerm(searchTerm);
             setHasNextPage(results.hasNextPage);
             setHasPreviousPage(results.haspreviousPage);
@@ -57,29 +58,28 @@ const TableTypePage = () => {
 
     const handleDelete = async (id: string) => {
         try {
-            console.log("Deleting table with id: " + id);
-            await DeleteTable(id);
-            const results = await GetAllTables(8, pageIndex, searchTerm);
-
+            console.log("Deleting voucher with id: " + id);
+            await DeleteVoucher(id);
+            const results = await GetAllVouchers(8, pageIndex, searchTerm);
             setPageIndex(pageIndex);
-            setTables(results.items);
+            setVouchers(results.items);
             setSearchTerm(searchTerm);
             setHasNextPage(results.hasNextPage);
             setHasPreviousPage(results.haspreviousPage);
             setTotalCount(results.totalCount);
         } catch (error) {
-            console.log('Failed to delete table:', error);
+            console.log(error);
         }
-    };
+    }
     return (
         <>
-            <main>
+            <main className="">
                 <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <div className="col ">
                         <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4 ">
                             <ol className="breadcrumb mb-0 ">
                                 <li className="breadcrumb-item"><Link to="/"><dt>Dashboard</dt></Link></li>
-                                <li className="breadcrumb-item active" aria-current="page">Tables</li>
+                                <li className="breadcrumb-item active" aria-current="page">Vouchers</li>
                             </ol>
                         </nav>
                     </div>
@@ -87,13 +87,9 @@ const TableTypePage = () => {
                 <div className="row">
                     <div className="row">
                         <div className="col-md-2">
-                            <Link to="/createtable" className="btn btn-primary">Create Table</Link>
+                            <Link to="/createvoucher" className="btn btn-primary">Create Voucher</Link>
                         </div>
-                        <div className="col-md-2">
-                            <Link to="/createtabletype" className="btn btn-primary">Create TableType</Link>
-                        </div>
-
-                        <div className="col-md-4"></div>
+                        <div className="col-md-6"></div>
                         <div className="col-md-4">
                             <input
                                 type="text"
@@ -110,29 +106,37 @@ const TableTypePage = () => {
                             <table className="table table-striped table-hover">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Table Id</th>
-                                        <th scope="col">TableType Name</th>
+                                        <th scope="col">Voucher Name</th>
+                                        <th scope="col">Max Discount</th>
+                                        <th scope="col">Voucher Condition</th>
+                                        <th scope="col">Start Date</th>
+                                        <th scope="col">Expired Date</th>
+                                        <th scope="col">Description</th>
                                         <th scope="col">Status</th>
-                                        <th scope="col">ActiveStatus</th>
-                                        <th scope="col">Actions</th>
+                                        <th scope="col">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {tables.map((table) => (
-                                        <tr key={table.tableId}>
-                                            <td>{table.tableId}</td>
-                                            <td>{table.tableTypeName}</td>
-                                            <td className={table.tableStatus === 'empty' ? 'text-danger' : 'text-success'}>{table.tableStatus}</td>
-                                            <td className={table.activeStatus === 'active' ? 'text-success' : 'text-danger'}>{table.activeStatus}</td>
-                                            <td>
-                                                <Link to={`/table/edit/${table.tableId}`} className="btn btn-primary">Detail</Link>
-                                                <button className="btn btn-danger" onClick={() => handleDelete(table.tableId)}>Delete</button>
-                                            </td>
-                                        </tr>
-                                    ))}
+                                    {vouchers.map((voucher) => {
+                                        return (
+                                            <tr key={voucher.voucherId}>
+                                                <td>{voucher.voucherName}</td>
+                                                <td>{voucher.maxDiscount}</td>
+                                                <td>{voucher.voucherCondition}</td>
+                                                <td>{voucher.startDate}</td>
+                                                <td>{voucher.expiredDate}</td>
+                                                <td>{voucher.description}</td>
+                                                <td className={voucher.status === 'Active' ? 'text-success' : 'text-danger'}>{voucher.status}</td>
+
+                                                <td>
+
+                                                    <button className="btn btn-danger" onClick={() => handleDelete(voucher.voucherId)}>Delete</button>
+                                                </td>
+                                            </tr>
+                                        )
+                                    })}
                                 </tbody>
                             </table>
-
                         </div>
                     </div>
                 </div>
@@ -153,7 +157,7 @@ const TableTypePage = () => {
                 </div>
             </main>
         </>
-    );
+    )
 }
 
-export default TableTypePage;
+export default VoucherPage;

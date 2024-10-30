@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { CreateTableType } from "../../services/tabletype-services";
+import { Link } from "react-router-dom";
 
 const CreateTableTypePage = () => {
     const [tableTypeName, setTableTypeName] = useState('');
@@ -57,26 +58,40 @@ const CreateTableTypePage = () => {
 
     return (
         <>
-            <form className="" onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="tableTypeName">Tên loại bàn</label>
-                    <input type="text" className="form-control" id="tableTypeName" placeholder="Tên loại bàn" value={tableTypeName} onChange={(e) => setTableTypeName(e.target.value)} />
+
+            <main className="">
+                <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <div className="col ">
+                        <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4 ">
+                            <ol className="breadcrumb mb-0 ">
+                                <li className="breadcrumb-item"><Link to="/"><dt>Dashboard</dt></Link></li>
+                                <li className="breadcrumb-item active">TableType</li>
+                                <li className="breadcrumb-item active" aria-current="page">Create</li>
+                            </ol>
+                        </nav>
+                    </div>
                 </div>
-                <div className="form-group">
-                    <label htmlFor="tablePrice">Giá bàn</label>
-                    <input type="text" className="form-control" id="tablePrice" placeholder="Giá bàn" value={tablePrice} onChange={(e) => setTablePrice(e.target.value)} />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="description">Mô tả</label>
-                    <textarea typeof="text" className="form-control" id="description" placeholder="Mô tả" value={description} onChange={(e) => setDescription(e.target.value)} />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="imageUrl">Hình ảnh</label>
-                    <input type="file" className="form-control" id="imageUrl" placeholder="Hình ảnh" ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileChange} />
-                    <img src={imageUrl ?? undefined} alt="" style={{ width: '100px', height: '100px' }} onClick={handleFileSelect} />
-                </div>
-                <button type="submit" className="btn btn-primary">Submit</button>
-            </form>
+                <form className="" onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label htmlFor="tableTypeName">Tên loại bàn</label>
+                        <input type="text" className="form-control" id="tableTypeName" placeholder="Tên loại bàn" value={tableTypeName} onChange={(e) => setTableTypeName(e.target.value)} />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="tablePrice">Giá bàn</label>
+                        <input type="text" className="form-control" id="tablePrice" placeholder="Giá bàn" value={tablePrice} onChange={(e) => setTablePrice(e.target.value)} />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="description">Mô tả</label>
+                        <textarea typeof="text" className="form-control" id="description" placeholder="Mô tả" value={description} onChange={(e) => setDescription(e.target.value)} />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="imageUrl">Hình ảnh</label>
+                        <input type="file" className="form-control" id="imageUrl" placeholder="Hình ảnh" ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileChange} />
+                        <img src={imageUrl ?? undefined} alt="" style={{ width: '100px', height: '100px' }} onClick={handleFileSelect} />
+                    </div>
+                    <button type="submit" className="btn btn-primary">Submit</button>
+                </form>
+            </main>
         </>
     )
 }

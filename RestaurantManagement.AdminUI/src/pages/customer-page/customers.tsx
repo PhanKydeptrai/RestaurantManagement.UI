@@ -74,7 +74,7 @@ const CustomerPage = () => {
                 <div className="row">
                     <div className="row">
                         <div className="col-md-2">
-                            <a href="/createemployee"><button className="btn btn-success w-100">Create</button></a>
+                            {/* <a href="/createemployee"><button className="btn btn-success w-100">Create</button></a> */}
                         </div>
                         <div className="col-md-6"></div>
                         {/* Component for search */}
@@ -97,9 +97,9 @@ const CustomerPage = () => {
                                     <th scope="col">Tên</th>
                                     <th scope="col">Email</th>
                                     <th scope="col">Số điện thoại</th>
+                                    <th scope="col">Giới tính</th>
                                     <th scope="col">Trạng thái</th>
                                     <th scope="col">Loại khách hàng</th>
-                                    <th scope="col">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -115,9 +115,7 @@ const CustomerPage = () => {
                                                 <td className={customer.customerStatus === 'Active' ? 'text-success' : 'text-danger'}>
                                                     {customer.customerStatus}</td>
                                                 <td>{customer.customerType}</td>
-                                                <td>
-                                                    <Link to={`detailcustomer/${customer.userId}`}><button className="btn btn-primary">Detail</button></Link>
-                                                </td>
+
                                             </tr>
                                         )
                                     }
