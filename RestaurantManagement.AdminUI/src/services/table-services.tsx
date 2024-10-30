@@ -2,6 +2,7 @@ import { TableDto } from "../models/tableDto";
 import baseUrl from "../apis/base";
 import { Axios, AxiosResponse } from "axios";
 import baseUrlDelete from "../apis/basedelete";
+import baseUrlPost from "../apis/basepost";
 
 export const Table = "table";
 export const searchTerm = "";
@@ -24,7 +25,8 @@ export const DeleteTable = async (tableId: string) => {
     return res.data;
 }
 
-export const CreateTable = async (formData: FormData) => {
-    const res = await baseUrl.post(`${Table}`, formData);
+export const RestoreTable = async (tableId: string) => {
+    const res = await baseUrlDelete.put(`${Table}/${tableId}`);
     return res.data;
 }
+

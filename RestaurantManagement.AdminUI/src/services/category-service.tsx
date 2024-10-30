@@ -86,3 +86,7 @@ export const DeleteCategory = async (categoryId: string) => {
     const res = await baseUrlDelete.delete(`${Category}/${categoryId}`);
     return res.data;
 }
+export const RestoreCategory = async (categoryId: string) => {
+    const res = await baseUrlDelete.put(`${Category}/restore/${categoryId}`);
+    return res.data;
+}

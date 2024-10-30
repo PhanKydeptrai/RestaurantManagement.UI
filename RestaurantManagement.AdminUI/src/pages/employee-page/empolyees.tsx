@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { EmployeeDto } from "../../models/employeeDto";
-import { DeleteEmployee, GetAllEmployees } from "../../services/employee-service";
+import { DeleteEmployee, GetAllEmployees, RestoreEmployee } from "../../services/employee-service";
 
 const EmployeePage = () => {
 
@@ -73,6 +73,23 @@ const EmployeePage = () => {
             console.log(error);
         }
     }
+    const handleRestore = async (id: string) => {
+        try {
+            console.log('Restoring employee with id: ', id);
+            await RestoreEmployee(id);
+            const results = await GetAllEmployees(8, pageIndex, searchTerm);
+            setPageIndex(pageIndex);
+            setEmployees(results.items);
+            setSearchTerm(searchTerm);
+            setHasNextPage(results.hasNextPage);
+            setHasPreviousPage(results.haspreviousPage);
+            setTotalCount(results.totalCount);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <>
             <main className="">
@@ -133,7 +150,12 @@ const EmployeePage = () => {
                                         <td>{employee.role}</td>
                                         <td>
                                             <Link to={`detailemployee/${employee.userId}`} ><button className="btn btn-primary">Detail</button></Link>
-                                            <button className="btn btn-danger" onClick={() => handleDelete(employee.userId)}>Delete</button>
+                                            {employee.employeeStatus === 'Active' ?
+                                                (
+                                                    <button className="btn btn-danger" onClick={() => handleDelete(employee.userId)}>Delete</button>
+                                                ) : (
+                                                    <button className="btn btn-warning" onClick={() => handleRestore(employee.userId)}>Restore</button>
+                                                )}
                                         </td>
                                     </tr>
                                 )

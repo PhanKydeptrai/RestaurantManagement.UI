@@ -29,3 +29,4 @@ export const GetDetailCustomer = async (id: string) => {
         });
     return res;
 }
+

@@ -4,7 +4,6 @@ import CategoryPage from "./pages/category-page/categories";
 import CreateCategoryPage from "./pages/category-page/createcategory";
 import Login from "./pages/auth-page/login";
 import ProtectedRoute from "./components/protectedroute/protectedroute";
-import UpdateCategory from "./pages/category-page/updatecategory";
 import EmployeePage from "./pages/employee-page/empolyees";
 import CreateEmployee from "./pages/employee-page/createemployee";
 import CustomerPage from "./pages/customer-page/customers";
@@ -16,7 +15,14 @@ import TableTypePage from "./pages/table-page/tables";
 import DetailEmployeePage from "./pages/employee-page/detailemployee";
 import DetailCategoryPage from "./pages/category-page/detailcategory";
 import DetailMealPage from "./pages/meal-page/detailmeal";
+
 import Account from "./pages/account-page/account";
+
+import CreateTableTypePage from "./pages/table-page/createtabletype";
+import CreateTablePage from "./pages/table-page/createtable";
+import VoucherPage from "./pages/voucher-page/vouchers";
+import CreateVoucherPage from "./pages/voucher-page/createvoucher";
+
 
 function Controller() {
     return (
@@ -68,11 +74,7 @@ function Controller() {
                         <CustomerPage />
                     </ProtectedRoute>
                 } />
-                <Route path="/customers/detailcustomer/:userId" element={
-                    <ProtectedRoute>
-                        <DetailEmployeePage />
-                    </ProtectedRoute>
-                } />
+
                 <Route path="/meals" element={
                     <ProtectedRoute>
                         <MealPage />
@@ -93,14 +95,37 @@ function Controller() {
                         <DetailMealPage />
                     </ProtectedRoute>
                 } />
-                <Route path="/tabletype" element={
+                <Route path="/tables" element={
                     <ProtectedRoute>
                         <TableTypePage />
                     </ProtectedRoute>
                 } />
+
                 <Route path="/account" element={
                     <ProtectedRoute>
                         <Account/>
+                    </ProtectedRoute>
+                } />
+
+                <Route path="/createtabletype" element={
+                    <ProtectedRoute>
+                        <CreateTableTypePage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/createtable" element={
+                    <ProtectedRoute>
+                        <CreateTablePage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/vouchers" element={
+                    <ProtectedRoute>
+                        <VoucherPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/createvoucher" element={
+                    <ProtectedRoute>
+                        <CreateVoucherPage />
+
                     </ProtectedRoute>
                 } />
             </Routes>
