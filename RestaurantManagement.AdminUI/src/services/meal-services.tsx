@@ -41,3 +41,7 @@ export const DeleteMeal = async (mealId: string) => {
     const res = await baseUrlDelete.delete(`${Meal}/${mealId}`);
     return res.data;
 }
+export const RestoresMeal = async (mealId: string) => {
+    const res = await baseUrlDelete.put(`${Meal}/restore/${mealId}`);
+    return res.data;
+}
