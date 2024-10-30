@@ -58,16 +58,30 @@ export const GetDetailCategory = async (id: string) => {
 }
 
 export const UpdateCategory = async (categoryId: string, formData: FormData) => {
-    const res = await baseUrlPost.putForm(`${Category}/${categoryId}`, formData);
-    console.log(res.data);
-    console.log(`${Category}/${categoryId}`);
-    return res.data;
+    try{
+        const res = await baseUrlPost.putForm(`${Category}/${categoryId}`, formData);
+        console.log(res.data);
+        return res.data;
+    }
+    catch (error: any) {
+        console.log(error.response.data);
+        return error.response.data;
+    }
 }
 
 export const CreateCategory = async (formData: FormData) => {
-    const res = await baseUrlPost.postForm('/category', formData);
-    return res.data;
+    
+    try {
+        const res = await baseUrlPost.postForm('/category', formData);
+        return res.data;
+    }
+    catch (error: any) {
+        console.log(error.response.data);
+        return error.response.data;
+    }
+
 }
+
 export const DeleteCategory = async (categoryId: string) => {
     const res = await baseUrlDelete.delete(`${Category}/${categoryId}`);
     return res.data;
