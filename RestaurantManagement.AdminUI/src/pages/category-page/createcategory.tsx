@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { CreateCategory } from "../../services/category-service";
@@ -11,7 +11,7 @@ const CreateCategoryPage = () => {
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const [description, setDescription] = useState('');
     const fileInputRef = useRef<HTMLInputElement | null>(null);
-
+    const navigate = useNavigate();
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -62,18 +62,24 @@ const CreateCategoryPage = () => {
 
         const response = await CreateCategory(formData);
         console.log(response);
+        
         //Show toast success
-        if (response) {
+        if(response.isSuccess)
+        {
             notifySucess();
+            setTimeout(() => {
+                navigate('/categories'); // Điều hướng đến trang danh sách sau khi lưu thành công
+            }, 2000);
         }
-        else {
+        else
+        {
             notifyError();
         }
 
     }
 
     const handleFileSelect = () => {
-        if (fileInputRef.current) {
+        if (fileInputRef.current) { 
             fileInputRef.current.click();
         }
     };

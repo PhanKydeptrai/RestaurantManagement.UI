@@ -15,10 +15,14 @@ import TableTypePage from "./pages/table-page/tables";
 import DetailEmployeePage from "./pages/employee-page/detailemployee";
 import DetailCategoryPage from "./pages/category-page/detailcategory";
 import DetailMealPage from "./pages/meal-page/detailmeal";
+
+import Account from "./pages/account-page/account";
+
 import CreateTableTypePage from "./pages/table-page/createtabletype";
 import CreateTablePage from "./pages/table-page/createtable";
 import VoucherPage from "./pages/voucher-page/vouchers";
 import CreateVoucherPage from "./pages/voucher-page/createvoucher";
+
 
 function Controller() {
     return (
@@ -96,6 +100,13 @@ function Controller() {
                         <TableTypePage />
                     </ProtectedRoute>
                 } />
+
+                <Route path="/account" element={
+                    <ProtectedRoute>
+                        <Account/>
+                    </ProtectedRoute>
+                } />
+
                 <Route path="/createtabletype" element={
                     <ProtectedRoute>
                         <CreateTableTypePage />
@@ -114,6 +125,7 @@ function Controller() {
                 <Route path="/createvoucher" element={
                     <ProtectedRoute>
                         <CreateVoucherPage />
+
                     </ProtectedRoute>
                 } />
             </Routes>
