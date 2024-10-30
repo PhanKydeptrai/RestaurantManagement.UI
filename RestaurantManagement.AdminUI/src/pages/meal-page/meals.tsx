@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { MealDto } from "../../models/mealDto";
-import { DeleteMeal, GetAllMeals } from "../../services/meal-services";
+import { DeleteMeal, GetAllMeals, RestoresMeal } from "../../services/meal-services";
 import { Link } from "react-router-dom";
 
 const MealPage = () => {
@@ -74,7 +74,23 @@ const MealPage = () => {
             console.error('Failed to delete category:', error);
         }
     };
+    const handleRestore = async (id: string) => {
+        try {
+            console.log('Restoring category with id:', id);
+            await RestoresMeal(id);
+            const results = await GetAllMeals(8, pageIndex, searchTerm);
 
+            setPageIndex(pageIndex);
+            setMeals(results.items);
+            setSearchTerm(searchTerm);
+            setHasNextPage(results.hasNextPage);
+            setHasPreviousPage(results.haspreviousPage);
+            setTotalCount(results.totalCount);
+            // Optionally, refresh the employee list or update the state
+        } catch (error) {
+            console.error('Failed to restore category:', error);
+        }
+    };
     return (
         <>
             <main className="">
@@ -126,14 +142,18 @@ const MealPage = () => {
 
                                                         <p className="card-text">
                                                             <span>
-                                                                Trạng thái món: <span className={meal.mealStatus === 'kd' ? 'text-success' : 'text-danger'}>{meal.mealStatus === 'kd' ? 'Active' : 'Inactive'}</span>
+                                                                Trạng thái món: <span className={meal.mealStatus === 'Active' ? 'text-success' : 'text-danger'}>{meal.mealStatus}</span>
                                                             </span>
                                                         </p>
                                                         <div className="btn-group">
                                                             <Link to={`updatemeal/${meal.mealId}`} className="btn btn-primary">Edit</Link>
                                                             <Link to={`detailmeal/${meal.mealId}`} className="btn btn-info">Detail</Link>
 
-                                                            <button className="btn btn-danger" onClick={() => handleDelete(meal.mealId)}>Delete</button>
+                                                            {meal.mealStatus === 'Active' ? (
+                                                                <button className="btn btn-danger" onClick={() => handleDelete(meal.mealId)}>Delete</button>
+                                                            ) : (
+                                                                <button className="btn btn-warning" onClick={() => handleRestore(meal.mealId)}>Restore</button>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 </div>

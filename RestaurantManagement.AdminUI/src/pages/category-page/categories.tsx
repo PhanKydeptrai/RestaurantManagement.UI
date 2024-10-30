@@ -1,7 +1,7 @@
 import { json, Link } from "react-router-dom";
 import { CategoryDto } from "../../models/categoryDto";
 import { useEffect, useState } from "react";
-import { DeleteCategory, GetAllCategories } from "../../services/category-service";
+import { DeleteCategory, GetAllCategories, RestoreCategory } from "../../services/category-service";
 
 
 const CategoryPage = () => {
@@ -77,6 +77,22 @@ const CategoryPage = () => {
             console.error('Failed to delete category:', error);
         }
     };
+    const handleRestore = async (id: string) => {
+        try {
+            console.log('Restoring category with id:', id);
+            await RestoreCategory(id);
+            const results = await GetAllCategories(8, pageIndex, searchTerm);
+            setPageIndex(pageIndex);
+            setCategories(results.items);
+            setSearchTerm(searchTerm);
+            setHasNextPage(results.hasNextPage);
+            setHasPreviousPage(results.haspreviousPage);
+            setTotalCount(results.totalCount);
+        } catch (error) {
+            console.error('Failed to restore category:', error);
+
+        };
+    }
     return (
         <>
             <main className="">
@@ -131,7 +147,11 @@ const CategoryPage = () => {
                                                         <div className="btn-group m-2">
                                                             <Link to={`/categories/updatecategory/${category.categoryId}`} className="btn btn-primary">Edit</Link>
                                                             <Link to={`/categories/detailcategory/${category.categoryId}`} className="btn btn-info">Detail</Link>
-                                                            <button className="btn btn-danger" onClick={() => handleDelete(category.categoryId)}>Delete</button>
+                                                            {category.categoryStatus === 'Active' ? (
+                                                                <button className="btn btn-danger" onClick={() => handleDelete(category.categoryId)}>Delete</button>
+                                                            ) : (
+                                                                <button className="btn btn-warning" onClick={() => handleRestore(category.categoryId)}>Restore</button>
+                                                            )}
                                                         </div>
                                                     </div>
 

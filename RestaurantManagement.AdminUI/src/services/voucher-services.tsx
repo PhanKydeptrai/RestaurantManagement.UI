@@ -23,3 +23,4 @@ export const DeleteVoucher = async (voucherId: string) => {
     const res = await baseUrlDelete.delete(`${Voucher}/${voucherId}`)
     return res;
 }
+

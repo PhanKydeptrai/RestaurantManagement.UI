@@ -25,3 +25,8 @@ export const DeleteTable = async (tableId: string) => {
     return res.data;
 }
 
+export const RestoreTable = async (tableId: string) => {
+    const res = await baseUrlDelete.put(`${Table}/${tableId}`);
+    return res.data;
+}
+

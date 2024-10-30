@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { TableDto } from "../../models/tableDto";
-import { DeleteTable, GetAllTables } from "../../services/table-services";
+import { DeleteTable, GetAllTables, RestoreTable } from "../../services/table-services";
 import { Link } from "react-router-dom";
 
 const TableTypePage = () => {
@@ -71,6 +71,23 @@ const TableTypePage = () => {
             console.log('Failed to delete table:', error);
         }
     };
+    const handleRestore = async (id: string) => {
+        try {
+            console.log("Restoring table with id: " + id);
+            await RestoreTable(id);
+            const results = await GetAllTables(8, pageIndex, searchTerm);
+
+            setPageIndex(pageIndex);
+            setTables(results.items);
+            setSearchTerm(searchTerm);
+            setHasNextPage(results.hasNextPage);
+            setHasPreviousPage(results.haspreviousPage);
+            setTotalCount(results.totalCount);
+        } catch (error) {
+            console.log('Failed to restore table:', error);
+        }
+    };
+
     return (
         <>
             <main>
@@ -125,8 +142,11 @@ const TableTypePage = () => {
                                             <td className={table.tableStatus === 'empty' ? 'text-danger' : 'text-success'}>{table.tableStatus}</td>
                                             <td className={table.activeStatus === 'active' ? 'text-success' : 'text-danger'}>{table.activeStatus}</td>
                                             <td>
-                                                <Link to={`/table/edit/${table.tableId}`} className="btn btn-primary">Detail</Link>
-                                                <button className="btn btn-danger" onClick={() => handleDelete(table.tableId)}>Delete</button>
+                                                {table.tableStatus === 'Active' ? (
+                                                    <button className="btn btn-danger" onClick={() => handleDelete(table.tableId)}>Delete</button>
+                                                ) : (
+                                                    <button className="btn btn-warning" onClick={() => handleRestore(table.tableId)}>Restore</button>
+                                                )}
                                             </td>
                                         </tr>
                                     ))}

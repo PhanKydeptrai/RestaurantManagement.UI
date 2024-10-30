@@ -34,3 +34,8 @@ export const GetDetailEmployee = async (employeeId: string) => {
     const res = await baseUrl.get<EmployeeDto>(`${Employee}/${employeeId}`);
     return res.data;
 }
+
+export const RestoreEmployee = async (id: string) => {
+    const res = await baseUrlPost.put(`${Employee}/restore-employee/${id}`, null);
+    return res.data;
+}
