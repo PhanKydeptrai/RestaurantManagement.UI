@@ -3,13 +3,8 @@ import axios from 'axios';
 import { useEffect, useState } from "react";
 import { EmployeeDto } from "../../models/employeeDto";
 
-import { FC } from "react";
 
-interface AccountProps {
-    userInfo: EmployeeDto;
-}
-
-const Account: FC<AccountProps> = ({ userInfo }) => {
+const AccountPage = () => {
     const [userDetails, setUserDetails] = useState<EmployeeDto | null>(null);
 
     useEffect(() => {
@@ -38,7 +33,7 @@ const Account: FC<AccountProps> = ({ userInfo }) => {
         fetchUserInfo();
     }, []);
 
-    if (!userInfo) {
+    if (!userDetails) {
         return <h1>Loading...</h1>;
     }
 
@@ -56,12 +51,12 @@ const Account: FC<AccountProps> = ({ userInfo }) => {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-12" key={userInfo?.userId}>
+                    <div className="col-12" key={userDetails?.userId}>
                         <div className="row">
                             <div className="col-md-3 border-right">
                                 <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-                                    <img className="rounded-circle mt-5" width="200" src={userInfo?.userImage || 'https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg'} alt="" />
-                                    <input type="file" ref={userInfo?.userImage} style={{ display: "none" }} accept="image/*" />
+                                    <img className="rounded-circle mt-5" width="200" src={userDetails?.userImage || 'https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg'} alt="" />
+                                    <input type="file" ref={userDetails?.userImage} style={{ display: "none" }} accept="image/*" />
                                 </div>
                             </div>
                             <div className="col-md-9 border-right">
@@ -70,33 +65,33 @@ const Account: FC<AccountProps> = ({ userInfo }) => {
                                         <div className="col-md-6">
 
                                             <label className="labels">First Name</label>
-                                            <input type="text" className="form-control" placeholder="Nhập tên" value={userInfo?.firstName} />
+                                            <input type="text" className="form-control" placeholder="Nhập tên" value={userDetails?.firstName} />
                                         </div>
                                         <div className="col-md-6">
                                             <label className="labels">Last Name</label>
-                                            <input type="text" className="form-control" placeholder="Nhập họ" value={userInfo?.lastName} />
+                                            <input type="text" className="form-control" placeholder="Nhập họ" value={userDetails?.lastName} />
                                         </div>
                                     </div>
                                     <div className="row mt-3">
                                         <div className="col-md-12">
                                             <label className="labels">Email</label>
-                                            <input type="text" className="form-control" placeholder="Nhập email" value={userInfo?.email} />
+                                            <input type="text" className="form-control" placeholder="Nhập email" value={userDetails?.email} />
                                         </div>
                                         <div className="col-md-12">
                                             <label className="labels">Phone Number</label>
-                                            <input type="text" className="form-control" placeholder="Nhập số điện thoại" value={userInfo?.phoneNumber} />
+                                            <input type="text" className="form-control" placeholder="Nhập số điện thoại" value={userDetails?.phoneNumber} />
                                         </div>
                                     </div>
 
                                     <div className="row mt-2">
                                         <div className="col-md-6">
                                             <label className="labels">Gender</label>
-                                            <input type="text" className="form-control" value={userInfo?.gender} />
+                                            <input type="text" className="form-control" value={userDetails?.gender} />
 
                                         </div>
                                         <div className="col-md-6">
                                             <label className="labels">Role</label>
-                                            <input type="text" className="form-control" value={userInfo?.role} />
+                                            <input type="text" className="form-control" value={userDetails?.role} />
                                         </div>
                                     </div>
 
@@ -111,4 +106,4 @@ const Account: FC<AccountProps> = ({ userInfo }) => {
 
 }
 
-export default Account;
+export default AccountPage;

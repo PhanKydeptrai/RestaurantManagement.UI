@@ -16,12 +16,12 @@ import DetailEmployeePage from "./pages/employee-page/detailemployee";
 import DetailCategoryPage from "./pages/category-page/detailcategory";
 import DetailMealPage from "./pages/meal-page/detailmeal";
 
-import Account from "./pages/account-page/account";
 
 import CreateTableTypePage from "./pages/table-page/createtabletype";
 import CreateTablePage from "./pages/table-page/createtable";
 import VoucherPage from "./pages/voucher-page/vouchers";
 import CreateVoucherPage from "./pages/voucher-page/createvoucher";
+import AccountPage from "./pages/account-page/account";
 
 
 function Controller() {
@@ -103,7 +103,7 @@ function Controller() {
 
                 <Route path="/account" element={
                     <ProtectedRoute>
-                        <Account/>
+                        <AccountPage />
                     </ProtectedRoute>
                 } />
 

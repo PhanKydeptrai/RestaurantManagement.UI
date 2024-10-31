@@ -15,7 +15,7 @@ const SliderBar = () => {
                                         <div className="position-sticky pt-3">
                                             <ul className="nav flex-column nav-tabs">
                                                 <li className="nav-item m-3 shadow-sm">
-                                                    <a className="nav-link d-flex align-items-center " href="/AdminLayout/BossLayout/dashboard.html">
+                                                    <a className="nav-link d-flex align-items-center " href="/dashboard">
                                                         <FontAwesomeIcon icon={faHome} className="me-2 p-1" />
                                                         Dashboard
                                                     </a>
