@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import { Link, useNavigate } from "react-router-dom";
 
 export interface TableTypeInfo {
     tableTypeId: string;
@@ -11,7 +11,8 @@ const CreateTablePage = () => {
     const [quantity, setQuantity] = useState(0);
     const [tableTypeName, setTableTypeName] = useState('');
     const [tableTypeId, setTableTypeId] = useState('');
-
+    const [errors, setErrors] = useState<{ quantity?: string, tableTypeName?: string, tableTypeId?: string }>();
+    const navigate = useNavigate();
 
     const [tableTypeInfo, setTableTypeInfo] = useState<TableTypeInfo[]>([]);
     useEffect(() => {
@@ -26,6 +27,33 @@ const CreateTablePage = () => {
         setTableTypeId(event.target.value);
         setTableTypeName(selectedTableType ? selectedTableType.tableTypeName : '');
     };
+    const validationForm = () => {
+        const newErrors: { quantity?: string, tableTypeName?: string, tableTypeId?: string } = {};
+        if (!quantity) {
+            newErrors.quantity = 'Vui lòng nhập số lượng!';
+        }
+        if (isNaN(quantity)) {
+            newErrors.quantity = 'Vui lòng nhập số!';
+        }
+        if (!tableTypeId) {
+            newErrors.tableTypeId = 'Vui lòng chọn loại bàn!';
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    }
+
+    const notifyError = () => {
+        toast.error('Vui lòng kiểm tra lại!', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored"
+        });
+    }
     const notifySucess = () => {
         toast.success('Thành công!', {
             position: "top-center",
@@ -41,12 +69,11 @@ const CreateTablePage = () => {
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-
-        // Kiểm tra các giá trị
-        if (!quantity || !tableTypeId || !tableTypeName) {
-            console.error('Missing required fields');
+        if (!validationForm()) {
+            notifyError();
             return;
         }
+
 
         const data = {
             quantity: quantity,
@@ -80,8 +107,14 @@ const CreateTablePage = () => {
 
             // Handle successful response
             console.log('Success:', await response.json());
+            notifySucess();
+            setTimeout(() => {
+                navigate('/tables');
+            }, 2000);
+
         } catch (error) {
             console.error('Error:', error);
+            notifyError();
         }
     };
 
@@ -96,7 +129,7 @@ const CreateTablePage = () => {
                     <div className="col ">
                         <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4 ">
                             <ol className="breadcrumb mb-0 ">
-                                <li className="breadcrumb-item"><Link to="/"><dt>Dashboard</dt></Link></li>
+                                <li className="breadcrumb-item"><Link to="/dashboard"><dt>Dashboard</dt></Link></li>
                                 <li className="breadcrumb-item"><Link to="/tables">Tables</Link></li>
                                 <li className="breadcrumb-item active" aria-current="page">Create</li>
                             </ol>
@@ -111,6 +144,7 @@ const CreateTablePage = () => {
                                     <div className="form-group">
                                         <label htmlFor="quanlity">Quanlity</label>
                                         <input type="number" className="form-control" id="quanlity" placeholder="Enter quanlity" value={quantity} onChange={(e) => setQuantity(parseInt(e.target.value))} />
+                                        {errors?.quantity && <div className="text-danger">{errors.quantity}</div>}
                                     </div>
                                 </div>
                                 <div className="col-6">
@@ -122,6 +156,7 @@ const CreateTablePage = () => {
                                                 <option key={tableType.tableTypeId} value={tableType.tableTypeId}>{tableType.tableTypeName}</option>
                                             ))}
                                         </select>
+                                        {errors?.tableTypeId && <div className="text-danger">{errors.tableTypeId}</div>}
                                     </div>
                                 </div>
                             </div>
@@ -134,6 +169,7 @@ const CreateTablePage = () => {
                     </div>
                 </form>
             </main>
+            <ToastContainer />
         </>
     )
 }

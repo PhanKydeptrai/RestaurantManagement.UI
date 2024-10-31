@@ -1,8 +1,8 @@
 export interface VoucherDto {
     voucherId: string;
     voucherName: string;
-    maxDiscount: number;
-    voucherCondition: number;
+    maxDiscount: string;
+    voucherCondition: string;
     startDate: string;
     expiredDate: string;
     description: string;
