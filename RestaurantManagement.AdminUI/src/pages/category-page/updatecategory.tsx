@@ -1,12 +1,16 @@
 import axios from 'axios';
 import React, { useRef, useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import { UpdateCategory } from '../../services/category-service';
 
 const UpdateCategoryPage = () => {
     const { categoryId } = useParams<{ categoryId: string }>();
     const [categoryName, setCategoryName] = useState<string>('');
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const [errors, setErrors] = useState<{ categoryName?: string }>({});
+    const [isSuccess, setIsSuccess] = useState();
 
     useEffect(() => {
         // Fetch category data using categoryId and set initial state
@@ -37,36 +41,71 @@ const UpdateCategoryPage = () => {
         }
     };
 
+    const notifySucess = () => {
+        toast.success('Thành công!', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored"
+        });
+    }
+    const notifyError = () => {
+        toast.error('Vui lòng kiểm tra lại!', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored"
+        });
+    }
+
+    const validateForm = () => {
+        const newErrors: { categoryName?: string } = {}
+        if (!categoryName) {
+            newErrors.categoryName = "Vui lòng nhập tên loại món";
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+
+    }
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+
+        if (!validateForm()) {
+            return;
+        }
         const formData = new FormData();
-
-
         formData.append('categoryName', categoryName);
         if (fileInputRef.current && fileInputRef.current.files) {
             formData.append('categoryImage', fileInputRef.current.files[0]);
         }
         try {
-            const response = await axios.putForm(`https://localhost:7057/api/category/${categoryId}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
-                },
-            });
-            console.log('Category updated successfully:', response.data);
-            // Optionally, handle success (e.g., redirect or show a success message)
-        } catch (error) {
-            console.error('Failed to update category:', error);
-            // Optionally, handle error (e.g., show an error message)
+            if (categoryId) {
+                const response = await UpdateCategory(categoryId, formData);
+                console.log('Category updated successfully:', response);
+                if (response.isSuccess) {
+                    console.log("Success");
+                    notifySucess();
+                } else {
+                    console.log("Failed");
+                    notifyError();
+                }
+            } else {
+                throw new Error('Category ID is undefined');
+            }
         }
-        // try {
-        //     const response = await UpdateCategory(categoryId, formData);
-        //     console.log('Category updated successfully:', response.data);
-        //     // Optionally, handle success (e.g., redirect or show a success message)
-        // } catch (error) {
-        //     console.error('Failed to update category:', error);
-        //     // Optionally, handle error (e.g., show an error message)
-        // }
+        catch (error: any) {
+            console.error('Failed to update category:', error.response.data);
+        }
+
+
 
     };
 
@@ -96,6 +135,7 @@ const UpdateCategoryPage = () => {
                                 value={categoryName}
                                 onChange={(e) => setCategoryName(e.target.value)}
                             />
+                            {errors.categoryName && <div className="text-danger">{errors.categoryName}</div>}
                         </div>
                         <div className="mb-3">
                             <label htmlFor="fileInput" className="form-label">Upload Image:</label>
@@ -116,6 +156,7 @@ const UpdateCategoryPage = () => {
                     </form>
                 </div>
             </main>
+            <ToastContainer />
         </>
     );
 };

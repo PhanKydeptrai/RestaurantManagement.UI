@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { CategoryInfo } from "./createmeal";
 import axios from "axios";
+import { UpdateMeal } from "../../services/meal-services";
+import { toast, ToastContainer } from "react-toastify";
 
 const UpdateMealPage = () => {
 
@@ -14,6 +16,10 @@ const UpdateMealPage = () => {
     const [categoryId, setCategoryId] = useState<string>('');
     const [categoryName, setCategoryName] = useState<string>('');
     const [categoryInfo, setCategoryInfo] = useState<CategoryInfo[]>([]);
+
+    const navigate = useNavigate();
+    const [errors, setErrors] = useState<{ mealName?: string, price?: string, description?: string, categoryId?: string }>();
+
 
     useEffect(() => {
         const fetchMealData = async () => {
@@ -52,6 +58,9 @@ const UpdateMealPage = () => {
     };
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+        if (!validateForm()) {
+            return;
+        }
         const formData = new FormData();
 
         formData.append('mealName', mealName);
@@ -63,18 +72,55 @@ const UpdateMealPage = () => {
             formData.append('mealImage', fileInputRef.files[0]);
         }
         try {
-            const response = await axios.putForm(`https://localhost:7057/api/meal/${mealId}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
-                },
-            });
-            console.log('Meal updated successfully:', response.data);
+            if (mealId) {
+                const response = await UpdateMeal(formData, mealId);
+                console.log('Meal update Successfully', response);
+                if (response.isSuccess) {
+                    console.log('Successfully');
+                    notifySucess();
+                } else {
+                    console.log('Failed');
+                    notifyError();
+                }
+            }
         } catch (error) {
             console.error('Failed to update meal:', error);
         }
     }
-
+    const validateForm = () => {
+        const newErrors: { mealName?: string, price?: string, description?: string, categoryId?: string } = {
+            mealName: mealName ? '' : 'Tên món không được để trống',
+            price: price ? '' : 'Giá không được để trống',
+            description: description ? '' : 'Mô tả không được để trống',
+            categoryId: categoryId ? '' : 'Loại món không được để trống'
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    }
+    const notifySucess = () => {
+        toast.success('Thành công!', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored"
+        });
+    }
+    const notifyError = () => {
+        toast.error('Vui lòng kiểm tra lại!', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored"
+        });
+    }
 
 
     return (
@@ -87,14 +133,17 @@ const UpdateMealPage = () => {
                     <div className="mb-3">
                         <label htmlFor="mealName" className="form-label">Meal Name</label>
                         <input type="text" className="form-control" id="mealName" value={mealName} onChange={(event) => setMealName(event.target.value)} />
+                        {errors?.mealName && <div className="text-danger">{errors.mealName}</div>}
                     </div>
                     <div className="mb-3">
                         <label htmlFor="price" className="form-label">Price</label>
                         <input type="number" className="form-control" id="price" value={price} onChange={(event) => setPrice(Number(event.target.value))} />
+                        {errors?.price && <div className="text-danger">{errors.price}</div>}
                     </div>
                     <div className="mb-3">
                         <label htmlFor="description" className="form-label">Description</label>
                         <textarea className="form-control" id="description" value={description} onChange={(event) => setDescription(event.target.value)} />
+                        {errors?.description && <div className="text-danger">{errors.description}</div>}
                     </div>
                     <div className="mb-3">
                         <label htmlFor="category" className="form-label">Category</label>
@@ -107,6 +156,7 @@ const UpdateMealPage = () => {
                                 <option key={category.categoryId} value={category.categoryId}>{category.categoryName}</option>
                             ))}
                         </select>
+                        {errors?.categoryId && <div className="text-danger">{errors.categoryId}</div>}
                     </div>
                     <div className="mb-3">
                         <label htmlFor="imageUrl" className="form-label">Image</label>
@@ -116,6 +166,8 @@ const UpdateMealPage = () => {
                     <button type="submit" className="btn btn-primary">Update</button>
                 </form>
             </main>
+            <ToastContainer />
+
         </>
     )
 }

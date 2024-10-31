@@ -33,8 +33,13 @@ export const GetDetailMeal = async (mealId: string) => {
 }
 
 export const CreateMeal = async (formData: FormData) => {
-    const res = await baseUrlPost.postForm(`${Meal}`, formData);
-    return res.data;
+    try {
+        const res = await baseUrlPost.postForm(`${Meal}`, formData);
+        return res.data;
+    } catch (error: any) {
+        console.log(error.response.data);
+        return error.response.data;
+    }
 }
 
 export const DeleteMeal = async (mealId: string) => {
@@ -44,4 +49,14 @@ export const DeleteMeal = async (mealId: string) => {
 export const RestoresMeal = async (mealId: string) => {
     const res = await baseUrlDelete.put(`${Meal}/restore/${mealId}`);
     return res.data;
+}
+
+export const UpdateMeal = async (formData: FormData, mealId: string) => {
+    try {
+        const res = await baseUrlPost.putForm(`${Meal}/${mealId}`, formData);
+        return res.data;
+    } catch (error: any) {
+        console.log(error.response.data);
+        return error.response.data;
+    }
 }

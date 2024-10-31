@@ -9,7 +9,8 @@ import { CreateCategory } from "../../services/category-service";
 const CreateCategoryPage = () => {
     const [name, setName] = useState('');
     const [imageUrl, setImageUrl] = useState<string | null>(null);
-    const [description, setDescription] = useState('');
+    //const [description, setDescription] = useState('');
+    const [errors, setErrors] = useState<{ name?: string }>({});
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const navigate = useNavigate();
 
@@ -49,12 +50,24 @@ const CreateCategoryPage = () => {
             theme: "colored"
         });
     }
+    const validateForm = () => {
+        const newErrors: { name?: string } = {}
+        if (!name) {
+            newErrors.name = "Vui lòng nhập tên loại món";
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+
+    }
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+        if (!validateForm()) {
+            return;
+        }
         const formData = new FormData();
         formData.append('name', name);
-        formData.append('description', description);
+        //formData.append('description', description);
 
         if (fileInputRef.current && fileInputRef.current.files) {
             formData.append('image', fileInputRef.current.files[0]);
@@ -62,27 +75,27 @@ const CreateCategoryPage = () => {
 
         const response = await CreateCategory(formData);
         console.log(response);
-        
+
         //Show toast success
-        if(response.isSuccess)
-        {
+        if (response.isSuccess) {
             notifySucess();
             setTimeout(() => {
                 navigate('/categories'); // Điều hướng đến trang danh sách sau khi lưu thành công
             }, 2000);
         }
-        else
-        {
+        else {
             notifyError();
+
         }
 
     }
 
     const handleFileSelect = () => {
-        if (fileInputRef.current) { 
+        if (fileInputRef.current) {
             fileInputRef.current.click();
         }
     };
+
 
     return (
         <>
@@ -120,19 +133,22 @@ const CreateCategoryPage = () => {
                                 <div className="col-md-9 border-right">
                                     <div className="p-3 py-5">
                                         <div className="row mt-3">
-                                            <div className="col-md-9 m-lg-3"><label className="labels">Tên loại món</label>
+                                            <div className="col-md-9 m-lg-3">
+                                                <label className="labels">Tên loại món</label>
                                                 <input type="text" className="form-control" placeholder="Nhập tên loại danh mục"
                                                     value={name}
-                                                    onChange={(e) => setName(e.target.value)} /></div>
+                                                    onChange={(e) => setName(e.target.value)} />
+                                                {errors.name && <p className="text-danger">{errors.name}</p>}
+                                            </div>
                                         </div>
-                                        <div className="row mt-3">
+                                        {/* <div className="row mt-3">
                                             <div className="col-md-9 m-lg-3"><label className="labels">Mô tả</label>
                                                 <textarea className="form-control" placeholder="Nhập mô tả"
                                                     value={description}
                                                     onChange={(e) => setDescription(e.target.value)}>
                                                 </textarea>
                                             </div>
-                                        </div>
+                                        </div> */}
                                         <div className="row mt-2">
                                             <span className="col-md-3"></span>
                                             <div className="col-md-3"></div>

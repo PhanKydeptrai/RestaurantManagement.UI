@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CreateMeal } from "../../services/meal-services";
 import { toast } from "react-toastify";
 
@@ -17,6 +17,9 @@ const CreateMealPage = () => {
     const [categoryId, setCategoryId] = useState('');
     const [categoryName, setCategoryName] = useState('');
     const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const navigate = useNavigate();
+    const [errors, setErrors] = useState<{ mealName?: string, price?: string, description?: string, categoryId?: string, categoryName?: string }>();
+
 
     const [categoryinfo, setCategoryInfo] = useState<CategoryInfo[]>([]);
     useEffect(() => {
@@ -42,6 +45,17 @@ const CreateMealPage = () => {
             reader.readAsDataURL(file);
         }
     };
+    const validateForm = () => {
+        const newErrors: { mealName?: string, price?: string, description?: string, categoryId?: string, categoryName?: string } = {
+            mealName: mealname ? '' : 'Tên món không được để trống',
+            price: price ? '' : 'Giá không được để trống',
+            // description: description ? '' : 'Mô tả không được để trống',
+            categoryId: categoryId ? '' : 'Loại món không được để trống',
+            categoryName: categoryName ? '' : 'Loại món không được để trống'
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    }
     const notifySucess = () => {
         toast.success('Thành công!', {
             position: "top-center",
@@ -54,8 +68,23 @@ const CreateMealPage = () => {
             theme: "colored"
         });
     }
+    const notifyError = () => {
+        toast.error('Vui lòng kiểm tra lại!', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored"
+        });
+    }
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+        // if (!validateForm()) {
+        //     return;
+        // }
         const formData = new FormData();
         formData.append('mealname', mealname);
         formData.append('price', price);
@@ -71,9 +100,17 @@ const CreateMealPage = () => {
         const response = await CreateMeal(formData);
         console.log(response);
 
-        if (response) {
-            notifySucess();
-        }
+        // // show toast 
+        // if (response.isSuccess) {
+        //     notifySucess();
+        //     setTimeout(() => {
+        //         navigate('/meals');
+        //     }, 2000);
+
+        // }
+        // else {
+        //     notifyError();
+        // }
     }
     const handleFileSelect = () => {
         if (fileInputRef.current) {
@@ -119,18 +156,21 @@ const CreateMealPage = () => {
                                             <div className="col-md-9 m-lg-3">
                                                 <label className="labels">Tên món</label>
                                                 <input type="text" className="form-control" placeholder="Nhập tên món" value={mealname} onChange={(e) => setMealName(e.target.value)} />
+                                                {errors?.mealName && <div className="text-danger">{errors.mealName}</div>}
                                             </div>
                                         </div>
                                         <div className="row mt-3">
                                             <div className="col-md-9 m-lg-3">
                                                 <label className="labels">Giá</label>
                                                 <input type="text" className="form-control" placeholder="Nhập giá" value={price} onChange={(e) => setPrice(e.target.value)} />
+                                                {errors?.price && <div className="text-danger">{errors.price}</div>}
                                             </div>
                                         </div>
                                         <div className="row mt-3">
                                             <div className="col-md-9 m-lg-3">
                                                 <label className="labels">Mô tả</label>
                                                 <textarea typeof="text" className="form-control" placeholder="Nhập mô tả" value={description} onChange={(e) => setDescription(e.target.value)} />
+                                                {errors?.description && <div className="text-danger">{errors.description}</div>}
                                             </div>
                                         </div>
                                         <div className="row mt-3">

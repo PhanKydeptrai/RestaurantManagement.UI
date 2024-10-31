@@ -23,8 +23,14 @@ export const GetAllEmployees = async (pageSize: number, pageIndex: number, sreac
 }
 
 export const CreateEmployee = async (formData: FormData) => {
-    const res = await baseUrlPost.postForm('/employee', formData);
-    return res.data;
+    try {
+        const res = await baseUrlPost.postForm('/employee', formData);
+        return res.data;
+    }
+    catch (error: any) {
+        console.log(error.response.data);
+        return error.response.data;
+    }
 }
 export const DeleteEmployee = async (id: string) => {
     const res = await baseUrlDelete.delete(`${Employee}/${id}`);
