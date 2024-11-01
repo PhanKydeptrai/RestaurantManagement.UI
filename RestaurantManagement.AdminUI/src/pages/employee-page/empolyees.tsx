@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { EmployeeDto } from "../../models/employeeDto";
-import { DeleteEmployee, GetAllEmployees, RestoreEmployee } from "../../services/employee-service";
+import { DeleteEmployee, GetAllEmployees, GetEmpolyeeByStatus, RestoreEmployee } from "../../services/employee-service";
+import { sreachTerm } from "../../services/category-service";
 
 const EmployeePage = () => {
 
@@ -11,12 +12,18 @@ const EmployeePage = () => {
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPreviousPage, setHasPreviousPage] = useState(false);
     const [totalCount, setTotalCount] = useState();
+
     const [searchTerm, setSearchTerm] = useState('');
+    const [filterStatus, setFilterStatus] = useState('');
+    const [filterGender, setFilterGender] = useState('');
+    const [filterRole, setFilterRole] = useState('');
+    const [sortColumn, setSortColumn] = useState('');
+    const [sortOrder, setSortOrder] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
             console.log("fetching data");
-            const result = await GetAllEmployees(pageSize, pageIndex, searchTerm);
+            const result = await GetAllEmployees(pageSize, pageIndex, sreachTerm);
             console.log(result.items);
             setEmployees(result.items);
             setHasNextPage(result.hasNextPage);
@@ -37,6 +44,27 @@ const EmployeePage = () => {
             setPageIndex(pageIndex + 1);
         }
     };
+
+    // #region Filter
+    const handleFilterStatusChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const newFilterStatus = event.target.value;
+        setFilterStatus(newFilterStatus);
+        await handleFilterStatus(newFilterStatus);
+    }
+    const handleFilterStatus = async (newFilterStatus: string) => {
+        // if (event.key === 'Enter') {
+
+        // }
+        const results = await GetEmpolyeeByStatus(8, 1, newFilterStatus);
+        setPageIndex(1);
+        setEmployees(results.items);
+        setFilterStatus(filterStatus);
+        setHasNextPage(results.hasNextPage);
+        setHasPreviousPage(results.haspreviousPage);
+        setTotalCount(results.totalCount);
+
+    }
+    //#endregion
 
     //#region Search
     //truyền tham số cho searchTerm
@@ -108,7 +136,17 @@ const EmployeePage = () => {
                         <div className="col-md-2">
                             <a href="/createemployee"><button className="btn btn-success w-100">Create</button></a>
                         </div>
-                        <div className="col-md-6"></div>
+                        <div className="col-md-2">
+                            <select className="form-select" onChange={handleFilterStatusChange}>
+                                <option value="">All</option>
+                                <option value="Active">Active</option>
+                                <option value="Deleted">Deleted</option>
+                            </select>
+                        </div>
+                        <div className="col-md-2"></div>
+
+                        <div className="col-md-2"></div>
+
                         {/* Component for search */}
                         <div className="col-md-4"><input
                             className="form-control"
