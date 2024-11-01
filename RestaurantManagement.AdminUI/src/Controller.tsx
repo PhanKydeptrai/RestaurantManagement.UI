@@ -1,4 +1,4 @@
-import { Routes, Route, Router } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Home from "./pages/dashboard/home";
 import CategoryPage from "./pages/category-page/categories";
 import CreateCategoryPage from "./pages/category-page/createcategory";

@@ -8,12 +8,36 @@ import baseUrlDelete from "../apis/basedelete";
 export const Employee = "employee";
 export const sreachTerm = '';
 
+// export const GetAllEmployee = async (filterGender: string, filterRole: string, filterStatus: string, sreachTerm: string, sortColumn: string, sortOrder: string, pageSize: number, pageIndex: number,) => {
+//     //console.log(`${baseUrl}/${Employee}?page=${pageIndex}&pageSize=${pageSize}`);
+//     const res = await baseUrl.get<EmployeeDto[]>(`${Employee}?filerGender=${filterGender}&filterRole=${filterRole}&filterStatus=${filterStatus}&sreachTerm=${sreachTerm}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&page=${pageIndex}&pageSize=${pageSize}`)
+//         //const res = await baseUrl.get<EmployeeDto[]>(`https://localhost:7057/api/employee?page=${pageIndex}&pageSize=${pageSize}`)
+//         .then((response: AxiosResponse) => {
+//             console.log(response.data.value);
+//             return response.data.value;
+//         }).catch((error) => {
+//             console.log(error);
+//             return error;
+//         });
+//     return res;
+// }
+
 export const GetAllEmployees = async (pageSize: number, pageIndex: number, sreachTerm: string) => {
     //console.log(`${baseUrl}/${Employee}?page=${pageIndex}&pageSize=${pageSize}`);
-    const res = await baseUrl.get<EmployeeDto[]>(`${Employee}?page=${pageIndex}&pageSize=${pageSize}&searchTerm=${sreachTerm}`)
+    const res = await baseUrl.get<EmployeeDto[]>(`${Employee}?page=${pageIndex}&pageSize=${pageSize}`)
         //const res = await baseUrl.get<EmployeeDto[]>(`https://localhost:7057/api/employee?page=${pageIndex}&pageSize=${pageSize}`)
         .then((response: AxiosResponse) => {
             console.log(response.data.value);
+            return response.data.value;
+        }).catch((error) => {
+            console.log(error);
+            return error;
+        });
+    return res;
+}
+export const GetEmpolyeeByStatus = async (pageSize: number, pageIndex: number, filterStatus: string) => {
+    const res = await baseUrl.get<EmployeeDto[]>(`${Employee}?page=${pageIndex}&pageSize=${pageSize}&filterStatus=${filterStatus}`)
+        .then((response: AxiosResponse) => {
             return response.data.value;
         }).catch((error) => {
             console.log(error);
