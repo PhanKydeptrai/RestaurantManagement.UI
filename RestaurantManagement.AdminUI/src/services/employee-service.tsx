@@ -6,25 +6,10 @@ import baseUrlDelete from "../apis/basedelete";
 
 
 export const Employee = "employee";
-export const sreachTerm = '';
 
-// export const GetAllEmployee = async (filterGender: string, filterRole: string, filterStatus: string, sreachTerm: string, sortColumn: string, sortOrder: string, pageSize: number, pageIndex: number,) => {
-//     //console.log(`${baseUrl}/${Employee}?page=${pageIndex}&pageSize=${pageSize}`);
-//     const res = await baseUrl.get<EmployeeDto[]>(`${Employee}?filerGender=${filterGender}&filterRole=${filterRole}&filterStatus=${filterStatus}&sreachTerm=${sreachTerm}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&page=${pageIndex}&pageSize=${pageSize}`)
-//         //const res = await baseUrl.get<EmployeeDto[]>(`https://localhost:7057/api/employee?page=${pageIndex}&pageSize=${pageSize}`)
-//         .then((response: AxiosResponse) => {
-//             console.log(response.data.value);
-//             return response.data.value;
-//         }).catch((error) => {
-//             console.log(error);
-//             return error;
-//         });
-//     return res;
-// }
-
-export const GetAllEmployees = async (pageSize: number, pageIndex: number, sreachTerm: string) => {
+export const GetAllEmployee = async (filterGender: string, filterRole: string, filterStatus: string, sreachTerm: string, sortColumn: string, sortOrder: string, pageSize: number, pageIndex: number,) => {
     //console.log(`${baseUrl}/${Employee}?page=${pageIndex}&pageSize=${pageSize}`);
-    const res = await baseUrl.get<EmployeeDto[]>(`${Employee}?page=${pageIndex}&pageSize=${pageSize}`)
+    const res = await baseUrl.get<EmployeeDto[]>(`${Employee}?filerGender=${filterGender}&filterRole=${filterRole}&filterStatus=${filterStatus}&sreachTerm=${sreachTerm}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&page=${pageIndex}&pageSize=${pageSize}`)
         //const res = await baseUrl.get<EmployeeDto[]>(`https://localhost:7057/api/employee?page=${pageIndex}&pageSize=${pageSize}`)
         .then((response: AxiosResponse) => {
             console.log(response.data.value);
@@ -35,9 +20,61 @@ export const GetAllEmployees = async (pageSize: number, pageIndex: number, sreac
         });
     return res;
 }
-export const GetEmpolyeeByStatus = async (pageSize: number, pageIndex: number, filterStatus: string) => {
-    const res = await baseUrl.get<EmployeeDto[]>(`${Employee}?page=${pageIndex}&pageSize=${pageSize}&filterStatus=${filterStatus}`)
+
+export const GetEmp = async (pageSize: number, pageIndex: number) => {
+    const res = await baseUrl.get<EmployeeDto[]>(`${Employee}?page=${pageIndex}&pageSize=${pageSize}`)
         .then((response: AxiosResponse) => {
+            return response.data.value;
+        }).catch((error) => {
+            console.log(error);
+            return error;
+        });
+    return res;
+}
+
+
+export const GetEmpSearch = async (pageSize: number, pageIndex: number, searchTerm: string) => {
+    //console.log(`${baseUrl}/${Employee}?page=${pageIndex}&pageSize=${pageSize}`);
+    const res = await baseUrl.get<EmployeeDto[]>(`${Employee}?searchTerm=${searchTerm}&page=${pageIndex}&pageSize=${pageSize}`)
+        //const res = await baseUrl.get<EmployeeDto[]>(`https://localhost:7057/api/employee?page=${pageIndex}&pageSize=${pageSize}`)
+        .then((response: AxiosResponse) => {
+            console.log(response.data.value);
+            return response.data.value;
+        }).catch((error) => {
+            console.log(error);
+            return error;
+        });
+    return res;
+}
+
+
+export const GetEmpStatus = async (pageSize: number, pageIndex: number, filterStatus: string) => {
+    const res = await baseUrl.get<EmployeeDto[]>(`${Employee}?filterStatus=${filterStatus}&page=${pageIndex}&pageSize=${pageSize}`)
+        .then((response: AxiosResponse) => {
+            console.log(response.data.value);
+            return response.data.value;
+        }).catch((error) => {
+            console.log(error);
+            return error;
+        });
+    return res;
+}
+
+export const GetEmpRole = async (pageSize: number, pageIndex: number, filterRole: string) => {
+    const res = await baseUrl.get<EmployeeDto[]>(`${Employee}?filterRole=${filterRole}&page=${pageIndex}&pageSize=${pageSize}`)
+        .then((response: AxiosResponse) => {
+            console.log(response.data.value);
+            return response.data.value;
+        }).catch((error) => {
+            console.log(error);
+            return error;
+        });
+    return res;
+}
+export const GetEmpGender = async (pageSize: number, pageIndex: number, filterGender: string) => {
+    const res = await baseUrl.get<EmployeeDto[]>(`${Employee}?filterGender=${filterGender}&page=${pageIndex}&pageSize=${pageSize}`)
+        .then((response: AxiosResponse) => {
+            console.log(response.data.value);
             return response.data.value;
         }).catch((error) => {
             console.log(error);

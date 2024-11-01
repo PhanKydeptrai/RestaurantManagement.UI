@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { EmployeeDto } from "../../models/employeeDto";
-import { DeleteEmployee, GetAllEmployees, GetEmpolyeeByStatus, RestoreEmployee } from "../../services/employee-service";
+import { DeleteEmployee, GetAllEmployee, GetEmp, GetEmpGender, GetEmpRole, GetEmpSearch, GetEmpStatus, RestoreEmployee } from "../../services/employee-service";
 import { sreachTerm } from "../../services/category-service";
 
 const EmployeePage = () => {
@@ -14,7 +14,7 @@ const EmployeePage = () => {
     const [totalCount, setTotalCount] = useState();
 
     const [searchTerm, setSearchTerm] = useState('');
-    const [filterStatus, setFilterStatus] = useState('');
+    const [filterStatus, setFilterStatus] = useState<string>('');
     const [filterGender, setFilterGender] = useState('');
     const [filterRole, setFilterRole] = useState('');
     const [sortColumn, setSortColumn] = useState('');
@@ -23,16 +23,16 @@ const EmployeePage = () => {
     useEffect(() => {
         const fetchData = async () => {
             console.log("fetching data");
-            const result = await GetAllEmployees(pageSize, pageIndex, sreachTerm);
-            console.log(result.items);
-            setEmployees(result.items);
-            setHasNextPage(result.hasNextPage);
-            setHasPreviousPage(result.haspreviousPage);
-            setTotalCount(result.totalCount);
+            const results = await GetAllEmployee(filterGender, filterRole, filterStatus, searchTerm, sortColumn, sortOrder, pageSize, pageIndex);
+            console.log(results.items);
+            setEmployees(results.items);
+            setHasNextPage(results.hasNextPage);
+            setHasPreviousPage(results.haspreviousPage);
+            setTotalCount(results.totalCount);
         };
         fetchData();
     }, [pageIndex, pageSize]); // Include pageSize in the dependency array
-
+    //#region Pagination
     const handlePreviousPage = () => {
         if (hasPreviousPage) { //nếu có trang trước đó
             setPageIndex(pageIndex - 1);
@@ -44,28 +44,44 @@ const EmployeePage = () => {
             setPageIndex(pageIndex + 1);
         }
     };
-
+    //#endregion
     // #region Filter
+    //#region filter status
     const handleFilterStatusChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const newFilterStatus = event.target.value;
-        setFilterStatus(newFilterStatus);
-        await handleFilterStatus(newFilterStatus);
-    }
-    const handleFilterStatus = async (newFilterStatus: string) => {
-        // if (event.key === 'Enter') {
-
-        // }
-        const results = await GetEmpolyeeByStatus(8, 1, newFilterStatus);
-        setPageIndex(1);
+        setFilterStatus(event.target.value);
+        const results = await GetEmpStatus(8, pageIndex, event.target.value);
+        setPageIndex(pageIndex);
         setEmployees(results.items);
-        setFilterStatus(filterStatus);
-        setHasNextPage(results.hasNextPage);
-        setHasPreviousPage(results.haspreviousPage);
-        setTotalCount(results.totalCount);
+        setFilterStatus(event.target.value);
+        setHasNextPage(false);
+        setHasPreviousPage(false);
+        setTotalCount(results.length);
 
     }
     //#endregion
-
+    //#region filter gender
+    const handleFilterGenderChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setFilterGender(event.target.value);
+        const results = await GetEmpGender(8, pageIndex, event.target.value);
+        setPageIndex(pageIndex);
+        setEmployees(results.items);
+        setFilterGender(event.target.value);
+        setHasNextPage(false);
+        setHasPreviousPage(false);
+        setTotalCount(results.length);
+    }
+    //#region filter role
+    const handleFilterRoleChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setFilterRole(event.target.value);
+        const results = await GetEmpRole(8, pageIndex, event.target.value);
+        setPageIndex(pageIndex);
+        setEmployees(results.items);
+        setFilterRole(event.target.value);
+        setHasNextPage(false);
+        setHasPreviousPage(false);
+        setTotalCount(results.length);
+    }
+    //#endregion
     //#region Search
     //truyền tham số cho searchTerm
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,8 +91,8 @@ const EmployeePage = () => {
     //Thực hiện search
     const handleSearchSubmit = async (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
-            const results = await GetAllEmployees(8, 1, searchTerm);
-            setPageIndex(1);
+            const results = await GetEmpSearch(8, pageIndex, searchTerm);
+            setPageIndex(pageIndex);
             setEmployees(results.items);
             setSearchTerm(searchTerm);
             setHasNextPage(results.hasNextPage);
@@ -85,12 +101,12 @@ const EmployeePage = () => {
         };
     }
     //#endregion
-
+    //#region Delete and Restore
     const handleDelete = async (id: string) => {
         try {
             console.log('Deleting empolyee with id: ', id);
             await DeleteEmployee(id);
-            const results = await GetAllEmployees(8, pageIndex, searchTerm);
+            const results = await GetAllEmployee(filterGender, filterRole, filterStatus, searchTerm, sortColumn, sortOrder, pageSize, pageIndex);
             setPageIndex(pageIndex);
             setEmployees(results.items);
             setSearchTerm(searchTerm);
@@ -105,7 +121,7 @@ const EmployeePage = () => {
         try {
             console.log('Restoring employee with id: ', id);
             await RestoreEmployee(id);
-            const results = await GetAllEmployees(8, pageIndex, searchTerm);
+            const results = await GetAllEmployee(filterGender, filterRole, filterStatus, searchTerm, sortColumn, sortOrder, pageSize, pageIndex);
             setPageIndex(pageIndex);
             setEmployees(results.items);
             setSearchTerm(searchTerm);
@@ -117,7 +133,7 @@ const EmployeePage = () => {
             console.log(error);
         }
     }
-
+    //#endregion
     return (
         <>
             <main className="">
@@ -136,19 +152,38 @@ const EmployeePage = () => {
                         <div className="col-md-2">
                             <a href="/createemployee"><button className="btn btn-success w-100">Create</button></a>
                         </div>
-                        <div className="col-md-2">
-                            <select className="form-select" onChange={handleFilterStatusChange}>
-                                <option value="">All</option>
+                        <div className="col-md-1">
+                            <select className="form-control" value={filterStatus} onChange={handleFilterStatusChange}>
+                                <option value="">Select</option>
                                 <option value="Active">Active</option>
-                                <option value="Deleted">Deleted</option>
+                                <option value="Deleted">Delete</option>
+
+                            </select>
+
+                        </div>
+
+                        <div className="col-md-2">
+                            <select className="form-control" value={filterRole} onChange={handleFilterRoleChange}>
+                                <option value="">Select</option>
+                                <option value="Boss">Admin</option>
+                                <option value="Manager">Manager</option>
+                                <option value="Receptionist">Receptionist</option>
+                                <option value="Waiter">Waiter</option>
+                                <option value="Cashier">Cashier</option>
+                                <option value="Chef">Chef</option>
                             </select>
                         </div>
-                        <div className="col-md-2"></div>
-
-                        <div className="col-md-2"></div>
+                        <div className="col-md-1">
+                            <select className="form-control" value={filterGender} onChange={handleFilterGenderChange}>
+                                <option value="">Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Orther">Orther</option>
+                            </select>
+                        </div>
 
                         {/* Component for search */}
-                        <div className="col-md-4"><input
+                        <div className="col-md-2"><input
                             className="form-control"
                             placeholder="Search by Name"
                             value={searchTerm}
@@ -216,7 +251,7 @@ const EmployeePage = () => {
                         </ul>
                     </nav>
                 </div>
-            </main>
+            </main >
         </>
     )
 }

@@ -41,6 +41,7 @@ const CategoryPage = () => {
     //#endregion
 
     //#region Search
+
     //truyền tham số cho searchTerm
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
@@ -59,7 +60,7 @@ const CategoryPage = () => {
         };
     }
     //#endregion
-
+    //#region Delete and Restore
     const handleDelete = async (id: string) => {
         try {
             console.log('Deleting category with id:', id);
@@ -92,7 +93,9 @@ const CategoryPage = () => {
             console.error('Failed to restore category:', error);
 
         };
+
     }
+    //#endregion
     return (
         <>
             <main className="">
