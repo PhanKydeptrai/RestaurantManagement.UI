@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { EmployeeDto } from "../../models/employeeDto";
 import { DeleteEmployee, GetAllEmployee, GetEmp, GetEmpGender, GetEmpRole, GetEmpSearch, GetEmpStatus, RestoreEmployee } from "../../services/employee-service";
-import { sreachTerm } from "../../services/category-service";
 
 const EmployeePage = () => {
 
@@ -109,7 +108,6 @@ const EmployeePage = () => {
             const results = await GetAllEmployee(filterGender, filterRole, filterStatus, searchTerm, sortColumn, sortOrder, pageSize, pageIndex);
             setPageIndex(pageIndex);
             setEmployees(results.items);
-            setSearchTerm(searchTerm);
             setHasNextPage(results.hasNextPage);
             setHasPreviousPage(results.haspreviousPage);
             setTotalCount(results.totalCount);
@@ -124,7 +122,6 @@ const EmployeePage = () => {
             const results = await GetAllEmployee(filterGender, filterRole, filterStatus, searchTerm, sortColumn, sortOrder, pageSize, pageIndex);
             setPageIndex(pageIndex);
             setEmployees(results.items);
-            setSearchTerm(searchTerm);
             setHasNextPage(results.hasNextPage);
             setHasPreviousPage(results.haspreviousPage);
             setTotalCount(results.totalCount);
@@ -154,7 +151,7 @@ const EmployeePage = () => {
                         </div>
                         <div className="col-md-1">
                             <select className="form-control" value={filterStatus} onChange={handleFilterStatusChange}>
-                                <option value="">Select</option>
+                                <option value="">Status</option>
                                 <option value="Active">Active</option>
                                 <option value="Deleted">Delete</option>
 
@@ -164,7 +161,7 @@ const EmployeePage = () => {
 
                         <div className="col-md-2">
                             <select className="form-control" value={filterRole} onChange={handleFilterRoleChange}>
-                                <option value="">Select</option>
+                                <option value="">Role</option>
                                 <option value="Boss">Admin</option>
                                 <option value="Manager">Manager</option>
                                 <option value="Receptionist">Receptionist</option>
@@ -175,7 +172,7 @@ const EmployeePage = () => {
                         </div>
                         <div className="col-md-1">
                             <select className="form-control" value={filterGender} onChange={handleFilterGenderChange}>
-                                <option value="">Select</option>
+                                <option value="">Gender</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                                 <option value="Orther">Orther</option>
