@@ -1,22 +1,27 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom"
 import { CustomerDto } from "../../models/customerDto";
-import { Customer, GetAllCustomers } from "../../services/customer-services";
+import { Customer, GetAllCustomer, GetCusGender, GetCusStatus, GetFilterTypeCus, GetSreachCus } from "../../services/customer-services";
 
 const CustomerPage = () => {
 
     const [customers, setCustomers] = useState<CustomerDto[]>([]);
     const [pageIndex, setPageIndex] = useState(1);
-    const [pageSize] = useState(8); // Setting page size to 8
+    const [pageSize, setPageSize] = useState(8); // Setting page size to 8
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPreviousPage, setHasPreviousPage] = useState(false);
     const [totalCount, setTotalCount] = useState();
     const [searchTerm, setSearchTerm] = useState('');
+    const [filterUserType, setFilterUserType] = useState('');
+    const [filterGender, setFilterGender] = useState('');
+    const [filterStatus, setFilterStatus] = useState('');
+    const [sortColumn, setSortColumn] = useState('');
+    const [sortOrder, setSortOrder] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
             console.log("fetching data");
-            const result = await GetAllCustomers(pageSize, pageIndex, searchTerm);
+            const result = await GetAllCustomer(filterUserType, filterGender, filterStatus, searchTerm, pageIndex, pageSize, sortColumn, sortOrder);
             console.log(result.items);
             setCustomers(result.items);
             setHasNextPage(result.hasNextPage);
@@ -25,7 +30,7 @@ const CustomerPage = () => {
         };
         fetchData();
     }, [pageIndex, pageSize]); // Include pageSize in the dependency array
-
+    //#region pagation
     const handlePreviousPage = () => {
         if (hasPreviousPage) { //nếu có trang trước đó
             setPageIndex(pageIndex - 1);
@@ -37,6 +42,45 @@ const CustomerPage = () => {
             setPageIndex(pageIndex + 1);
         }
     };
+    //#endregion
+    //#region  Filter user type
+    const handleFilterUserType = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setFilterUserType(event.target.value);
+        const results = await GetFilterTypeCus(event.target.value, pageIndex, 8);
+        setPageIndex(pageIndex);
+        setPageSize(pageSize);
+        setCustomers(results.items);
+        setFilterUserType(event.target.value);
+        setHasNextPage(results.hasNextPage);
+        setHasPreviousPage(results.haspreviousPage);
+        setTotalCount(results.totalCount);
+        console.log(results);
+    }
+    //#endregion
+    //#region Filter Gender
+    const handleFilterGenderChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setFilterGender(event.target.value);
+        const results = await GetCusGender(8, pageIndex, event.target.value);
+        setPageIndex(pageIndex);
+        setCustomers(results.items);
+        setFilterGender(event.target.value);
+        setHasNextPage(false);
+        setHasPreviousPage(false);
+        setTotalCount(results.length);
+    }
+    //#endregion
+    //#region Filter Status
+    const handleFilterStatusChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setFilterStatus(event.target.value);
+        const results = await GetCusStatus(8, pageIndex, event.target.value);
+        setPageIndex(pageIndex);
+        setCustomers(results.items);
+        setFilterStatus(event.target.value);
+        setHasNextPage(false);
+        setHasPreviousPage(false);
+        setTotalCount(results.length);
+    }
+    //#endregion
 
     //#region Search
     //truyền tham số cho searchTerm
@@ -47,8 +91,9 @@ const CustomerPage = () => {
     //Thực hiện search
     const handleSearchSubmit = async (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
-            const results = await GetAllCustomers(8, 1, searchTerm);
+            const results = await GetSreachCus(searchTerm, pageIndex, pageSize);
             setPageIndex(1);
+            setPageSize(8);
             setCustomers(results.items);
             setSearchTerm(searchTerm);
             setHasNextPage(results.hasNextPage);
@@ -57,6 +102,7 @@ const CustomerPage = () => {
         };
     }
     //#endregion
+
 
     return (
         <>
@@ -76,7 +122,27 @@ const CustomerPage = () => {
                         <div className="col-md-2">
                             {/* <a href="/createemployee"><button className="btn btn-success w-100">Create</button></a> */}
                         </div>
-                        <div className="col-md-6"></div>
+                        <div className="col-md-2">
+                            <select className="form-select" value={filterUserType} onChange={handleFilterUserType}>
+                                <option value="">All</option>
+                                <option value="Subscriber">Subscriber</option>
+                                <option value="">Customer</option>
+                            </select>
+                        </div>
+                        <div className="col-md-2">
+                            <select className="form-select" value={filterGender} onChange={handleFilterGenderChange}>
+                                <option value="">All</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female  </option>
+                            </select>
+                        </div>
+                        <div className="col-md-2">
+                            <select className="form-select" value={filterStatus} onChange={handleFilterStatusChange}>
+                                <option value="">All</option>
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                        </div>
                         {/* Component for search */}
                         <div className="col-md-4"><input
                             className="form-control"
