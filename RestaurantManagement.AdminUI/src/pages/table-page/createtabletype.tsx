@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { CreateTableType } from "../../services/tabletype-services";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const CreateTableTypePage = () => {
     const [tableTypeName, setTableTypeName] = useState('');
@@ -9,6 +9,9 @@ const CreateTableTypePage = () => {
     const [tablePrice, setTablePrice] = useState('');
     const [description, setDescription] = useState('');
     const [imageUrl, setImageUrl] = useState<string | null>(null);
+    const navigate = useNavigate();
+    const [errors, setErrors] = useState<{ tableTypeName?: string, status?: string, tablePrice?: string }>();
+
 
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,9 +36,44 @@ const CreateTableTypePage = () => {
             theme: "colored"
         });
     }
+    const notifyError = () => {
+        toast.error('Vui lòng kiểm tra lại!', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored"
+        });
+    }
+    const validationForm = () => {
+        const newErrors: { tableTypeName?: string, status?: string, tablePrice?: string } = {};
+        if (!tableTypeName) {
+            newErrors.tableTypeName = 'Vui lòng nhập tên loại bàn!';
+        }
+        if (!status) {
+            newErrors.status = 'Vui lòng nhập trạng thái!';
+        }
+        if (!tablePrice) {
+            newErrors.tablePrice = 'Vui lòng nhập giá bàn!';
+        }
+        if (isNaN(Number(tablePrice))) {
+            newErrors.tablePrice = 'Vui lòng nhập số!';
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+
+    }
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+        if (!validationForm()) {
+            notifyError();
+            return;
+        }
         const formData = new FormData();
         formData.append('tableTypeName', tableTypeName);
         formData.append('status', status);
@@ -48,6 +86,11 @@ const CreateTableTypePage = () => {
         console.log(response);
         if (response) {
             notifySucess();
+            setTimeout(() => {
+                navigate('/tables');
+            }, 2000);
+        } else {
+            notifyError();
         }
     }
     const handleFileSelect = () => {
@@ -64,7 +107,7 @@ const CreateTableTypePage = () => {
                     <div className="col ">
                         <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4 ">
                             <ol className="breadcrumb mb-0 ">
-                                <li className="breadcrumb-item"><Link to="/"><dt>Dashboard</dt></Link></li>
+                                <li className="breadcrumb-item"><Link to="/dashboard"><dt>Dashboard</dt></Link></li>
                                 <li className="breadcrumb-item active">TableType</li>
                                 <li className="breadcrumb-item active" aria-current="page">Create</li>
                             </ol>
@@ -75,10 +118,12 @@ const CreateTableTypePage = () => {
                     <div className="form-group">
                         <label htmlFor="tableTypeName">Tên loại bàn</label>
                         <input type="text" className="form-control" id="tableTypeName" placeholder="Tên loại bàn" value={tableTypeName} onChange={(e) => setTableTypeName(e.target.value)} />
+                        {errors?.tableTypeName && <div className="text-danger">{errors.tableTypeName}</div>}
                     </div>
                     <div className="form-group">
                         <label htmlFor="tablePrice">Giá bàn</label>
                         <input type="text" className="form-control" id="tablePrice" placeholder="Giá bàn" value={tablePrice} onChange={(e) => setTablePrice(e.target.value)} />
+                        {errors?.tablePrice && <div className="text-danger">{errors.tablePrice}</div>}
                     </div>
                     <div className="form-group">
                         <label htmlFor="description">Mô tả</label>
@@ -92,6 +137,7 @@ const CreateTableTypePage = () => {
                     <button type="submit" className="btn btn-primary">Submit</button>
                 </form>
             </main>
+            <ToastContainer />
         </>
     )
 }

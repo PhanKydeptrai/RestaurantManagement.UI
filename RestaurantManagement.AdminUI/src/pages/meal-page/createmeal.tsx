@@ -125,7 +125,7 @@ const CreateMealPage = () => {
                         <div className="col ">
                             <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4 ">
                                 <ol className="breadcrumb mb-0 ">
-                                    <li className="breadcrumb-item"><Link to="/"><dt>Dashboard</dt></Link></li>
+                                    <li className="breadcrumb-item"><Link to="/dashboard"><dt>Dashboard</dt></Link></li>
                                     <li className="breadcrumb-item"><Link to="/meals">Meals</Link></li>
                                     <li className="breadcrumb-item active" aria-current="page">Create</li>
                                 </ol>

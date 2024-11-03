@@ -12,7 +12,7 @@ const CreateEmployeePage = () => {
     const [gender, setGender] = useState('');
     const [role, setRole] = useState('');
     const navigate = useNavigate();
-    const [errors, setErrors] = useState<{ lastName?: string, fisrtName?: string, email: string, phoneNumber: string, role: string, gender: string }>();
+    const [errors, setErrors] = useState<{ lastName?: string, fisrtName?: string, email?: string, phoneNumber?: string, role?: string, gender?: string }>();
 
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -27,14 +27,8 @@ const CreateEmployeePage = () => {
         }
     };
     const validateForm = () => {
-        const newErrors: { lastName?: string, fisrtName?: string, email: string, phoneNumber: string, role: string, gender: string } = {
-            lastName: '',
-            fisrtName: '',
-            email: '',
-            phoneNumber: '',
-            role: '',
-            gender: ''
-        }
+        const newErrors: { lastName?: string, fisrtName?: string, email?: string, phoneNumber?: string, role?: string, gender?: string } = {};
+
         if (!lastName) {
             newErrors.lastName = "Vui lòng nhập họ";
         }
@@ -56,8 +50,8 @@ const CreateEmployeePage = () => {
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
-
     }
+
 
     const notifySucess = () => {
         toast.success('Thành công!', {

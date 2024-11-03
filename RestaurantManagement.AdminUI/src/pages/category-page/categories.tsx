@@ -1,7 +1,7 @@
 import { json, Link } from "react-router-dom";
 import { CategoryDto } from "../../models/categoryDto";
 import { useEffect, useState } from "react";
-import { DeleteCategory, GetAllCategories, RestoreCategory } from "../../services/category-service";
+import { DeleteCategory, GetAllCategory, GetCategory, GetCategoryFilter, GetCategorySearch, RestoreCategory } from "../../services/category-service";
 
 
 const CategoryPage = () => {
@@ -11,11 +11,15 @@ const CategoryPage = () => {
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPreviousPage, setHasPreviousPage] = useState(false);
     const [totalCount, setTotalCount] = useState();
+
     const [searchTerm, setSearchTerm] = useState('');
+    const [filter, setFilter] = useState('');
+    const [sortColumn, setSortColumn] = useState('');
+    const [sortOrder, setSortOrder] = useState('');
     useEffect(() => {
         const fetchData = async () => {
             console.log("fetching data");
-            const result = await GetAllCategories(pageSize, pageIndex, searchTerm);
+            const result = await GetAllCategory(filter, searchTerm, sortColumn, sortOrder, pageSize, pageIndex);
             console.log(result.items);
             setCategories(result.items);
             setHasNextPage(result.hasNextPage);
@@ -40,7 +44,21 @@ const CategoryPage = () => {
     };
     //#endregion
 
+    //#region filter
+    const handleFilterStatusChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setFilter(event.target.value);
+        const results = await GetCategoryFilter(8, pageIndex, event.target.value);
+        setPageIndex(pageIndex);
+        setCategories(results.items)
+        setFilter(event.target.value);
+        setHasNextPage(false);
+        setHasPreviousPage(false);
+        setTotalCount(results.length);
+    }
+    //#endregion
+
     //#region Search
+
     //truyền tham số cho searchTerm
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
@@ -49,7 +67,7 @@ const CategoryPage = () => {
     //Thực hiện search
     const handleSearchSubmit = async (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
-            const results = await GetAllCategories(8, 1, searchTerm);
+            const results = await GetCategorySearch(8, 1, searchTerm);
             setPageIndex(1);
             setCategories(results.items);
             setSearchTerm(searchTerm);
@@ -59,16 +77,15 @@ const CategoryPage = () => {
         };
     }
     //#endregion
-
+    //#region Delete and Restore
     const handleDelete = async (id: string) => {
         try {
             console.log('Deleting category with id:', id);
             await DeleteCategory(id);
-            const results = await GetAllCategories(8, pageIndex, searchTerm);
+            const results = await GetAllCategory(filter, searchTerm, sortColumn, sortOrder, pageSize, pageIndex);
 
             setPageIndex(pageIndex);
             setCategories(results.items);
-            setSearchTerm(searchTerm);
             setHasNextPage(results.hasNextPage);
             setHasPreviousPage(results.haspreviousPage);
             setTotalCount(results.totalCount);
@@ -81,10 +98,9 @@ const CategoryPage = () => {
         try {
             console.log('Restoring category with id:', id);
             await RestoreCategory(id);
-            const results = await GetAllCategories(8, pageIndex, searchTerm);
+            const results = await GetAllCategory(filter, searchTerm, sortColumn, sortOrder, pageSize, pageIndex);
             setPageIndex(pageIndex);
             setCategories(results.items);
-            setSearchTerm(searchTerm);
             setHasNextPage(results.hasNextPage);
             setHasPreviousPage(results.haspreviousPage);
             setTotalCount(results.totalCount);
@@ -92,7 +108,9 @@ const CategoryPage = () => {
             console.error('Failed to restore category:', error);
 
         };
+
     }
+    //#endregion
     return (
         <>
             <main className="">
@@ -111,7 +129,16 @@ const CategoryPage = () => {
                         <div className="col-md-2">
                             <Link to="/categories/createcategory"><button className="btn btn-success w-100">Create</button></Link>
                         </div>
-                        <div className="col-md-6"></div>
+                        <div className="col-md-1">
+                            <select className="form-control" value={filter} onChange={handleFilterStatusChange}>
+                                <option value="">Status</option>
+                                <option value="Active">Active</option>
+                                <option value="Deleted">Delete</option>
+
+                            </select>
+
+                        </div>
+                        <div className="col-md-5"></div>
                         {/* Component for search */}
                         <div className="col-md-4"><input
                             className="form-control"

@@ -1,4 +1,4 @@
-import { Routes, Route, Router } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Home from "./pages/dashboard/home";
 import CategoryPage from "./pages/category-page/categories";
 import CreateCategoryPage from "./pages/category-page/createcategory";
@@ -22,6 +22,7 @@ import CreateTablePage from "./pages/table-page/createtable";
 import VoucherPage from "./pages/voucher-page/vouchers";
 import CreateVoucherPage from "./pages/voucher-page/createvoucher";
 import AccountPage from "./pages/account-page/account";
+import { RefactorGetAllEmployee } from "./services/employee-service";
 
 
 function Controller() {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import { CategoryInfo } from "./createmeal";
 import axios from "axios";
 import { UpdateMeal } from "../../services/meal-services";
@@ -127,7 +127,15 @@ const UpdateMealPage = () => {
         <>
             <main className="container">
                 <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 className="h2">Update Meal</h1>
+                    <div className="col ">
+                        <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4 ">
+                            <ol className="breadcrumb mb-0 ">
+                                <li className="breadcrumb-item"><Link to="/dashboard"><dt>Dashboard</dt></Link></li>
+                                <li className="breadcrumb-item"><Link to="/meals">Meals</Link></li>
+                                <li className="breadcrumb-item active" aria-current="page">Update</li>
+                            </ol>
+                        </nav>
+                    </div>
                 </div>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
