@@ -22,6 +22,8 @@ import CreateTablePage from "./pages/table-page/createtable";
 import VoucherPage from "./pages/voucher-page/vouchers";
 import CreateVoucherPage from "./pages/voucher-page/createvoucher";
 import AccountPage from "./pages/account-page/account";
+import BookingPage from "./pages/booking-page/booking";
+import DetailBookingPage from "./pages/booking-page/bookingdetail";
 
 
 function Controller() {
@@ -126,6 +128,16 @@ function Controller() {
                     <ProtectedRoute>
                         <CreateVoucherPage />
 
+                    </ProtectedRoute>
+                } />
+                <Route path="/bookings" element={
+                    <ProtectedRoute>
+                        <BookingPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="bookings/bookingdetail/:bookId" element={
+                    <ProtectedRoute>
+                        <DetailBookingPage />
                     </ProtectedRoute>
                 } />
             </Routes>

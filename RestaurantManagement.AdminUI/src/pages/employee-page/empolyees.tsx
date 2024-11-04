@@ -44,7 +44,6 @@ const EmployeePage = () => {
         }
     };
     //#endregion
-    // #region Filter
     //#region filter status
     const handleFilterStatusChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
         setFilterStatus(event.target.value);
