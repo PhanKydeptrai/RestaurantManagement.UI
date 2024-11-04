@@ -31,6 +31,7 @@ export const GetTableTypeInfo = async () => {
 
 export const CreateTableType = async (formData: FormData) => {
     const res = await baseUrlPost.postForm(`${TableType}`, formData)
+    console.log(res);
     return res.data;
 }
 export const DeleteTableType = async (tableTypeId: string) => {

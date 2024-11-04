@@ -8,9 +8,10 @@ const CreateTableTypePage = () => {
     const [status, setStatus] = useState('');
     const [tablePrice, setTablePrice] = useState('');
     const [description, setDescription] = useState('');
+    const [tableCapacity, setTableCapacity] = useState('');
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const navigate = useNavigate();
-    const [errors, setErrors] = useState<{ tableTypeName?: string, status?: string, tablePrice?: string }>();
+    const [errors, setErrors] = useState<{ tableTypeName?: string, status?: string, tablePrice?: string, tableCapacity?: string }>();
 
 
     const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -49,18 +50,24 @@ const CreateTableTypePage = () => {
         });
     }
     const validationForm = () => {
-        const newErrors: { tableTypeName?: string, status?: string, tablePrice?: string } = {};
+        const newErrors: { tableTypeName?: string, status?: string, tablePrice?: string, tableCapacity?: string } = {};
         if (!tableTypeName) {
             newErrors.tableTypeName = 'Vui lòng nhập tên loại bàn!';
         }
-        if (!status) {
-            newErrors.status = 'Vui lòng nhập trạng thái!';
-        }
+        // if (!status) {
+        //     newErrors.status = 'Vui lòng nhập trạng thái!';
+        // }
         if (!tablePrice) {
             newErrors.tablePrice = 'Vui lòng nhập giá bàn!';
         }
         if (isNaN(Number(tablePrice))) {
             newErrors.tablePrice = 'Vui lòng nhập số!';
+        }
+        if (!tableCapacity) {
+            newErrors.tableCapacity = 'Vui lòng nhập số lượng!';
+        }
+        if (isNaN(Number(tableCapacity))) {
+            newErrors.tableCapacity = 'Vui lòng nhập số!';
         }
 
         setErrors(newErrors);
@@ -79,9 +86,11 @@ const CreateTableTypePage = () => {
         formData.append('status', status);
         formData.append('tablePrice', tablePrice);
         formData.append('description', description);
+        formData.append('tableCapacity', tableCapacity);
         if (fileInputRef.current && fileInputRef.current.files) {
             formData.append('imageUrl', fileInputRef.current.files[0]);
         }
+
         const response = await CreateTableType(formData);
         console.log(response);
         if (response) {
@@ -124,6 +133,11 @@ const CreateTableTypePage = () => {
                         <label htmlFor="tablePrice">Giá bàn</label>
                         <input type="text" className="form-control" id="tablePrice" placeholder="Giá bàn" value={tablePrice} onChange={(e) => setTablePrice(e.target.value)} />
                         {errors?.tablePrice && <div className="text-danger">{errors.tablePrice}</div>}
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="tableCapacity">Số lượng</label>
+                        <input type="text" className="form-control" id="tableCapacity" placeholder="Số lượng" value={tableCapacity} onChange={(e) => setTableCapacity(e.target.value)} />
+                        {errors?.tableCapacity && <div className="text-danger">{errors.tableCapacity}</div>}
                     </div>
                     <div className="form-group">
                         <label htmlFor="description">Mô tả</label>

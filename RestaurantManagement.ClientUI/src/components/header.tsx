@@ -70,7 +70,7 @@ const HeaderComponent = () => {
                         <Link to='/login'></Link>Login
                     </Menu.Item>
                     <Menu.Item key="signin" style={menuItemsStyle}>
-                        <Link to='/signin'></Link>Sign In
+                        <Link to='/register'></Link>Sign In
                     </Menu.Item>
                 </SubMenu>
             </Menu>

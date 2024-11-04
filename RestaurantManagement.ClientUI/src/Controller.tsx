@@ -10,6 +10,8 @@ import LoginPage from "./pages/auth/login";
 import RegisterPage from "./pages/auth/register";
 import ResetPasswordPage from "./pages/auth/resetpassword";
 import MenuPage from "./pages/menu/menu";
+import ProtectedRoute from "./components/protectedroute/protechtedroute";
+import BookFormOfSubcribe from "./components/bookform/bookformofSubcribe";
 
 function ControllerPage() {
 
@@ -65,6 +67,13 @@ function ControllerPage() {
                 />
                 <Route path="/meals" element={
                     <MealPage />
+                }
+                />
+
+                <Route path="/booksubcribe" element={
+                    <ProtectedRoute>
+                        <BookFormOfSubcribe />
+                    </ProtectedRoute>
                 }
                 />
             </Routes>

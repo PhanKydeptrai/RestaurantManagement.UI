@@ -1,88 +1,170 @@
 import { DatePicker, Form, FormProps, Input, InputNumber, TimePicker } from "antd";
 import { useState } from "react";
-
-const containerStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+import { CreateBooking } from "../../services/book-services";
+import dayjs, { Dayjs } from 'dayjs';
 
 
-};
-const formStyle: React.CSSProperties = {
-    width: '100%',
-    maxWidth: '600px',
-};
-
-const formItemLayout = {
-    labelCol: {
-        xs: { span: 24 },
-        sm: { span: 6 },
-    },
-    wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 14 },
-    },
-};
 const BookFormOfNormal = () => {
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [bookingDate, setBookingDate] = useState('');
+    const [bookingTime, setBookingTime] = useState('');
+    const [numberOfCustomer, setNumberOfCustomer] = useState(0);
+    const [note, setNote] = useState('');
+
+
     const [componentVariant, setComponentVariant] = useState<FormProps['variant']>('filled');
 
     const onFormVariantChange = ({ variant }: { variant: FormProps['variant'] }) => {
         setComponentVariant(variant);
     };
+
+    const handleTimeChange = (e: any) => {
+        setBookingTime(e.target.value);
+    };
+
+    const saveTime = () => {
+        const fullTime = `${bookingTime}:00`; // thêm giây là 00
+        console.log('Thời gian đã lưu:', fullTime);
+        // Có thể lưu giá trị này vào nơi bạn cần, ví dụ: gửi lên server hoặc lưu vào state khác
+    };
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        console.log('submit');
+
+        const data = {
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            phoneNumber: phoneNumber,
+            bookingDate: bookingDate,
+            bookingTime: `${bookingTime}:00`,
+            numberOfCustomer: numberOfCustomer,
+            note: note
+        }
+        console.log("Data be sent: ", data);
+        try {
+            const res = CreateBooking(data);
+            console.log("this is res: ", res);
+        } catch (error) {
+            console.log("this is error: ", error);
+
+
+        }
+    }
+
+
     return (
         <>
-            <h2 className="text-center">Book For Table</h2>
-            <div className="container" style={containerStyle}>
-
-
-                <form {...formItemLayout}
-                    // onVolumeChange={onFormVariantChange}
-                    // variant={componentVariant}
-                    style={formStyle}
-                // initialValues={{ variant: componentVariant }}
-                >
-                    <Form.Item label="Fisrt Name" name="Input" rules={[{ required: true, message: 'Please input!' }]}>
-                        <Input />
-                    </Form.Item>
-                    <Form.Item label="Last Name" name="Input" rules={[{ required: true, message: 'Please input!' }]}>
-                        <Input />
-                    </Form.Item>
-                    <Form.Item label="Email @" name="Input" rules={[{ required: true, message: 'Please input!' }]}>
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        label="Phone Number"
-                        name="InputNumber"
-                        rules={[{ required: true, message: 'Please input!' }]}>
-                        <InputNumber style={{ width: '100%' }} />
-                    </Form.Item>
-                    <div className="row">
-                        <Form.Item
-                            label="Day"
-                            name="DatePicker"
-                            rules={[{ required: true, message: 'Please input!' }]}
-                        >
-                            <DatePicker />
-                        </Form.Item>
-
-                        <Form.Item
-                            label="Time"
-                            name="TimePicker"
-                            rules={[{ required: true, message: 'Please input!' }]}
-                        >
-                            <TimePicker style={{ width: '100%' }} />
-                        </Form.Item>
+            <h2 className="text-center my-4">Book For Table</h2>
+            <div className="container">
+                <form onSubmit={handleSubmit}>
+                    <div className="row mb-3">
+                        <div className="col-md-6">
+                            <label>First Name</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                value={firstName}
+                                onChange={(e) => setFirstName(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="col-md-6">
+                            <label>Last Name</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                value={lastName}
+                                onChange={(e) => setLastName(e.target.value)}
+                                required
+                            />
+                        </div>
                     </div>
-                    <Form.Item
-                        label="Note"
-                        name="TextArea"
-                        rules={[{ required: true, message: 'Please input!' }]}
-                    >
-                        <Input.TextArea />
-                    </Form.Item>
+
+                    <div className="row mb-3">
+                        <div className="col-md-6">
+                            <label>Email</label>
+                            <input
+                                type="email"
+                                className="form-control"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+
+                            />
+                        </div>
+                        <div className="col-md-6">
+                            <label>Phone Number</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                value={phoneNumber}
+                                onChange={(e) => setPhoneNumber(e.target.value)}
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div className="row mb-3">
+                        <div className="col-md-6">
+                            <label>Day</label>
+                            <input
+                                type="date"
+                                className="form-control"
+                                value={bookingDate}
+                                onChange={(e) => setBookingDate(e.target.value)}
+
+                            />
+                        </div>
+                        <div className="col-md-6">
+                            <label>Time</label>
+                            <input
+                                type="time"
+                                className="form-control"
+                                value={bookingTime}
+                                onChange={handleTimeChange}
+
+                            />
+                        </div>
+                    </div>
+
+                    <div className="row mb-3">
+                        <div className="col-md-6">
+                            <label>Number Of People</label>
+                            <input
+                                type="number"
+                                className="form-control"
+                                value={numberOfCustomer}
+                                onChange={(e) => setNumberOfCustomer(parseInt(e.target.value))}
+
+                            />
+                        </div>
+                        <div className="col-md-6">
+                            <label>Note</label>
+                            <textarea
+                                className="form-control"
+                                value={note}
+                                onChange={(e) => setNote(e.target.value)}
+
+                            />
+                        </div>
+                    </div>
+
+                    <div className="text-center my-4">
+                        <button
+                            type="submit"
+                            onClick={saveTime}
+                            className="btn btn-success"
+                        >
+                            Book Now
+                        </button>
+                    </div>
                 </form>
-            </div >
+            </div>
         </>
+
     );
 }
 
