@@ -20,7 +20,7 @@ const CreateTablePage = () => {
             .then(response => response.json())
             .then(data => setTableTypeInfo(data.value))
             .catch(error => console.log(error))
-    })
+    }, []);
 
     const handleTableTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedTableType = tableTypeInfo.find(table => table.tableTypeId === event.target.value);

@@ -32,7 +32,7 @@ const SliderBar = () => {
                                                     </a>
                                                     <ul className="dropdown-menu">
                                                         <li><a href="/AdminLayout/BossLayout/listorder.html" className="dropdown-item">Ordering</a></li>
-                                                        <li><a href="/AdminLayout/BossLayout/listbook.html" className="dropdown-item">Booking</a></li>
+                                                        <li><a href="/bookings" className="dropdown-item">Booking</a></li>
                                                     </ul>
                                                 </li>
 

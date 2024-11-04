@@ -31,6 +31,7 @@ export const GetCategory = async (pageSize: number, pageIndex: number) => {
     return res;
 }
 
+
 export const GetCategorySearch = async (pageSize: number, pageIndex: number, searchTerm: string) => {
     const res = await baseUrl.get<CategoryDto[]>(`${Category}?searchTerm=${searchTerm}&page=${pageIndex}&pageSize=${pageSize}`)
         .then((response: AxiosResponse) => {
