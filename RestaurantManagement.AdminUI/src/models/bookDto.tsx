@@ -13,3 +13,9 @@ export interface BookDto {
     numberOfCustomer: number;
     note: string;
 }
+
+export interface Arange {
+    bookingId: string;
+    tableId: string;
+    tableTypeName: string;
+}

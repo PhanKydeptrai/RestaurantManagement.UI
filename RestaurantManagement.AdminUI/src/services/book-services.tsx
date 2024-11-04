@@ -1,6 +1,7 @@
 import { Axios, AxiosResponse } from "axios";
 import baseUrl from "../apis/base";
-import { BookDto } from "../models/bookDto";
+import { Arange, BookDto } from "../models/bookDto";
+import baseUrlDelete from "../apis/basedelete";
 
 export const Booking = "booking";
 
@@ -26,5 +27,17 @@ export const GetBookingById = async (bookId: string) => {
     } catch (error) {
         console.error("Error fetching booking by id:", error);
         return null;
+    }
+}
+
+export const CreateArangeBooking = async (BookingId: string, arangebook: Arange) => {
+    try {
+        const response: AxiosResponse = await baseUrlDelete.post(`${Booking}/table-arrange/${BookingId}`, arangebook);
+        console.log(response.data);
+        return response.data;
+
+    }
+    catch (error) {
+        console.error("Error creating arange booking:", error);
     }
 }

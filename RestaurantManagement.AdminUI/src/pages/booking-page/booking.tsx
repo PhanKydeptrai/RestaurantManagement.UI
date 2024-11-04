@@ -93,7 +93,7 @@ const BookingPage = () => {
                                     }
                                     >{booking.paymentStatus}</td>
                                     <td>
-                                        <Link to={``} className="btn btn-success">Assign</Link>
+                                        <Link to={`/arrangebooking/${booking.bookId}`} className="btn btn-success">Assign</Link>
                                         <Link to={`bookingdetail/${booking.bookId}`} className="btn btn-info">Detail</Link>
 
                                     </td>
