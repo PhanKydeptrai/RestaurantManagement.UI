@@ -133,7 +133,7 @@ const CategoryPage = () => {
                             <select className="form-control" value={filter} onChange={handleFilterStatusChange}>
                                 <option value="">Status</option>
                                 <option value="Active">Active</option>
-                                <option value="Deleted">Delete</option>
+                                <option value="InActive">InActive</option>
 
                             </select>
 
