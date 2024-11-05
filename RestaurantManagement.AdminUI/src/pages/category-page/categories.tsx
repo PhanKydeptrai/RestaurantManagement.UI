@@ -186,7 +186,7 @@ const CategoryPage = () => {
 
                         <div className="col-md-2">
                             <select className="form-control" value={sortOrder} onChange={(e) => handleSortChangeColumn(e, 'order')}>
-                                <option value="asc">Ascending</option>
+                                <option value="esc">Ascending</option>
                                 <option value="desc">Descending</option>
                             </select>
                         </div>
