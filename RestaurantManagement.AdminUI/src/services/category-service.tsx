@@ -54,6 +54,17 @@ export const GetCategoryFilter = async (pageSize: number, pageIndex: number, fil
         })
     return res;
 }
+export const SortCategory = async (pageSize: number, pageIndex: number, sortColumn: string, sortOrder: string) => {
+    const res = await baseUrl.get<CategoryDto[]>(`${Category}?sortColumn=${sortColumn}&sortOrder=${sortOrder}&page=${pageIndex}&pageSize=${pageSize}`)
+        .then((response: AxiosResponse) => {
+            console.log(response.data.value);
+            return response.data.value;
+        }).catch((error) => {
+            console.log(error);
+            return error;
+        });
+    return res;
+}
 export const GetAllCategories = async (pageSize: number, pageIndex: number, searchTerm: string) => {
     //console.log(`${baseUrl}/${Category}?page=${pageIndex}&pageSize=${pageSize}`);
     const res = await baseUrl.get<CategoryDto[]>(`${Category}?page=${pageIndex}&pageSize=${pageSize}&searchTerm=${searchTerm}`)
