@@ -30,3 +30,14 @@ export const RestoreTable = async (tableId: string) => {
     return res.data;
 }
 
+export const GetOrderDetail = async (tableId: string) => {
+    try {
+        const response: AxiosResponse = await baseUrl.get(`${Table}/${tableId}`);
+        console.log(response.data);
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching order by id:", error);
+        return null;
+    }
+}

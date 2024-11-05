@@ -89,29 +89,29 @@ const CategoryPage = () => {
         setHasPreviousPage(results.haspreviousPage);
         setTotalCount(results.totalCount);
     }
-    const handleSortChangeColumn = async (event: React.ChangeEvent<HTMLSelectElement>, type: 'column' | 'order') => {
-        if (type === 'column') {
-            setSortColumn(event.target.value);
-            console.log(sortColumn);
-        } else {
-            setSortOrder(event.target.value);
-            const results = await SortCategory(8, pageIndex, sortColumn, event.target.value);
-            setPageIndex(pageIndex);
-            setCategories(results.items);
-            setSortColumn(sortColumn);
-            setSortOrder(event.target.value);
-            setHasNextPage(results.hasNextPage);
-            setHasPreviousPage(results.haspreviousPage);
-            setTotalCount(results.totalCount);
-        }
-        const column = type === 'column' ? event.target.value : sortColumn;
-        const order = type === 'order' ? event.target.value : sortOrder;
-        const results = await SortCategory(8, pageIndex, column, order);
+    const handleSortChangeColumn = async (event: React.ChangeEvent<HTMLSelectElement>, type: 'column' & 'order') => {
+        // if (type === 'column') {
+        //     setSortColumn(event.target.value);
+        //     console.log(sortColumn);
+        // } else {
+        setSortOrder(event.target.value);
+        const results = await SortCategory(8, pageIndex, event.target.value, event.target.value);
         setPageIndex(pageIndex);
         setCategories(results.items);
+        setSortColumn(event.target.value);
+        setSortOrder(event.target.value);
         setHasNextPage(results.hasNextPage);
         setHasPreviousPage(results.haspreviousPage);
         setTotalCount(results.totalCount);
+
+        // const column = type === 'column' ? event.target.value : sortColumn;
+        // const order = type === 'order' ? event.target.value : sortOrder;
+        // const results = await SortCategory(8, pageIndex, column, order);
+        // setPageIndex(pageIndex);
+        // setCategories(results.items);
+        // setHasNextPage(results.hasNextPage);
+        // setHasPreviousPage(results.haspreviousPage);
+        // setTotalCount(results.totalCount);
     }
 
     //#endregion
@@ -177,7 +177,7 @@ const CategoryPage = () => {
 
                         </div>
                         <div className="col-md-2">
-                            <select className="form-control" value={sortColumn} onChange={(e) => handleSortChangeColumn(e, 'column')}>
+                            <select className="form-control" value={sortColumn} >
                                 <option value="">SortColumn</option>
                                 <option value="name">A-Z</option>
 
@@ -185,7 +185,7 @@ const CategoryPage = () => {
                         </div>
 
                         <div className="col-md-2">
-                            <select className="form-control" value={sortOrder} onChange={(e) => handleSortChangeColumn(e, 'order')}>
+                            <select className="form-control" value={sortOrder} onChange={handleSortChange}>
                                 <option value="esc">Ascending</option>
                                 <option value="desc">Descending</option>
                             </select>

@@ -25,6 +25,7 @@ import AccountPage from "./pages/account-page/account";
 import BookingPage from "./pages/booking-page/booking";
 import DetailBookingPage from "./pages/booking-page/bookingdetail";
 import ArrangeBookPage from "./pages/booking-page/arangebook";
+import OrderDetailPage from "./pages/order-page/orderDetail";
 
 
 function Controller() {
@@ -144,6 +145,11 @@ function Controller() {
                 <Route path="/arrangebooking/:BookingId" element={
                     <ProtectedRoute>
                         <ArrangeBookPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/tableorder/:tableId" element={
+                    <ProtectedRoute>
+                        <OrderDetailPage />
                     </ProtectedRoute>
                 } />
             </Routes>
