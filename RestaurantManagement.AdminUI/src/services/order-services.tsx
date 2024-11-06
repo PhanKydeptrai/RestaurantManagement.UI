@@ -14,3 +14,4 @@ export const GetOrderDetail = async (orderId: string) => {
         return null;
     }
 }
+

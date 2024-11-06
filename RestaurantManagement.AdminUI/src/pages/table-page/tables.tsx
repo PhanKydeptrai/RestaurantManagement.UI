@@ -140,8 +140,13 @@ const TableTypePage = () => {
                                             <td>{table.tableId}</td>
                                             <td>{table.tableTypeName}</td>
                                             <td className={table.tableStatus === 'empty' ? 'text-danger' : 'text-success'}>{table.tableStatus}</td>
-                                            <td className={table.activeStatus === 'active' ? 'text-success' : 'text-danger'}>{table.activeStatus}</td>
-                                            <td>
+                                            <td className={
+                                                table.activeStatus === 'Occupied' ? 'text-success' :
+                                                    table.activeStatus === 'Empty' ? 'text-danger' :
+                                                        table.activeStatus === 'Booked' ? 'text-info' : ''
+                                            }>
+                                                {table.activeStatus}
+                                            </td>                                            <td>
                                                 {table.tableStatus === 'Active' ? (
                                                     <button className="btn btn-danger" onClick={() => handleDelete(table.tableId)}>Delete</button>
                                                 ) : (
