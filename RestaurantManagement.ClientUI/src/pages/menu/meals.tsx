@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
-import { GetAllMeals } from "../../services/meal-services";
+import { GetAllCategory, GetAllMeal, GetAllMeals } from "../../services/meal-services";
 import { MealDto } from "../../models/mealDto";
 import { Link } from "react-router-dom";
+import { CategoryDto } from "../../models/categoryDto";
 
+export interface CategoryInfo {
+    categoryId: string;
+    categoryName: string;
+}
 const MealPage = () => {
     const [meals, setMeals] = useState<MealDto[]>([]);
     const [pageIndex, setPageIndex] = useState(1);
@@ -10,7 +15,14 @@ const MealPage = () => {
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPreviousPage, setHasPreviousPage] = useState(false);
     const [totalCount, setTotalCount] = useState();
+    const [categoryinfo, setCategoryInfo] = useState<CategoryInfo[]>([]);
+
     const [searchTerm, setSearchTerm] = useState('');
+    const [filterCategory, setFilterCategory] = useState('');
+    const [filterSellStatus, setFilterSellStatus] = useState('');
+    const [filterMealStatus, setFilterMealStatus] = useState('');
+    const [sortColumn, setSortColumn] = useState('');
+    const [sortOrder, setSortOrder] = useState('');
     useEffect(() => {
         const fetchData = async () => {
             console.log("fetching data");
@@ -23,6 +35,13 @@ const MealPage = () => {
         };
         fetchData();
     }, [pageIndex, pageSize]); // Include pageSize in the dependency array
+    useEffect(() => {
+        fetch('https://localhost:7057/api/category/category-info')
+            .then(response => response.json())
+            .then(data => setCategoryInfo(data.value))
+            .catch(error => console.log(error))
+
+    });
 
     //#region Pagination
     // Xử lý chuyển trang 
@@ -37,6 +56,22 @@ const MealPage = () => {
             setPageIndex(pageIndex + 1);
         }
     };
+    //#endregion
+    //#region filter
+    const handleFilterCategoryChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const results = await GetAllMeal(e.target.value, filterSellStatus, filterMealStatus, searchTerm, sortColumn, sortOrder, pageIndex, pageSize);
+        setMeals(results.items);
+        setFilterCategory(e.target.value);
+        setFilterSellStatus(filterSellStatus);
+        setFilterMealStatus(filterMealStatus);
+        setSearchTerm(searchTerm);
+        setSortColumn(sortColumn);
+        setSortOrder(sortOrder);
+        setPageIndex(1);
+        setHasNextPage(results.hasNextPage);
+        setHasPreviousPage(results.haspreviousPage);
+        setTotalCount(results.totalCount);
+    }
     //#endregion
 
     return (
@@ -57,13 +92,13 @@ const MealPage = () => {
                                     // onChange={handleSearch}
                                     />
                                     <h6 className="mt-3">Phân loại</h6>
-                                    <select className="form-select"
-                                    //</div>onChange={handleFilterChange}
-                                    >
-                                        <option value="">Tất cả</option>
-                                        {/* Thêm các phân loại món ăn tại đây */}
-                                        <option value="category1">Phân loại 1</option>
-                                        <option value="category2">Phân loại 2</option>
+                                    <select onChange={handleFilterCategoryChange} value={filterCategory}>
+                                        <option value="">Select Category</option>
+                                        {
+                                            categoryinfo.map((category) => (
+                                                <option key={category.categoryId} value={category.categoryId}>{category.categoryName}</option>
+                                            ))
+                                        }
                                     </select>
                                 </div>
                             </div>

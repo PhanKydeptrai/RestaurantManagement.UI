@@ -25,8 +25,9 @@ import AccountPage from "./pages/account-page/account";
 import BookingPage from "./pages/booking-page/booking";
 import DetailBookingPage from "./pages/booking-page/bookingdetail";
 import ArrangeBookPage from "./pages/booking-page/arangebook";
-import OrderDetailPage from "./pages/order-page/orderDetail";
-
+import OrderDetailPage from "./pages/order-page/orderdetail";
+import OrderPage from "./pages/order-page/orders";
+import CreateOrderPage from "./pages/order-page/createorder";
 
 function Controller() {
     return (
@@ -150,6 +151,16 @@ function Controller() {
                 <Route path="/tableorder/:tableId" element={
                     <ProtectedRoute>
                         <OrderDetailPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/orders" element={
+                    <ProtectedRoute>
+                        <OrderPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/order/create/:tableId" element={
+                    <ProtectedRoute>
+                        <CreateOrderPage />
                     </ProtectedRoute>
                 } />
             </Routes>

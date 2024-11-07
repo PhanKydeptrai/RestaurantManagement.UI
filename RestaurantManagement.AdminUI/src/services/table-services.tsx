@@ -41,3 +41,8 @@ export const GetOrderDetail = async (tableId: string) => {
         return null;
     }
 }
+
+export const GetAllForOrder = async (filterTableType: string, filterActiveStatus: string, filterStatus: string, sortColumn: string, sortOrder: string, page: number, pageSize: number) => {
+    const res = await baseUrl.get(`${Table}?filterTableType=${filterTableType}&filterActiveStatus=${filterActiveStatus}&filterStatus=${filterStatus}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&page=${page}&pageSize=${pageSize}`);
+    return res.data;
+}
