@@ -46,3 +46,36 @@ export const GetAllForOrder = async (filterTableType: string, filterActiveStatus
     const res = await baseUrl.get(`${Table}?filterTableType=${filterTableType}&filterActiveStatus=${filterActiveStatus}&filterStatus=${filterStatus}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&page=${page}&pageSize=${pageSize}`);
     return res.data;
 }
+
+export const GetAllTableOfStatusEmpty = async (filterTableType: string, filterActiveStatus: string, filterStatus: string, sortColumn: string, sortOrder: string, page: number, pageSize: number) => {
+    try {
+        const res = await baseUrl.get(`${Table}?filterTableType=${filterTableType}&filterActiveStatus=${filterActiveStatus}&filterStatus=${filterStatus}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&page=${page}&pageSize=${pageSize}`);
+        console.log(filterActiveStatus);
+        return res.data;
+    }
+    catch (error) {
+        console.error("Error fetching table of status empty:", error);
+        return null;
+    }
+}
+export const AssignTableforCustomer = async (tableId: string) => {
+    try {
+        const res = await baseUrlDelete.put(`${Table}/table-assign/${tableId}`)
+        return res.data;
+    } catch (error) {
+        console.error("Error assigning table for customer:", error);
+        return null;
+    }
+
+}
+
+export const UnAssignTableforCustomer = async (tableId: string) => {
+    try {
+        const res = await baseUrlDelete.put(`${Table}/table-unassign/${tableId}`)
+        return res.data;
+    } catch (error) {
+        console.error("Error unassigning table for customer:", error);
+        return null;
+    }
+
+}

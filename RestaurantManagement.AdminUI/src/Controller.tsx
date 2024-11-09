@@ -28,6 +28,7 @@ import ArrangeBookPage from "./pages/booking-page/arangebook";
 import OrderDetailPage from "./pages/order-page/orderdetail";
 import OrderPage from "./pages/order-page/orders";
 import CreateOrderPage from "./pages/order-page/createorder";
+import AssignCustomerPage from "./pages/table-page/assigncustomer";
 
 function Controller() {
     return (
@@ -166,6 +167,11 @@ function Controller() {
                 <Route path="/orders/:tableId" element={
                     <ProtectedRoute>
                         <OrderDetailPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/tables/TableStatusEmpty" element={
+                    <ProtectedRoute>
+                        <AssignCustomerPage />
                     </ProtectedRoute>
                 } />
 
