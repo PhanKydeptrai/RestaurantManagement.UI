@@ -1,5 +1,7 @@
 import { AxiosResponse } from "axios";
 import baseUrl from "../apis/base";
+import baseUrlPost from "../apis/basepost";
+import baseUrlDelete from "../apis/basedelete";
 
 export const Order = "orders";
 
@@ -15,3 +17,24 @@ export const GetOrderDetail = async (orderId: string) => {
     }
 }
 
+export const GetAllOrders = async (filterUserId: string, filterTableId: string, filterPaymentStatus: string, searchTerm: string, sortColumn: string, sortOrder: string, page: number, pageSize: number) => {
+    try {
+        const response: AxiosResponse = await baseUrl.get(`${Order}?filterUserId=${filterUserId}&filterTableId=${filterTableId}&filterPaymentStatus=${filterPaymentStatus}&searchTerm=${searchTerm}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&page=${page}&pageSize=${pageSize}`);
+        console.log(response.data.value);
+        return response.data.value;
+    }
+    catch (error) {
+        console.error("Error fetching orders:", error);
+        return null;
+    }
+}
+export const CreateOrder = async (order: any, tableId: string) => {
+    try {
+        const response: AxiosResponse = await baseUrlDelete.post(`${Order}/${tableId}`, order);
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error creating order:", error);
+        return null;
+    }
+}

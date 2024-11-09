@@ -27,8 +27,8 @@ const OrderDetailPage = () => {
                         <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4">
                             <ol className="breadcrumb mb-0">
                                 <li className="breadcrumb-item"><Link to="/"><dt>Dashboard</dt></Link></li>
-                                <li className="breadcrumb-item"><Link to="/tables">Table</Link></li>
-                                <li className="breadcrumb-item active" aria-current="page">Order Table</li>
+                                <li className="breadcrumb-item"><Link to="/orders">Order</Link></li>
+                                <li className="breadcrumb-item active" aria-current="page">Order Detail</li>
                             </ol>
                         </nav>
                     </div>
