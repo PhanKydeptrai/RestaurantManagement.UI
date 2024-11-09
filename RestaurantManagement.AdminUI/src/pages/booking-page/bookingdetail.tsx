@@ -79,6 +79,10 @@ const DetailBookingPage = () => {
                             <input type="text" className="form-control" value={book?.value.bookingStatus} readOnly />
                         </div>
                         <div className="mb-3">
+                            <label className="form-label">Số Bàn</label>
+                            <input type="text" className="form-control" value={book?.value.tableId} readOnly />
+                        </div>
+                        <div className="mb-3">
                             <label className="form-label">Số Khách</label>
                             <input type="number" className="form-control" value={book?.value.numberOfCustomers} readOnly />
                         </div>
