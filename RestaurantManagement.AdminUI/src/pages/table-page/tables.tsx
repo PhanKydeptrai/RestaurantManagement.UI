@@ -152,7 +152,6 @@ const TableTypePage = () => {
                                                 ) : (
                                                     <button className="btn btn-warning" onClick={() => handleRestore(table.tableId)}>Restore</button>
                                                 )}
-                                                <Link className="btn btn-info" to={`/tableorder/${table.tableId}`}>Detail</Link>
                                             </td>
                                         </tr>
                                     ))}

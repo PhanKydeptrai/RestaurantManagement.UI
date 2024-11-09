@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { GetOrderDetail } from "../../services/order-services";
+import { DeleteOrder, GetOrderDetail, UpdateOrder } from "../../services/order-services";
+import { toast, ToastContainer } from "react-toastify";
 
 const OrderDetailPage = () => {
     const { tableId } = useParams<{ tableId: string }>();
     const [table, setTable] = useState<any>();
     const [orderDetail, setOrderDetail] = useState<any>();
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -17,7 +19,67 @@ const OrderDetailPage = () => {
             }
         }; fetchData();
     }, [tableId]);
-    useEffect(() => { { } })
+
+
+
+    //#region Message
+    const notifySucess = () => {
+        toast.success('Thành công!', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored"
+        });
+    }
+
+    const notifyError = () => {
+        toast.error('Vui lòng kiểm tra lại!', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored"
+        });
+    }
+    //#endregion
+    const handleDelete = async (OrderId: string) => {
+        try {
+            console.log("Deleting order: ", OrderId);
+            const response = await DeleteOrder(OrderId);
+            if (response?.IsSuccess) {
+                notifySucess();
+            } else {
+                notifyError();
+            }
+        }
+        catch (error) {
+            notifyError();
+            console.error("Error deleting order:", error);
+        }
+
+    }
+    const handleUpdate = async (orderDetailId: string) => {
+        try {
+            console.log("Updating order: ", orderDetailId);
+            const response = await UpdateOrder(orderDetailId);
+            if (response?.IsSuccess) {
+                notifySucess();
+            } else {
+                notifyError();
+            }
+        }
+        catch (error) {
+            notifyError();
+            console.error("Error updating order:", error);
+        }
+    }
 
     return (
         <>
@@ -55,7 +117,7 @@ const OrderDetailPage = () => {
                         <table className="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th scope="col">OrderId</th>
+                                    <th scope="col">Order Detail Id</th>
                                     <th scope="col">Meal Name</th>
                                     <th scope="col">Image</th>
                                     <th scope="col">Quantity</th>
@@ -69,15 +131,23 @@ const OrderDetailPage = () => {
                                         <td>{item.orderDetailId}</td>
                                         <td>{item.mealName}</td>
                                         <td><img src={item.image} alt={item.mealName} width="100" height="100" /></td>
-                                        <td>{item.quantity}</td>
+                                        <td>
+                                            {item.quantity}
+                                        </td>
                                         <td>{item.unitPrice}</td>
-                                        <td></td>
+                                        <td>
+                                            <button className="btn btn-danger" onClick={() => handleDelete(item.orderDetailId)}>Delete</button>
+                                        </td>
                                     </tr>
+
                                 ))}
                             </tbody>
+
                         </table>
                     </form>
                 </div>
+                <ToastContainer />
+
             </main>
         </>
     )

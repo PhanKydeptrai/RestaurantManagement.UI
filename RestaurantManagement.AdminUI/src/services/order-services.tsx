@@ -38,3 +38,28 @@ export const CreateOrder = async (order: any, tableId: string) => {
         return null;
     }
 }
+
+export const UpdateOrder = async (orderDetailId: string) => {
+    try {
+        const response: AxiosResponse = await baseUrlDelete.put(`${Order}/${orderDetailId}`);
+        console.log(response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error updating order:", error);
+        return null;
+    }
+}
+
+export const DeleteOrder = async (orderDetailId: string) => {
+    try {
+        const response: AxiosResponse = await baseUrlDelete.delete(`${Order}/${orderDetailId}`);
+        console.log(response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error deleting order:", error);
+        return null;
+    }
+
+}

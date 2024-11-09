@@ -61,7 +61,7 @@ const OrderPage = () => {
                 </div>
                 <div className="container">
                     <div className="col-md-2">
-                        <Link to="/createmeal"><button className="btn btn-success w-100">Create</button></Link>
+                        <Link to="/order/create"><button className="btn btn-success w-100">Create</button></Link>
                     </div>
                     <div className="row mt-3">
                         <div className="col-12">

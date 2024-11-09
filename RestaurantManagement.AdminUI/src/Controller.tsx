@@ -159,7 +159,7 @@ function Controller() {
                         <OrderPage />
                     </ProtectedRoute>
                 } />
-                <Route path="/order/create/:tableId" element={
+                <Route path="/order/create" element={
                     <ProtectedRoute>
                         <CreateOrderPage />
                     </ProtectedRoute>

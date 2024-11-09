@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { OrderDto, OrderDetailDto } from '../../models/orderDto';
 import { GetAllMeals } from '../../services/meal-services';
 import { CreateOrder } from '../../services/order-services';
+import { toast, ToastContainer } from 'react-toastify';
 // import { GetMeals } from '../../services/meal-services'; // Giả sử đây là service để lấy danh sách món ăn.
 // import { CreateOrder } from '../../services/order-services'; // Giả sử đây là service để tạo đơn hàng.
 
@@ -42,8 +43,33 @@ const CreateOrderPage = () => {
     fetchMeals();
   }, [pageIndex, pageSize]);
 
-  // Xử lý khi người dùng chọn món ăn
+  //#region Message
+  const notifySucess = () => {
+    toast.success('Thành công!', {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored"
+    });
+  }
 
+  const notifyError = () => {
+    toast.error('Vui lòng kiểm tra lại!', {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored"
+    });
+  }
+  //#endregion
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
 
   const handleIncreaseQuantity = (mealId: string) => {
@@ -83,14 +109,16 @@ const CreateOrderPage = () => {
         body: JSON.stringify({ mealId, quantity }),
       })
       console.log('Data to be sent:', { mealId, quantity });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
       const data = await response.json();
       console.log('Order created:', data);
+      if (response.ok) {
+        notifySucess();
+      } else {
+        notifyError();
+      }
+
     } catch (error) {
+      notifyError();
       console.error('Error creating order:', error);
     }
   };
@@ -157,37 +185,16 @@ const CreateOrderPage = () => {
         </div>
       </div>
 
-      <h3 className="mt-4">Order Summary</h3>
-      <table className="table table-bordered">
-        <thead>
-          <tr>
-            <th>Meal</th>
-            <th>Quantity</th>
-            <th>Unit Price</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orderDetails.map((detail) => (
-            <tr key={detail.orderDetailId}>
-              <td>{detail.mealName}</td>
-              <td>{detail.quantity}</td>
-              <td>{detail.unitPrice}</td>
 
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div className="text-end">
-        <h4>Total: {total} VND</h4>
-      </div>
 
       <div className="mt-4">
 
-        <Link to="/orders" className="btn btn-secondary ml-2">
+        <Link to="/orders" className="btn btn-danger ml-2">
           Cancel
         </Link>
       </div>
+      <ToastContainer />
+
     </div>
   );
 };
