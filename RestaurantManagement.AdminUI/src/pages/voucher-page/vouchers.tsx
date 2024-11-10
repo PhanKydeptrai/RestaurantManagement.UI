@@ -2,53 +2,50 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { VoucherDto } from "../../models/voucherDto";
 import { DeleteVoucher, GetAllVouchers } from "../../services/voucher-services";
+import { Button, Input, Table, Pagination, notification } from "antd";
 
 const VoucherPage = () => {
-
     const [vouchers, setVouchers] = useState<VoucherDto[]>([]);
     const [pageIndex, setPageIndex] = useState(1);
-    const [pageSize] = useState(8); // Setting page size to 8
+    const [pageSize] = useState(8);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPreviousPage, setHasPreviousPage] = useState(false);
-    const [totalCount, setTotalCount] = useState();
+    const [totalCount, setTotalCount] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
+
     useEffect(() => {
         const fetchData = async () => {
-            console.log("fetching data");
             const result = await GetAllVouchers(pageSize, pageIndex, searchTerm);
-            console.log(result.items);
             setVouchers(result.items);
             setHasNextPage(result.hasNextPage);
             setHasPreviousPage(result.haspreviousPage);
             setTotalCount(result.totalCount);
         };
         fetchData();
-    }, [pageIndex, pageSize]); // Include pageSize in the dependency array  
+    }, [pageIndex, pageSize, searchTerm]);
+
     const handlePreviousPage = () => {
-        if (hasPreviousPage) { //nếu có trang trước đó
+        if (hasPreviousPage) {
             setPageIndex(pageIndex - 1);
         }
     };
 
     const handleNextPage = () => {
-        if (hasNextPage) { //nếu có trang tiếp theo
+        if (hasNextPage) {
             setPageIndex(pageIndex + 1);
         }
     };
 
     //#region Search
-    //truyền tham số cho searchTerm
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
 
-    //Thực hiện search
     const handleSearchSubmit = async (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             const results = await GetAllVouchers(8, 1, searchTerm);
             setPageIndex(1);
             setVouchers(results.items);
-            setSearchTerm(searchTerm);
             setHasNextPage(results.hasNextPage);
             setHasPreviousPage(results.haspreviousPage);
             setTotalCount(results.totalCount);
@@ -58,106 +55,123 @@ const VoucherPage = () => {
 
     const handleDelete = async (id: string) => {
         try {
-            console.log("Deleting voucher with id: " + id);
             await DeleteVoucher(id);
             const results = await GetAllVouchers(8, pageIndex, searchTerm);
-            setPageIndex(pageIndex);
             setVouchers(results.items);
-            setSearchTerm(searchTerm);
             setHasNextPage(results.hasNextPage);
             setHasPreviousPage(results.haspreviousPage);
             setTotalCount(results.totalCount);
+            notification.success({ message: "Voucher Deleted", description: "Voucher has been successfully deleted." });
         } catch (error) {
-            console.log(error);
+            notification.error({ message: "Error", description: "Failed to delete the voucher." });
         }
-    }
+    };
+
+    const columns = [
+        {
+            title: 'Voucher Name',
+            dataIndex: 'voucherName',
+            key: 'voucherName',
+        },
+        {
+            title: 'Max Discount',
+            dataIndex: 'maxDiscount',
+            key: 'maxDiscount',
+        },
+        {
+            title: 'Voucher Condition',
+            dataIndex: 'voucherCondition',
+            key: 'voucherCondition',
+        },
+        {
+            title: 'Start Date',
+            dataIndex: 'startDate',
+            key: 'startDate',
+        },
+        {
+            title: 'Expired Date',
+            dataIndex: 'expiredDate',
+            key: 'expiredDate',
+        },
+        {
+            title: 'Description',
+            dataIndex: 'description',
+            key: 'description',
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+            render: (status: string) => (
+                <span className={status === 'Active' ? 'text-success' : 'text-danger'}>
+                    {status}
+                </span>
+            ),
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            render: (text: string, record: VoucherDto) => (
+                <Button type="link" danger onClick={() => handleDelete(record.voucherId)}>
+                    Delete
+                </Button>
+            ),
+        },
+    ];
+
     return (
         <>
-            <main className="">
+            <main className="container">
                 <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-3 border-bottom">
-                    <div className="col ">
-                        <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4 ">
-                            <ol className="breadcrumb mb-0 ">
+                    <div className="col">
+                        <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4">
+                            <ol className="breadcrumb mb-0">
                                 <li className="breadcrumb-item"><Link to="/dashboard"><dt>Dashboard</dt></Link></li>
                                 <li className="breadcrumb-item active" aria-current="page">Vouchers</li>
                             </ol>
                         </nav>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="row">
-                        <div className="col-md-2">
-                            <Link to="/createvoucher" className="btn btn-primary">Create Voucher</Link>
-                        </div>
-                        <div className="col-md-6"></div>
-                        <div className="col-md-4">
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Search"
-                                value={searchTerm}
-                                onChange={handleSearchChange}
-                                onKeyPress={handleSearchSubmit}
-                            />
-                        </div>
+
+                <div className="row mb-3">
+                    <div className="col-md-2">
+                        <Link to="/createvoucher">
+                            <Button type="primary">Create Voucher</Button>
+                        </Link>
                     </div>
-                    <div className="container mt-5">
-                        <div className="row">
-                            <table className="table table-striped table-hover">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Voucher Name</th>
-                                        <th scope="col">Max Discount</th>
-                                        <th scope="col">Voucher Condition</th>
-                                        <th scope="col">Start Date</th>
-                                        <th scope="col">Expired Date</th>
-                                        <th scope="col">Description</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {vouchers.map((voucher) => {
-                                        return (
-                                            <tr key={voucher.voucherId}>
-                                                <td>{voucher.voucherName}</td>
-                                                <td>{voucher.maxDiscount}</td>
-                                                <td>{voucher.voucherCondition}</td>
-                                                <td>{voucher.startDate}</td>
-                                                <td>{voucher.expiredDate}</td>
-                                                <td>{voucher.description}</td>
-                                                <td className={voucher.status === 'Active' ? 'text-success' : 'text-danger'}>{voucher.status}</td>
-
-                                                <td>
-
-                                                    <button className="btn btn-danger" onClick={() => handleDelete(voucher.voucherId)}>Delete</button>
-                                                </td>
-                                            </tr>
-                                        )
-                                    })}
-                                </tbody>
-                            </table>
-                        </div>
+                    <div className="col-md-6"></div>
+                    <div className="col-md-4">
+                        <Input
+                            placeholder="Search"
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                            onKeyPress={handleSearchSubmit}
+                            allowClear
+                        />
                     </div>
                 </div>
-                <div className="row mt-5">
-                    <nav aria-label="Page navigation example">
-                        <ul className="pagination">
-                            <li className={`page-item ${!hasPreviousPage && 'disabled'}`}>
-                                <button className="page-link" onClick={handlePreviousPage}>Previous</button>
-                            </li>
-                            <li className="page-item disabled">
-                                <span className="page-link">Page {pageIndex}</span>
-                            </li>
-                            <li className={`page-item ${!hasNextPage && 'disabled'}`}>
-                                <button className="page-link" onClick={handleNextPage}>Next</button>
-                            </li>
-                        </ul>
-                    </nav>
+
+                <Table
+                    columns={columns}
+                    dataSource={vouchers}
+                    rowKey="voucherId"
+                    pagination={false} // Disable default pagination
+                />
+
+                <div className="row mt-4">
+                    <Pagination
+                        current={pageIndex}
+                        pageSize={pageSize}
+                        total={totalCount}
+                        showSizeChanger={false}
+                        onChange={(page) => setPageIndex(page)}
+                        onShowSizeChange={() => { }}
+                        showTotal={(total) => `Total ${total} items`}
+                    />
                 </div>
             </main>
         </>
-    )
-}
+    );
+};
 
 export default VoucherPage;
