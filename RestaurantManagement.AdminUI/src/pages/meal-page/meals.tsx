@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { MealDto } from "../../models/mealDto";
-import { DeleteMeal, GetAllMeals, RestoresMeal } from "../../services/meal-services";
+import { DeleteMeal, GetAllMeal, GetAllMeals, GetMeal, RestoresMeal } from "../../services/meal-services";
 import { Link } from "react-router-dom";
 
 const MealPage = () => {
@@ -10,7 +10,14 @@ const MealPage = () => {
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPreviousPage, setHasPreviousPage] = useState(false);
     const [totalCount, setTotalCount] = useState();
+
     const [searchTerm, setSearchTerm] = useState('');
+    const [filterCategory, setFilterCategory] = useState('');
+    const [filterSellStatus, setFilterSellStatus] = useState('');
+    const [filterMealStatus, setFilterMealStatus] = useState('');
+    const [sortColumn, setSortColumn] = useState('');
+    const [sortOrder, setSortOrder] = useState('');
+
     useEffect(() => {
         const fetchData = async () => {
             console.log("fetching data");
@@ -38,6 +45,39 @@ const MealPage = () => {
         }
     };
     //#endregion
+
+    //#region Filter
+    const handleFilterSellStatus = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const results = await GetAllMeal(filterCategory, event.target.value, filterMealStatus, searchTerm, sortColumn, sortOrder, pageIndex, pageSize);
+        setMeals(results.value.items);
+        setFilterCategory(filterCategory);
+        setFilterSellStatus(event.target.value);
+        setFilterMealStatus(filterMealStatus);
+        setSearchTerm(searchTerm);
+        setSortColumn(sortColumn);
+        setSortOrder(sortOrder);
+        setPageIndex(1);
+        setHasNextPage(results.hasNextPage);
+        setHasPreviousPage(results.haspreviousPage);
+        setTotalCount(results.totalCount);
+    }
+
+    const handleFilterMealStatus = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const results = await GetAllMeal(filterCategory, filterSellStatus, event.target.value, searchTerm, sortColumn, sortOrder, pageIndex, pageSize);
+        setMeals(results.value.items);
+        setFilterCategory(filterCategory);
+        setFilterSellStatus(filterSellStatus);
+        setFilterMealStatus(event.target.value);
+        setSearchTerm(searchTerm);
+        setSortColumn(sortColumn);
+        setSortOrder(sortOrder);
+        setPageIndex(1);
+        setHasNextPage(results.hasNextPage);
+        setHasPreviousPage(results.haspreviousPage);
+        setTotalCount(results.totalCount);
+    }
+    //#endregion
+
     //#region Search
     //truyền tham số cho searchTerm
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,9 +87,12 @@ const MealPage = () => {
     //Thực hiện search
     const handleSearchSubmit = async (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
-            const results = await GetAllMeals(8, 1, searchTerm);
+            const results = await GetAllMeal(filterCategory, filterSellStatus, filterMealStatus, searchTerm, sortColumn, sortOrder, pageIndex, pageSize);
             setPageIndex(1);
             setMeals(results.items);
+            setFilterCategory(filterCategory);
+            setFilterSellStatus(filterSellStatus);
+            setFilterMealStatus(filterMealStatus);
             setSearchTerm(searchTerm);
             setHasNextPage(results.hasNextPage);
             setHasPreviousPage(results.haspreviousPage);
@@ -57,15 +100,20 @@ const MealPage = () => {
         };
     }
     //#endregion
+    //#region Delete and Restore
     const handleDelete = async (id: string) => {
         try {
             console.log('Deleting category with id:', id);
             await DeleteMeal(id);
-            const results = await GetAllMeals(8, pageIndex, searchTerm);
-
-            setPageIndex(pageIndex);
-            setMeals(results.items);
+            const results = await GetAllMeal(filterCategory, filterSellStatus, filterMealStatus, searchTerm, sortColumn, sortOrder, pageIndex, pageSize);
+            setFilterCategory(filterCategory);
+            setFilterSellStatus(filterSellStatus);
+            setFilterMealStatus(filterMealStatus);
             setSearchTerm(searchTerm);
+            setSortColumn(sortColumn);
+            setSortOrder(sortOrder);
+            setPageIndex(pageIndex);
+            setMeals(results.value.items);
             setHasNextPage(results.hasNextPage);
             setHasPreviousPage(results.haspreviousPage);
             setTotalCount(results.totalCount);
@@ -78,11 +126,15 @@ const MealPage = () => {
         try {
             console.log('Restoring category with id:', id);
             await RestoresMeal(id);
-            const results = await GetAllMeals(8, pageIndex, searchTerm);
-
-            setPageIndex(pageIndex);
-            setMeals(results.items);
+            const results = await GetAllMeal(filterCategory, filterSellStatus, filterMealStatus, searchTerm, sortColumn, sortOrder, pageIndex, pageSize);
+            setFilterCategory(filterCategory);
+            setFilterSellStatus(filterSellStatus);
+            setFilterMealStatus(filterMealStatus);
             setSearchTerm(searchTerm);
+            setSortColumn(sortColumn);
+            setSortOrder(sortOrder);
+            setPageIndex(pageIndex);
+            setMeals(results.value.items);
             setHasNextPage(results.hasNextPage);
             setHasPreviousPage(results.haspreviousPage);
             setTotalCount(results.totalCount);
@@ -91,6 +143,7 @@ const MealPage = () => {
             console.error('Failed to restore category:', error);
         }
     };
+    //#endregion
     return (
         <>
             <main className="">
@@ -109,9 +162,23 @@ const MealPage = () => {
                         <div className="col-md-2">
                             <Link to="/createmeal"><button className="btn btn-success w-100">Create</button></Link>
                         </div>
-                        <div className="col-md-6"></div>
+                        <div className="col-md-2">
+                            <select className="form-select" onChange={handleFilterSellStatus}>
+                                <option value="">All</option>
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <div className="col-md-3"></div>
+                        <div className="col-md-2">
+                            <select className="form-select" onChange={handleFilterMealStatus}>
+                                <option value="">All</option>
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                        </div>
                         {/* Component for search */}
-                        <div className="col-md-4"><input
+                        <div className="col-md-3"><input
                             className="form-control"
                             placeholder="Search by Name"
                             value={searchTerm}

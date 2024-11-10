@@ -126,7 +126,7 @@ const CustomerPage = () => {
                             <select className="form-select" value={filterUserType} onChange={handleFilterUserType}>
                                 <option value="">All</option>
                                 <option value="Subscriber">Subscriber</option>
-                                <option value="">Customer</option>
+                                <option value="Normal">Normal</option>
                             </select>
                         </div>
                         <div className="col-md-2">

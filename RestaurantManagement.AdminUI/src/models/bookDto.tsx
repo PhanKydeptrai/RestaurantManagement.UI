@@ -1,4 +1,5 @@
 export interface BookDto {
+    tableId: string;
     bookId: string;
     userId: string;
     bookingPrice: string;

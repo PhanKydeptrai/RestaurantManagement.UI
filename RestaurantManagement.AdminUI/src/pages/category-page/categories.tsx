@@ -1,7 +1,7 @@
 import { json, Link } from "react-router-dom";
 import { CategoryDto } from "../../models/categoryDto";
 import { useEffect, useState } from "react";
-import { DeleteCategory, GetAllCategory, GetCategory, GetCategoryFilter, GetCategorySearch, RestoreCategory } from "../../services/category-service";
+import { DeleteCategory, GetAllCategory, GetCategory, GetCategoryFilter, GetCategorySearch, RestoreCategory, SortCategory } from "../../services/category-service";
 
 
 const CategoryPage = () => {
@@ -77,6 +77,44 @@ const CategoryPage = () => {
         };
     }
     //#endregion
+    //#region Sort
+    const handleSortChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setSortOrder(event.target.value);
+        const results = await SortCategory(8, pageIndex, sortColumn, event.target.value);
+        setPageIndex(pageIndex);
+        setCategories(results.items);
+        setSortColumn(sortColumn);
+        setSortOrder(event.target.value);
+        setHasNextPage(results.hasNextPage);
+        setHasPreviousPage(results.haspreviousPage);
+        setTotalCount(results.totalCount);
+    }
+    const handleSortChangeColumn = async (event: React.ChangeEvent<HTMLSelectElement>, type: 'column' & 'order') => {
+        // if (type === 'column') {
+        //     setSortColumn(event.target.value);
+        //     console.log(sortColumn);
+        // } else {
+        setSortOrder(event.target.value);
+        const results = await SortCategory(8, pageIndex, event.target.value, event.target.value);
+        setPageIndex(pageIndex);
+        setCategories(results.items);
+        setSortColumn(event.target.value);
+        setSortOrder(event.target.value);
+        setHasNextPage(results.hasNextPage);
+        setHasPreviousPage(results.haspreviousPage);
+        setTotalCount(results.totalCount);
+
+        // const column = type === 'column' ? event.target.value : sortColumn;
+        // const order = type === 'order' ? event.target.value : sortOrder;
+        // const results = await SortCategory(8, pageIndex, column, order);
+        // setPageIndex(pageIndex);
+        // setCategories(results.items);
+        // setHasNextPage(results.hasNextPage);
+        // setHasPreviousPage(results.haspreviousPage);
+        // setTotalCount(results.totalCount);
+    }
+
+    //#endregion
     //#region Delete and Restore
     const handleDelete = async (id: string) => {
         try {
@@ -129,16 +167,29 @@ const CategoryPage = () => {
                         <div className="col-md-2">
                             <Link to="/categories/createcategory"><button className="btn btn-success w-100">Create</button></Link>
                         </div>
-                        <div className="col-md-1">
+                        <div className="col-md-2">
                             <select className="form-control" value={filter} onChange={handleFilterStatusChange}>
                                 <option value="">Status</option>
                                 <option value="Active">Active</option>
-                                <option value="Deleted">Delete</option>
+                                <option value="InActive">InActive</option>
 
                             </select>
 
                         </div>
-                        <div className="col-md-5"></div>
+                        <div className="col-md-2">
+                            <select className="form-control" value={sortColumn} >
+                                <option value="">SortColumn</option>
+                                <option value="name">A-Z</option>
+
+                            </select>
+                        </div>
+
+                        <div className="col-md-2">
+                            <select className="form-control" value={sortOrder} onChange={handleSortChange}>
+                                <option value="esc">Ascending</option>
+                                <option value="desc">Descending</option>
+                            </select>
+                        </div>
                         {/* Component for search */}
                         <div className="col-md-4"><input
                             className="form-control"

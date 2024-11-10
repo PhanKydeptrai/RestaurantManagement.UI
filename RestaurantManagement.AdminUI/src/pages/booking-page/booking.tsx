@@ -68,6 +68,7 @@ const BookingPage = () => {
                                 <th>Booking Date</th>
                                 <th>Booking Time</th>
                                 <th>Number of Customer</th>
+                                <th>Table Id</th>
                                 <th>Booking Price</th>
                                 <th>Booking Status</th>
                                 <th>Payment Status</th>
@@ -82,6 +83,7 @@ const BookingPage = () => {
                                     <td>{booking.bookingDate}</td>
                                     <td>{booking.bookingTime}</td>
                                     <td>{booking.numberOfCustomer}</td>
+                                    <td>{booking.tableId}</td>
                                     <td>{booking.bookingPrice}</td>
                                     <td className={
                                         booking.bookingStatus === 'Waiting' ? 'text-warning' : booking.bookingStatus === 'Canceled' ? 'text-danger' : booking.bookingStatus === 'Assign' ? 'text-primary' : booking.bookingStatus === 'Completed' ? 'text-success' : booking.bookingStatus === 'Seated' ? 'text-info' : ''

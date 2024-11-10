@@ -25,7 +25,10 @@ import AccountPage from "./pages/account-page/account";
 import BookingPage from "./pages/booking-page/booking";
 import DetailBookingPage from "./pages/booking-page/bookingdetail";
 import ArrangeBookPage from "./pages/booking-page/arangebook";
-
+import OrderDetailPage from "./pages/order-page/orderdetail";
+import OrderPage from "./pages/order-page/orders";
+import CreateOrderPage from "./pages/order-page/createorder";
+import AssignCustomerPage from "./pages/table-page/assigncustomer";
 
 function Controller() {
     return (
@@ -146,6 +149,32 @@ function Controller() {
                         <ArrangeBookPage />
                     </ProtectedRoute>
                 } />
+                <Route path="/tableorder/:tableId" element={
+                    <ProtectedRoute>
+                        <OrderDetailPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/orders" element={
+                    <ProtectedRoute>
+                        <OrderPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/order/create" element={
+                    <ProtectedRoute>
+                        <CreateOrderPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/orders/:tableId" element={
+                    <ProtectedRoute>
+                        <OrderDetailPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/tables/TableStatusEmpty" element={
+                    <ProtectedRoute>
+                        <AssignCustomerPage />
+                    </ProtectedRoute>
+                } />
+
             </Routes>
         </>
     )
