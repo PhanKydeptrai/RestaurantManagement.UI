@@ -106,7 +106,6 @@ function Controller() {
                         <TableTypePage />
                     </ProtectedRoute>
                 } />
-
                 <Route path="/account" element={
                     <ProtectedRoute>
                         <AccountPage />

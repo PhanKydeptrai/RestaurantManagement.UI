@@ -124,78 +124,91 @@ const CreateOrderPage = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <h2>Create Order</h2>
-      <div className="row">
-        <div className="col-md-6">
-          <div className="form-group">
-            <label htmlFor="tableId">Table ID</label>
-            <input
-              type="text"
-              id="tableId"
-              className="form-control"
-              value={tableId}
-              onChange={(e) => setTableId(e.target.value)}
-              placeholder="Enter Table ID"
-            />
+    <>
+      <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-3 border-bottom">
+        <div className="col ">
+          <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4 ">
+            <ol className="breadcrumb mb-0 ">
+              <li className="breadcrumb-item"><Link to="/dashboard"><dt>Dashboard</dt></Link></li>
+              <li className="breadcrumb-item"><Link to="/orders">Order</Link></li>
+              <li className="breadcrumb-item active" aria-current="page">Create</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <div className="container mt-5">
+        <h2>Create Order</h2>
+        <div className="row">
+          <div className="col-md-6">
+            <div className="form-group">
+              <label htmlFor="tableId">Table ID</label>
+              <input
+                type="text"
+                id="tableId"
+                className="form-control"
+                value={tableId}
+                onChange={(e) => setTableId(e.target.value)}
+                placeholder="Enter Table ID"
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      <div>
-        <h3 className="mt-4">Select Meals</h3>
-        <div className="row">
-          {meals.map((meal) => (
-            <div key={meal.mealId} className="col-md-4">
-              <div className="card">
-                <img
-                  src={meal.imageUrl}
-                  className="card-img-top"
-                  alt={meal.mealName}
-                  style={{ height: '150px', objectFit: 'cover' }}
-                />
-                <div className="card-body">
-                  <h5 className="card-title">{meal.mealName}</h5>
-                  <p className="card-text">Price: {meal.price} VND</p>
-                  <div className="d-flex align-items-center">
+        <div>
+          <h3 className="mt-4">Select Meals</h3>
+          <div className="row">
+            {meals.map((meal) => (
+              <div key={meal.mealId} className="col-md-4">
+                <div className="card">
+                  <img
+                    src={meal.imageUrl}
+                    className="card-img-top"
+                    alt={meal.mealName}
+                    style={{ height: '150px', objectFit: 'cover' }}
+                  />
+                  <div className="card-body">
+                    <h5 className="card-title">{meal.mealName}</h5>
+                    <p className="card-text">Price: {meal.price} VND</p>
+                    <div className="d-flex align-items-center">
+                      <button
+                        className="btn btn-secondary"
+                        onClick={() => handleDecreaseQuantity(meal.mealId)}
+                      >
+                        -
+                      </button>
+                      <span className="mx-2">{quantities[meal.mealId] || 0}</span>
+                      <button
+                        className="btn btn-secondary"
+                        onClick={() => handleIncreaseQuantity(meal.mealId)}
+                      >
+                        +
+                      </button>
+                    </div>
                     <button
-                      className="btn btn-secondary"
-                      onClick={() => handleDecreaseQuantity(meal.mealId)}
+                      className="btn btn-primary mt-2"
+                      onClick={() => handleCreateOrder(meal.mealId)}
                     >
-                      -
-                    </button>
-                    <span className="mx-2">{quantities[meal.mealId] || 0}</span>
-                    <button
-                      className="btn btn-secondary"
-                      onClick={() => handleIncreaseQuantity(meal.mealId)}
-                    >
-                      +
+                      Add to Order
                     </button>
                   </div>
-                  <button
-                    className="btn btn-primary mt-2"
-                    onClick={() => handleCreateOrder(meal.mealId)}
-                  >
-                    Add to Order
-                  </button>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
+
+
+
+        <div className="mt-4">
+
+          <Link to="/orders" className="btn btn-danger ml-2">
+            Cancel
+          </Link>
+        </div>
+        <ToastContainer />
+
       </div>
-
-
-
-      <div className="mt-4">
-
-        <Link to="/orders" className="btn btn-danger ml-2">
-          Cancel
-        </Link>
-      </div>
-      <ToastContainer />
-
-    </div>
+    </>
   );
 };
 

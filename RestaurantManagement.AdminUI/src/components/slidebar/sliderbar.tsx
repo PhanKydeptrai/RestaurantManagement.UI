@@ -1,90 +1,88 @@
+import { AlertOutlined, BarcodeOutlined, ContainerOutlined, HomeOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, MoneyCollectOutlined, ShopOutlined, ShoppingOutlined, TableOutlined, TagOutlined, UsergroupAddOutlined, UserOutlined } from "@ant-design/icons";
+import { icon } from "@fortawesome/fontawesome-svg-core";
 import { faClipboardList, faFileInvoiceDollar, faHome, faPercent, faSolarPanel, faTags, faUser, faUsers, faUtensils } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
+import { Breadcrumb, Button, Layout, Menu, theme } from "antd";
+import { Content, Footer, Header } from "antd/es/layout/layout";
+import Sider from "antd/es/layout/Sider";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Slide } from "react-toastify";
+import Controller from "../../Controller";
 
 const SliderBar = () => {
+
+    const [collapsed, setCollapsed] = useState(false);
+    const {
+        token: { colorBgContainer, borderRadiusLG },
+    } = theme.useToken();
+    const menuItems = [
+        { key: '1', icon: <HomeOutlined />, title: 'Dashboard', link: '/dashboard' },
+        { key: '2', icon: <UserOutlined />, title: 'Employee', link: '/employees' },
+        {
+            key: 'sub1', icon: <ContainerOutlined />, title: 'Order',
+            children: [
+                { key: '3', icon: <ShoppingOutlined />, title: 'Ordering', link: '/orders' },
+                { key: '4', icon: <ShopOutlined />, title: 'Booking', link: '/bookings' },
+            ]
+        },
+        { key: '5', icon: <TagOutlined />, title: 'Category', link: '/categories' },
+        { key: '6', icon: <UsergroupAddOutlined />, title: 'Customers', link: '/customers' },
+        { key: '7', icon: <AlertOutlined />, title: 'Meals', link: '/meals' },
+        { key: '8', icon: <TableOutlined />, title: 'Table', link: '/tables' },
+        { key: '9', icon: <BarcodeOutlined />, title: 'Voucher', link: '/vouchers' },
+        { key: '10', icon: <MoneyCollectOutlined />, title: 'Bills', link: '/bills' },
+
+    ]
+    const navigate = useNavigate();
+
+
+
     return (
         <>
-            <div className="container-fluid">
-                <div className="row">
-                    <div className="shadow  bg-body-tertiary rounded">
-                        <div className="container-fluid">
-                            <div className="row">
-                                <div className="col-md-2">
-                                    <nav id="sidebarMenu" className="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-                                        <div className="position-sticky pt-3">
-                                            <ul className="nav flex-column nav-tabs">
-                                                <li className="nav-item m-3 shadow-sm">
-                                                    <a className="nav-link d-flex align-items-center " href="/dashboard">
-                                                        <FontAwesomeIcon icon={faHome} className="me-2 p-1" />
-                                                        Dashboard
-                                                    </a>
-                                                </li>
-                                                <li className="nav-item m-3 shadow-sm ">
-                                                    <a className="nav-link d-flex align-items-center" href="/employees">
-                                                        <FontAwesomeIcon icon={faUser} className="me-2 p-1" />Employee
-                                                    </a>
-                                                </li>
-                                                <li className="dropdown nav-item m-3  shadow-sm">
-                                                    <a className="nav-link d-flex align-items-center dropdown-toggle" href="#" data-bs-toggle="dropdown" role="button" aria-expanded="false">
-                                                        <FontAwesomeIcon icon={faClipboardList} className="me-2 p-1" />
-                                                        Order
-                                                    </a>
-                                                    <ul className="dropdown-menu">
-                                                        <li><a href="/orders" className="dropdown-item">Ordering</a></li>
-                                                        <li><a href="/bookings" className="dropdown-item">Booking</a></li>
-                                                    </ul>
-                                                </li>
-
-                                                <li className="nav-item m-3 shadow-sm">
-                                                    <Link className="nav-link d-flex align-items-center" to="/categories">
-                                                        <FontAwesomeIcon icon={faTags} className="me-2 p-1" />
-                                                        Category
-                                                    </Link>
-                                                </li>
-
-                                                <li className="nav-item m-3 shadow-sm">
-                                                    <a className="nav-link d-flex align-items-center" href="/customers">
-                                                        <FontAwesomeIcon icon={faUsers} className="me-2 p-1" />
-                                                        Customers
-                                                    </a>
-                                                </li>
-                                                <li className="nav-item m-3 shadow-sm">
-                                                    <a className="nav-link d-flex align-items-center" href="/meals">
-                                                        <FontAwesomeIcon icon={faUtensils} className="me-2 p-1" />
-                                                        Meals
-                                                    </a>
-                                                </li>
-                                                <li className="nav-item m-3 shadow-sm">
-                                                    <a className="nav-link d-flex align-items-center" href="/tables">
-                                                        <FontAwesomeIcon icon={faSolarPanel} className="me-2 p-1" />
-                                                        Table
-                                                    </a>
-                                                </li>
-                                                <li className="nav-item m-3 shadow-sm">
-                                                    <a className="nav-link d-flex align-items-center" href="/vouchers">
-                                                        <FontAwesomeIcon icon={faPercent} className="me-2 p-1" />
-                                                        Voucher
-                                                    </a>
-                                                </li>
-                                                <li className="nav-item m-3 shadow-sm">
-                                                    <a className="nav-link d-flex align-items-center" href="/AdminLayout/BossLayout/listbill.html">
-                                                        <FontAwesomeIcon icon={faFileInvoiceDollar} className="me-2 p-1" />
-                                                        Bills
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </nav>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
+            <Layout>
+                <Sider trigger={null} collapsible collapsed={collapsed}>
+                    <div className="demo-logo-vertical" />
+                    <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
+                        {menuItems.map(item => (
+                            <Menu.Item key={item.key} icon={item.icon}>
+                                <Link to={item.link as string}>{item.title}</Link>
+                            </Menu.Item>
+                        ))}
+                    </Menu>
+                </Sider>
+                <Layout>
+                    <Header style={{ padding: 0, background: colorBgContainer }}>
+                        <Button
+                            type="text"
+                            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                            onClick={() => setCollapsed(!collapsed)}
+                            style={{
+                                fontSize: '16px',
+                                width: 64,
+                                height: 64,
+                            }}
+                        />
+                    </Header>
+                    <Content
+                        style={{
+                            margin: '24px 16px',
+                            padding: 24,
+                            minHeight: 280,
+                            background: colorBgContainer,
+                            borderRadius: borderRadiusLG,
+                        }}
+                    >
+                        <Controller></Controller>
+                    </Content>
+                    <Footer style={{ textAlign: 'center' }}>
+                        Ant Design ©{new Date().getFullYear()} Created by Ant UED
+                    </Footer>
+                </Layout>
+            </Layout>
         </>
-    );
+    )
+
 }
 
 export default SliderBar;

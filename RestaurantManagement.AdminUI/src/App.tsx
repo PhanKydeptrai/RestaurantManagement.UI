@@ -7,7 +7,8 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import Controller from './Controller';
 import Header from './components/header/header';
 import SliderBar from './components/slidebar/sliderbar';
-import { useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
+import Login from './pages/auth-page/login';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import react router
 
@@ -19,17 +20,15 @@ function App() {
   return (
     <>
       {!isLoginPage && <Header />}
-      <div className="container-fluid">
-        <div className="row">
-          {!isLoginPage && (
-            <div className="col-md-2">
-              <SliderBar />
-            </div>
-          )}
-          <div className={isLoginPage ? 'col-md-12' : 'col-md-10'}>
-            <Controller />
-          </div>
+      {!isLoginPage && (
+        <div className="">
+          <SliderBar />
         </div>
+      )}
+      <div>
+        <Routes>
+          <Route path="/" element={<Login />} />
+        </Routes>
       </div>
 
     </>

@@ -101,7 +101,7 @@ const CreateCategoryPage = () => {
         <>
             <form onSubmit={handleSubmit}>
                 <main className="container">
-                    <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-3 border-bottom">
                         <div className="col ">
                             <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4 ">
                                 <ol className="breadcrumb mb-0 ">
