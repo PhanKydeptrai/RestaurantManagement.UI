@@ -76,7 +76,7 @@ const SliderBar = () => {
                         <Controller></Controller>
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>
-                        Ant Design ©{new Date().getFullYear()} Created by Ant UED
+                        3TK Team ©{new Date().getFullYear()}
                     </Footer>
                 </Layout>
             </Layout>

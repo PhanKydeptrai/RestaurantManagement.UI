@@ -74,7 +74,6 @@ export const GetEmpRole = async (pageSize: number, pageIndex: number, filterRole
 export const GetEmpGender = async (pageSize: number, pageIndex: number, filterGender: string) => {
     const res = await baseUrl.get<EmployeeDto[]>(`${Employee}?filterGender=${filterGender}&page=${pageIndex}&pageSize=${pageSize}`)
         .then((response: AxiosResponse) => {
-            console.log(response.data.value);
             return response.data.value;
         }).catch((error) => {
             console.log(error);

@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
+import { Table, Select, Input, Button, Pagination } from "antd";
 import { CustomerDto } from "../../models/customerDto";
-import { Customer, GetAllCustomer, GetCusGender, GetCusStatus, GetFilterTypeCus, GetSreachCus } from "../../services/customer-services";
+import { GetAllCustomer, GetCusGender, GetCusStatus, GetFilterTypeCus, GetSreachCus } from "../../services/customer-services";
+
+const { Option } = Select;
 
 const CustomerPage = () => {
 
@@ -10,7 +13,7 @@ const CustomerPage = () => {
     const [pageSize, setPageSize] = useState(8); // Setting page size to 8
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPreviousPage, setHasPreviousPage] = useState(false);
-    const [totalCount, setTotalCount] = useState();
+    const [totalCount, setTotalCount] = useState<number>(0);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterUserType, setFilterUserType] = useState('');
     const [filterGender, setFilterGender] = useState('');
@@ -20,194 +23,191 @@ const CustomerPage = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            console.log("fetching data");
             const result = await GetAllCustomer(filterUserType, filterGender, filterStatus, searchTerm, pageIndex, pageSize, sortColumn, sortOrder);
-            console.log(result.items);
             setCustomers(result.items);
             setHasNextPage(result.hasNextPage);
             setHasPreviousPage(result.haspreviousPage);
             setTotalCount(result.totalCount);
         };
         fetchData();
-    }, [pageIndex, pageSize]); // Include pageSize in the dependency array
-    //#region pagation
-    const handlePreviousPage = () => {
-        if (hasPreviousPage) { //nếu có trang trước đó
-            setPageIndex(pageIndex - 1);
-        }
-    };
+    }, [pageIndex, pageSize, filterUserType, filterGender, filterStatus, searchTerm]); // Include relevant dependencies
 
-    const handleNextPage = () => {
-        if (hasNextPage) { //nếu có trang tiếp theo
-            setPageIndex(pageIndex + 1);
-        }
-    };
-    //#endregion
-    //#region  Filter user type
-    const handleFilterUserType = async (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setFilterUserType(event.target.value);
-        const results = await GetFilterTypeCus(event.target.value, pageIndex, 8);
-        setPageIndex(pageIndex);
-        setPageSize(pageSize);
+
+    // Filter by user type
+    const handleFilterUserType = async (value: string) => {
+        setFilterUserType(value);
+        const results = await GetFilterTypeCus(value, pageIndex, pageSize);
         setCustomers(results.items);
-        setFilterUserType(event.target.value);
         setHasNextPage(results.hasNextPage);
         setHasPreviousPage(results.haspreviousPage);
         setTotalCount(results.totalCount);
-        console.log(results);
-    }
-    //#endregion
-    //#region Filter Gender
-    const handleFilterGenderChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setFilterGender(event.target.value);
-        const results = await GetCusGender(8, pageIndex, event.target.value);
-        setPageIndex(pageIndex);
-        setCustomers(results.items);
-        setFilterGender(event.target.value);
-        setHasNextPage(false);
-        setHasPreviousPage(false);
-        setTotalCount(results.length);
-    }
-    //#endregion
-    //#region Filter Status
-    const handleFilterStatusChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setFilterStatus(event.target.value);
-        const results = await GetCusStatus(8, pageIndex, event.target.value);
-        setPageIndex(pageIndex);
-        setCustomers(results.items);
-        setFilterStatus(event.target.value);
-        setHasNextPage(false);
-        setHasPreviousPage(false);
-        setTotalCount(results.length);
-    }
-    //#endregion
+    };
 
-    //#region Search
-    //truyền tham số cho searchTerm
+    // Filter by gender
+    const handleFilterGenderChange = async (value: string) => {
+        setFilterGender(value);
+        const results = await GetCusGender(pageSize, pageIndex, value);
+        setCustomers(results.items);
+        setHasNextPage(results.hasNextPage);
+        setHasPreviousPage(results.haspreviousPage);
+        setTotalCount(results.totalCount);
+    };
+
+    // Filter by status
+    const handleFilterStatusChange = async (value: string) => {
+        setFilterStatus(value);
+        const results = await GetCusStatus(pageSize, pageIndex, value);
+        setCustomers(results.items);
+        setHasNextPage(results.hasNextPage);
+        setHasPreviousPage(results.haspreviousPage);
+        setTotalCount(results.totalCount);
+    };
+
+    // Handle search term
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
 
-    //Thực hiện search
+    // Handle search submit (Enter key press)
     const handleSearchSubmit = async (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             const results = await GetSreachCus(searchTerm, pageIndex, pageSize);
             setPageIndex(1);
-            setPageSize(8);
             setCustomers(results.items);
-            setSearchTerm(searchTerm);
             setHasNextPage(results.hasNextPage);
             setHasPreviousPage(results.haspreviousPage);
             setTotalCount(results.totalCount);
-        };
-    }
-    //#endregion
+        }
+    };
 
+    // Columns for Ant Design Table
+    const columns = [
+        {
+            title: 'Họ',
+            dataIndex: 'lastName',
+            key: 'lastName',
+        },
+        {
+            title: 'Tên',
+            dataIndex: 'firstName',
+            key: 'firstName',
+        },
+        {
+            title: 'Email',
+            dataIndex: 'email',
+            key: 'email',
+        },
+        {
+            title: 'Số điện thoại',
+            dataIndex: 'phoneNumber',
+            key: 'phoneNumber',
+        },
+        {
+            title: 'Giới tính',
+            dataIndex: 'gender',
+            key: 'gender',
+        },
+        {
+            title: 'Trạng thái',
+            dataIndex: 'customerStatus',
+            key: 'customerStatus',
+            render: (status: string) => (
+                <span className={status === 'Active' ? 'text-success' : 'text-danger'}>
+                    {status}
+                </span>
+            ),
+        },
+        {
+            title: 'Loại khách hàng',
+            dataIndex: 'customerType',
+            key: 'customerType',
+        },
+    ];
 
     return (
-        <>
-            <main className="">
-                <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-3 border-bottom">
-                    <div className="col ">
-                        <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4 ">
-                            <ol className="breadcrumb mb-0 ">
-                                <li className="breadcrumb-item"><Link to="/"><dt>Dashboard</dt></Link></li>
-                                <li className="breadcrumb-item active" aria-current="page">Customers</li>
-                            </ol>
-                        </nav>
-                    </div>
+        <main>
+            <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-3 border-bottom">
+                <div className="col">
+                    <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4">
+                        <ol className="breadcrumb mb-0">
+                            <li className="breadcrumb-item"><Link to="/">Dashboard</Link></li>
+                            <li className="breadcrumb-item active" aria-current="page">Customers</li>
+                        </ol>
+                    </nav>
                 </div>
-                <div className="row">
-                    <div className="row">
-                        <div className="col-md-2">
-                            {/* <a href="/createemployee"><button className="btn btn-success w-100">Create</button></a> */}
-                        </div>
-                        <div className="col-md-2">
-                            <select className="form-select" value={filterUserType} onChange={handleFilterUserType}>
-                                <option value="">All</option>
-                                <option value="Subscriber">Subscriber</option>
-                                <option value="Normal">Normal</option>
-                            </select>
-                        </div>
-                        <div className="col-md-2">
-                            <select className="form-select" value={filterGender} onChange={handleFilterGenderChange}>
-                                <option value="">All</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female  </option>
-                            </select>
-                        </div>
-                        <div className="col-md-2">
-                            <select className="form-select" value={filterStatus} onChange={handleFilterStatusChange}>
-                                <option value="">All</option>
-                                <option value="Active">Active</option>
-                                <option value="Inactive">Inactive</option>
-                            </select>
-                        </div>
-                        {/* Component for search */}
-                        <div className="col-md-4"><input
-                            className="form-control"
-                            placeholder="Search by Name"
-                            value={searchTerm}
-                            onChange={handleSearchChange}
-                            onKeyDown={handleSearchSubmit}
-                        /></div>
-                        {/* end */}
-                    </div>
-                    <div className="mt-5"></div>
+            </div>
 
-                    <div className="col-md-12">
-                        <table className="table table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Họ</th>
-                                    <th scope="col">Tên</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Số điện thoại</th>
-                                    <th scope="col">Giới tính</th>
-                                    <th scope="col">Trạng thái</th>
-                                    <th scope="col">Loại khách hàng</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    customers.map((customer) => {
-                                        return (
-                                            <tr key={customer.userId}>
-                                                <td>{customer.lastName}</td>
-                                                <td>{customer.firstName}</td>
-                                                <td>{customer.email}</td>
-                                                <td>{customer.phoneNumber}</td>
-                                                <td>{customer.gender}</td>
-                                                <td className={customer.customerStatus === 'Active' ? 'text-success' : 'text-danger'}>
-                                                    {customer.customerStatus}</td>
-                                                <td>{customer.customerType}</td>
-
-                                            </tr>
-                                        )
-                                    }
-                                    )}
-                            </tbody>
-                        </table>
-                        <div className="row mt-5">
-                            <nav aria-label="Page navigation example">
-                                <ul className="pagination">
-                                    <li className={`page-item ${!hasPreviousPage && 'disabled'}`}>
-                                        <button className="page-link" onClick={handlePreviousPage}>Previous</button>
-                                    </li>
-                                    <li className="page-item disabled">
-                                        <span className="page-link">Page {pageIndex}</span>
-                                    </li>
-                                    <li className={`page-item ${!hasNextPage && 'disabled'}`}>
-                                        <button className="page-link" onClick={handleNextPage}>Next</button>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
+            <div className="row mb-3">
+                <div className="col-md-2">
+                    {/* You can add a "Create" button here if needed */}
                 </div>
-            </main>
-        </>
-    )
-}
+                <div className="col-md-2">
+                    <Select
+
+                        value={filterUserType}
+                        onChange={handleFilterUserType}
+                        style={{ width: '100%' }}
+                    >
+                        <Option value="">Customer Type</Option>
+                        <Option value="Subscriber">Subscriber</Option>
+                        <Option value="Normal">Normal</Option>
+                    </Select>
+                </div>
+                <div className="col-md-2">
+                    <Select
+
+                        value={filterGender}
+                        onChange={handleFilterGenderChange}
+                        style={{ width: '100%' }}
+                    >
+                        <Option value="">Gender</Option>
+                        <Option value="Male">Male</Option>
+                        <Option value="Female">Female</Option>
+                        <Option value="Orther">Other</Option>
+                    </Select>
+                </div>
+                <div className="col-md-2">
+                    <Select
+
+                        value={filterStatus}
+                        onChange={handleFilterStatusChange}
+                        style={{ width: '100%' }}
+                    >
+                        <Option value="">Status</Option>
+                        <Option value="Active">Active</Option>
+                        <Option value="Inactive">Inactive</Option>
+                    </Select>
+                </div>
+                <div className="col-md-4">
+                    <Input
+                        placeholder="Search by Name"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        onKeyDown={handleSearchSubmit}
+                    />
+                </div>
+            </div>
+
+            <Table
+                columns={columns}
+                dataSource={customers}
+                rowKey="userId"
+                pagination={false}  // Disable the default pagination of Ant Design Table
+            />
+
+            <div className="row mt-5">
+                <Pagination
+                    current={pageIndex}
+                    total={totalCount}
+                    pageSize={pageSize}
+                    onChange={setPageIndex}
+                    pageSizeOptions={['8', '16', '32']}
+                    showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+
+                />
+            </div>
+        </main>
+    );
+};
 
 export default CustomerPage;
