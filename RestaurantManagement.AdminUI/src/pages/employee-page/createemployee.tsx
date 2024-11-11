@@ -2,6 +2,9 @@ import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { CreateEmployee } from "../../services/employee-service";
+import { Form, Input, Select, Button, Row, Col, Image, Breadcrumb } from "antd";
+
+const { Option } = Select;
 
 const CreateEmployeePage = () => {
     const [lastName, setLastName] = useState('');
@@ -11,9 +14,8 @@ const CreateEmployeePage = () => {
     const [userImage, setUserImage] = useState<string | null>(null);
     const [gender, setGender] = useState('');
     const [role, setRole] = useState('');
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const navigate = useNavigate();
-    const [errors, setErrors] = useState<{ lastName?: string, fisrtName?: string, email?: string, phoneNumber?: string, role?: string, gender?: string }>();
-
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,34 +28,28 @@ const CreateEmployeePage = () => {
             reader.readAsDataURL(file);
         }
     };
-    const validateForm = () => {
-        const newErrors: { lastName?: string, fisrtName?: string, email?: string, phoneNumber?: string, role?: string, gender?: string } = {};
 
-        if (!lastName) {
-            newErrors.lastName = "Vui lòng nhập họ";
+    const handleFileSelect = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
         }
-        if (!firstName) {
-            newErrors.fisrtName = "Vui lòng nhập tên";
-        }
-        if (!email) {
-            newErrors.email = "Vui lòng nhập email";
-        }
-        if (!phoneNumber) {
-            newErrors.phoneNumber = "Vui lòng nhập số điện thoại";
-        }
-        if (!role) {
-            newErrors.role = "Vui lòng chọn vai trò";
-        }
-        if (!gender) {
-            newErrors.gender = "Vui lòng chọn giới tính";
-        }
+    };
+
+    const validateForm = () => {
+        const newErrors: { [key: string]: string } = {};
+
+        if (!lastName) newErrors.lastName = "Vui lòng nhập họ";
+        if (!firstName) newErrors.firstName = "Vui lòng nhập tên";
+        if (!email) newErrors.email = "Vui lòng nhập email";
+        if (!phoneNumber) newErrors.phoneNumber = "Vui lòng nhập số điện thoại";
+        if (!role) newErrors.role = "Vui lòng chọn vai trò";
+        if (!gender) newErrors.gender = "Vui lòng chọn giới tính";
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
-    }
+    };
 
-
-    const notifySucess = () => {
+    const notifySuccess = () => {
         toast.success('Thành công!', {
             position: "top-center",
             autoClose: 5000,
@@ -61,10 +57,10 @@ const CreateEmployeePage = () => {
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
-            progress: undefined,
-            theme: "colored"
+            theme: "colored",
         });
-    }
+    };
+
     const notifyError = () => {
         toast.error('Vui lòng kiểm tra lại!', {
             position: "top-center",
@@ -73,15 +69,16 @@ const CreateEmployeePage = () => {
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
-            progress: undefined,
-            theme: "colored"
+            theme: "colored",
         });
-    }
+    };
+
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         if (!validateForm()) {
             return;
         }
+
         const formData = new FormData();
         formData.append('firstName', firstName);
         formData.append('lastName', lastName);
@@ -93,121 +90,146 @@ const CreateEmployeePage = () => {
         if (fileInputRef.current && fileInputRef.current.files) {
             formData.append('userImage', fileInputRef.current.files[0]);
         }
-        const response = await CreateEmployee(formData);
-        console.log(response);
 
-        // show toast 
+        const response = await CreateEmployee(formData);
         if (response.isSuccess) {
-            notifySucess();
+            notifySuccess();
             setTimeout(() => {
                 navigate('/employees');
             }, 2000);
-
-        }
-        else {
+        } else {
             notifyError();
-        }
-    }
-
-    const handleFileSelect = () => {
-        if (fileInputRef.current) {
-            fileInputRef.current.click();
         }
     };
 
     return (
         <>
-            <form className="" onSubmit={handleSubmit}>
-                <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-3 border-bottom">
-                    <div className="col ">
-                        <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4 ">
-                            <ol className="breadcrumb mb-0 ">
-                                <li className="breadcrumb-item"><Link to="/"><dt>Dashboard</dt></Link></li>
-                                <li className="breadcrumb-item"><Link to="/employees">Employees</Link></li>
-                                <li className="breadcrumb-item" aria-current="page">Create</li>
-                            </ol>
-                        </nav>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-12">
-                        <div className="row">
-                            <div className="col-md-3 border-right">
-                                <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-                                    <img className="rounded-circle mt-5" width="200" src={userImage || 'https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg'} alt="" />
-                                    <button className="btn btn-success mt-3" onClick={handleFileSelect}>Chọn ảnh</button>
-                                    <input type="file" ref={fileInputRef} style={{ display: "none" }} accept="image/*" onChange={handleFileChange} />
-                                </div>
-                            </div>
-                            <div className="col-md-9 border-right">
-                                <div className="p-3 py-5">
-                                    <div className="row mt-2">
-                                        <div className="col-md-6">
-                                            <label className="labels">First Name</label>
-                                            <input type="text" className="form-control" placeholder="Nhập tên" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-                                            {errors?.fisrtName && <div className="text-danger">{errors.fisrtName}</div>}
-                                        </div>
-                                        <div className="col-md-6">
-                                            <label className="labels">Last Name</label>
-                                            <input type="text" className="form-control" placeholder="Nhập họ" value={lastName} onChange={(e) => setLastName(e.target.value)} />
-                                            {errors?.lastName && <div className="text-danger">{errors.lastName}</div>}
-                                        </div>
-                                    </div>
-                                    <div className="row mt-3">
-                                        <div className="col-md-12">
-                                            <label className="labels">Email</label>
-                                            <input type="text" className="form-control" placeholder="Nhập email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                                            {errors?.email && <div className="text-danger">{errors.email}</div>}
-                                        </div>
-                                        <div className="col-md-12">
-                                            <label className="labels">Phone Number</label>
-                                            <input type="text" className="form-control" placeholder="Nhập số điện thoại" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
-                                            {errors?.phoneNumber && <div className="text-danger">{errors.phoneNumber}</div>}
-                                        </div>
-                                    </div>
+            <form onSubmit={handleSubmit}>
+                <Row gutter={16} style={{ marginBottom: 24 }}>
+                    <Col>
+                        <Breadcrumb>
+                            <Breadcrumb.Item>
+                                <Link to="/"><td>Dashboard</td></Link>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item>
+                                <Link to="/employees">Employees</Link>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item>Create</Breadcrumb.Item>
+                        </Breadcrumb>
+                    </Col>
+                </Row>
 
-                                    <div className="row mt-2">
-                                        <div className="col-md-6">
-                                            <label className="labels">Gender</label>
-                                            <select className="form-control" value={gender} onChange={(e) => setGender(e.target.value)}>
-
-                                                <option value="">Chọn giới tính</option>
-                                                <option value="Male">Male</option>
-                                                <option value="Female">Female</option>
-                                                <option value="Orther">Orther</option>
-                                            </select>
-                                            {errors?.gender && <div className="text-danger">{errors.gender}</div>}
-                                        </div>
-                                        <div className="col-md-6">
-                                            <label className="labels">Role</label>
-                                            <select className="form-control" value={role} onChange={(e) => setRole(e.target.value)}>
-                                                <option value="">Chọn vai trò</option>
-                                                <option value="Manager">Manager</option>
-                                                <option value="Receptionist">Receptionist</option>
-                                                <option value="Waiter">Waiter</option>
-                                                <option value="Cashier">Cashier</option>
-                                                <option value="Chef">Chef</option>
-                                            </select>
-                                            {errors?.role && <div className="text-danger">{errors.role}</div>}
-                                        </div>
-                                    </div>
-                                    <div className="row mt-2">
-                                        <span className="col-md-3"></span>
-                                        <div className="col-md-6"></div>
-                                        <span className="col-md-3">
-                                            <button className="btn btn-success mt-3" type="submit">Lưu</button>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
+                <Row gutter={16}>
+                    {/* Left Column: Profile image */}
+                    <Col span={24} md={6}>
+                        <div className="d-flex flex-column align-items-center text-center p-3 py-5">
+                            <Image
+                                width={200}
+                                src={userImage || 'https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg'}
+                                alt="Employee"
+                                style={{ borderRadius: "50%" }}
+                            />
+                            <Button className="mt-3" onClick={handleFileSelect}>Chọn ảnh</Button>
+                            <input type="file" ref={fileInputRef} style={{ display: "none" }} accept="image/*" onChange={handleFileChange} />
                         </div>
-                    </div>
-                </div>
+                    </Col>
+
+                    {/* Right Column: Employee Information */}
+                    <Col span={24} md={18}>
+                        <div className="p-3 py-5">
+                            <Row gutter={16}>
+                                <Col span={12}>
+                                    <Form.Item label="First Name">
+                                        <Input
+                                            value={firstName}
+                                            onChange={(e) => setFirstName(e.target.value)}
+                                            placeholder="Nhập tên"
+                                        />
+                                        {errors.firstName && <div className="text-danger">{errors.firstName}</div>}
+                                    </Form.Item>
+                                </Col>
+                                <Col span={12}>
+                                    <Form.Item label="Last Name">
+                                        <Input
+                                            value={lastName}
+                                            onChange={(e) => setLastName(e.target.value)}
+                                            placeholder="Nhập họ"
+                                        />
+                                        {errors.lastName && <div className="text-danger">{errors.lastName}</div>}
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+
+                            <Row gutter={16}>
+                                <Col span={24}>
+                                    <Form.Item label="Email">
+                                        <Input
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            placeholder="Nhập email"
+                                        />
+                                        {errors.email && <div className="text-danger">{errors.email}</div>}
+                                    </Form.Item>
+                                </Col>
+                                <Col span={24}>
+                                    <Form.Item label="Phone Number">
+                                        <Input
+                                            value={phoneNumber}
+                                            onChange={(e) => setPhoneNumber(e.target.value)}
+                                            placeholder="Nhập số điện thoại"
+                                        />
+                                        {errors.phoneNumber && <div className="text-danger">{errors.phoneNumber}</div>}
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+
+                            <Row gutter={16}>
+                                <Col span={12}>
+                                    <Form.Item label="Gender">
+                                        <Select
+                                            value={gender}
+                                            onChange={(value) => setGender(value)}
+                                            placeholder="Chọn giới tính"
+                                        >
+                                            <Option value="">Chọn giới tính</Option>
+                                            <Option value="Male">Male</Option>
+                                            <Option value="Female">Female</Option>
+                                            <Option value="Other">Other</Option>
+                                        </Select>
+                                        {errors.gender && <div className="text-danger">{errors.gender}</div>}
+                                    </Form.Item>
+                                </Col>
+                                <Col span={12}>
+                                    <Form.Item label="Role">
+                                        <Select
+                                            value={role}
+                                            onChange={(value) => setRole(value)}
+                                            placeholder="Chọn vai trò"
+                                        >
+                                            <Option value="">Chọn vai trò</Option>
+                                            <Option value="Manager">Manager</Option>
+                                            <Option value="Receptionist">Receptionist</Option>
+                                            <Option value="Waiter">Waiter</Option>
+                                            <Option value="Cashier">Cashier</Option>
+                                            <Option value="Chef">Chef</Option>
+                                        </Select>
+                                        {errors.role && <div className="text-danger">{errors.role}</div>}
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+
+                            <Row gutter={16} justify="center">
+                                <Col>
+                                    <Button type="primary" htmlType="submit">Lưu</Button>
+                                </Col>
+                            </Row>
+                        </div>
+                    </Col>
+                </Row>
             </form>
             <ToastContainer />
-
         </>
     );
-}
+};
 
 export default CreateEmployeePage;

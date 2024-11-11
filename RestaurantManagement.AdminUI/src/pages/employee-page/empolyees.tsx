@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Table, Button, Select, Input, Space, Pagination } from 'antd';
+import { Table, Button, Select, Input, Space, Pagination, Row, Col, Breadcrumb, Tag } from 'antd';
 import { EmployeeDto } from "../../models/employeeDto";
 import { DeleteEmployee, GetAllEmployee, GetEmpGender, GetEmpRole, GetEmpStatus, GetEmpSearch, RestoreEmployee } from "../../services/employee-service";
 const { Option } = Select;
@@ -90,7 +90,10 @@ const EmployeePage = () => {
             dataIndex: 'employeeStatus',
             key: 'employeeStatus',
             render: (status: string) => (
-                <span className={status === 'Active' ? 'text-success' : 'text-danger'}>{status}</span>
+                <Tag color={status === 'Active' ? 'green' :
+                    status === 'Deleted' ? 'red' : ''}>
+                    {status}
+                </Tag>
             ),
         },
         { title: 'Chức vụ', dataIndex: 'role', key: 'role' },
@@ -112,16 +115,16 @@ const EmployeePage = () => {
 
     return (
         <main>
-            <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-3 border-bottom">
-                <div className="col">
-                    <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4">
-                        <ol className="breadcrumb mb-0">
-                            <li className="breadcrumb-item"><Link to="/"><dt>Dashboard</dt></Link></li>
-                            <li className="breadcrumb-item active" aria-current="page">Employees</li>
-                        </ol>
-                    </nav>
-                </div>
-            </div>
+            <Row gutter={16} style={{ marginBottom: 24 }}>
+                <Col>
+                    <Breadcrumb>
+                        <Breadcrumb.Item>
+                            <Link to="/"><td>Dashboard</td></Link>
+                        </Breadcrumb.Item>
+                        <Breadcrumb.Item>Employees</Breadcrumb.Item>
+                    </Breadcrumb>
+                </Col>
+            </Row>
             <div className="row">
                 <div className="col-md-2">
                     <Link to="/createemployee">
