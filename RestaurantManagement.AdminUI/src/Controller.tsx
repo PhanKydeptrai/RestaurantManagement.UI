@@ -29,6 +29,7 @@ import OrderDetailPage from "./pages/order-page/orderdetail";
 import OrderPage from "./pages/order-page/orders";
 import CreateOrderPage from "./pages/order-page/createorder";
 import AssignCustomerPage from "./pages/table-page/assigncustomer";
+import BillPage from "./pages/bill-page/bill";
 
 function Controller() {
     return (
@@ -173,6 +174,12 @@ function Controller() {
                         <AssignCustomerPage />
                     </ProtectedRoute>
                 } />
+                <Route path="/bills" element={
+                    <ProtectedRoute>
+                        <BillPage />
+                    </ProtectedRoute>
+                } />
+
 
             </Routes>
         </>

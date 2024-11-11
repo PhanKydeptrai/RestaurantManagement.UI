@@ -2,7 +2,6 @@ import { json, Link } from "react-router-dom";
 import { CategoryDto } from "../../models/categoryDto";
 import React, { useEffect, useState } from "react";
 import { DeleteCategory, GetAllCategory, GetCategory, GetCategoryFilter, GetCategorySearch, RestoreCategory, SortCategory } from "../../services/category-service";
-import { render } from "react-dom";
 import { Button, Input, Pagination, Select, Space, Table } from "antd";
 
 const { Option } = Select;
