@@ -58,6 +58,24 @@ export const GetAllTableOfStatusEmpty = async (filterTableType: string, filterAc
         return null;
     }
 }
+export const AssignTableforbook = async (tableId: string) => {
+    try {
+        const res = await baseUrlDelete.put(`${Table}/table-assign/booked/${tableId}`)
+        return res.data;
+    } catch (error) {
+        console.error("Error assigning table for customer:", error);
+        return null;
+    }
+}
+export const UnAssignTableforbook = async (tableId: string) => {
+    try {
+        const res = await baseUrlDelete.put(`${Table}/table-unassign/booked/${tableId}`)
+        return res.data;
+    } catch (error) {
+        console.error("Error unassigning table for customer:", error);
+        return null;
+    }
+}
 export const AssignTableforCustomer = async (tableId: string) => {
     try {
         const res = await baseUrlDelete.put(`${Table}/table-assign/${tableId}`)

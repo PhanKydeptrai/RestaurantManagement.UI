@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { TableDto } from "../../models/tableDto";
-import { AssignTableforCustomer, GetAllTableOfStatusEmpty, UnAssignTableforCustomer } from "../../services/table-services";
+import { AssignTableforbook, AssignTableforCustomer, GetAllTableOfStatusEmpty, UnAssignTableforbook, UnAssignTableforCustomer } from "../../services/table-services";
 import { Link } from "react-router-dom";
 import { Button, Select, Table, Space, Pagination, message } from "antd";
 import { SyncOutlined } from '@ant-design/icons';
@@ -52,7 +52,33 @@ const AssignCustomerPage = () => {
             message.error('Error assigning table');
         }
     };
+    const handleAssignBook = async (tableId: string) => {
+        try {
+            console.log("Assigning table with id: ", tableId);
+            await AssignTableforbook(tableId);
+            const response = await GetAllTableOfStatusEmpty(filterTableType, filterActiveStatus, filterStatus, sortColumn, sortOrder, 1, 8);
+            setTable(response.value.items);
+            message.success('Table assigned successfully!');
+        }
+        catch (error) {
+            console.error("Error assigning table:", error);
+            message.error('Error assigning table');
+        }
+    }
+    const handleUnAssignBook = async (tableId: string) => {
+        try {
+            console.log("Unassigning table with id: ", tableId);
+            await UnAssignTableforbook(tableId);
+            const response = await GetAllTableOfStatusEmpty(filterTableType, filterActiveStatus, filterStatus, sortColumn, sortOrder, 1, 8);
+            setTable(response.value.items);
+            message.success('Table unassigned successfully!');
 
+        }
+        catch (error) {
+            console.error("Error unassigning table:", error);
+            message.error('Error unassigning table');
+        }
+    }
     const handleUnAssign = async (tableId: string) => {
         try {
             console.log("Unassigning table with id: ", tableId);
@@ -111,13 +137,20 @@ const AssignCustomerPage = () => {
             render: (text: any, record: TableDto) => (
                 <Space size="middle">
                     {record.activeStatus === 'Empty' ? (
-                        <Button type="primary" onClick={() => handleAssign(record.tableId)}>Assign</Button>
+                        <>
+                            <Button type="primary" onClick={() => handleAssign(record.tableId)}>Assign</Button>
+                        </>
+                    ) : record.activeStatus === 'Booked' ? (
+                        <>
+                            <Button type="primary" onClick={() => handleAssignBook(record.tableId)}>Assign</Button>
+                        </>
                     ) : (
                         <Button type="default" onClick={() => handleUnAssign(record.tableId)}>UnAssign</Button>
                     )}
                 </Space>
             ),
         },
+
     ];
 
     return (
@@ -142,6 +175,7 @@ const AssignCustomerPage = () => {
                         style={{ width: 150 }}
                     >
                         <Select.Option value="Empty">Empty</Select.Option>
+                        <Select.Option value="Booked">Booked</Select.Option>
                         <Select.Option value="Occupied">Occupied</Select.Option>
                     </Select>
                 </Space>
