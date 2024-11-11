@@ -120,7 +120,7 @@ const BookingPage = () => {
                     <Link to={`/arrangebooking/${record.bookId}`}>
                         <Button type="primary">Assign</Button>
                     </Link>
-                    <Link to={`/bookingdetail/${record.bookId}`}>
+                    <Link to={`bookingdetail/${record.bookId}`}>
                         <Button>Detail</Button>
                     </Link>
                 </Space>
