@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { GetAllBooking } from "../../services/book-services";
 import { Link } from "react-router-dom";
 import { BookDto } from "../../models/bookDto";
+import { Table, Button, Pagination, Space, notification, Tag } from "antd";
 
 const BookingPage = () => {
     const [bookings, setBookings] = useState<BookDto[]>([]);
@@ -19,112 +20,149 @@ const BookingPage = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const results = await GetAllBooking(filterBookingStatus, filterPaymentStatus, searchTerm, sortColumn, sortOrder, pageIndex, pageSize);
-            if (Array.isArray(results)) {
-                setBookings(results);
-                console.log(bookings);
-            } else {
-                console.error("Dữ liệu không đúng định dạng:", results);
-                setBookings([]); // Đặt bookings thành mảng rỗng nếu dữ liệu không đúng
+            try {
+                const results = await GetAllBooking(
+                    filterBookingStatus, filterPaymentStatus, searchTerm, sortColumn, sortOrder, pageIndex, pageSize
+                );
+                if (Array.isArray(results)) {
+                    setBookings(results);
+                    setHasNextPage(results.length === pageSize);
+                    setHasPreviousPage(pageIndex > 1);
+                    setTotalCount(results.length); // Update with the correct total count
+                } else {
+                    console.error("Dữ liệu không đúng định dạng:", results);
+                    setBookings([]);
+                }
+            } catch (error) {
+                notification.error({
+                    message: "Error",
+                    description: "Unable to load bookings.",
+                });
             }
         };
 
         fetchData();
-    }, [pageIndex, pageSize]);
+    }, [pageIndex, pageSize, filterBookingStatus, filterPaymentStatus, searchTerm, sortColumn, sortOrder]);
 
-
-    // Pagination
-    const handlePreviousPage = () => {
-        if (hasPreviousPage) {
-            setPageIndex(pageIndex - 1);
-        }
+    // Handle page changes
+    const handlePageChange = (page: number) => {
+        setPageIndex(page);
     };
 
-    const handleNextPage = () => {
-        if (hasNextPage) {
-            setPageIndex(pageIndex + 1);
-        }
-    };
+    // Columns configuration for the table
+    const columns = [
+        {
+            title: 'Email',
+            dataIndex: 'email',
+            key: 'email',
+        },
+        {
+            title: 'Phone',
+            dataIndex: 'phone',
+            key: 'phone',
+        },
+        {
+            title: 'Booking Date',
+            dataIndex: 'bookingDate',
+            key: 'bookingDate',
+        },
+        {
+            title: 'Booking Time',
+            dataIndex: 'bookingTime',
+            key: 'bookingTime',
+        },
+        {
+            title: 'Number of Customers',
+            dataIndex: 'numberOfCustomer',
+            key: 'numberOfCustomer',
+        },
+        {
+            title: 'Table ID',
+            dataIndex: 'tableId',
+            key: 'tableId',
+        },
+        {
+            title: 'Booking Price',
+            dataIndex: 'bookingPrice',
+            key: 'bookingPrice',
+        },
+        {
+            title: 'Booking Status',
+            dataIndex: 'bookingStatus',
+            key: 'bookingStatus',
+            render: (status: string) => (
+                <Tag color={status === 'Waiting' ? 'orange' :
+                    status === 'Canceled' ? 'red' :
+                        status === 'Assign' ? 'blue' :
+                            status === 'Completed' ? 'green' :
+                                status === 'Seated' ? 'cyan' : ''}>
+                    {status}
+                </Tag>
+            ),
+        },
+        {
+            title: 'Payment Status',
+            dataIndex: 'paymentStatus',
+            key: 'paymentStatus',
+            render: (status: string) => (
+                <Tag color={status === 'Waiting' ? 'orange' :
+                    status === 'Paid' ? 'green' :
+                        status === 'Expired' ? 'red' : ''}>
+                    {status}
+                </Tag>
+            ),
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            render: (_: any, record: BookDto) => (
+                <Space size="middle">
+                    <Link to={`/arrangebooking/${record.bookId}`}>
+                        <Button type="primary">Assign</Button>
+                    </Link>
+                    <Link to={`bookingdetail/${record.bookId}`}>
+                        <Button>Detail</Button>
+                    </Link>
+                </Space>
+            ),
+        },
+    ];
 
     return (
-        <>
-            <main>
-                <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <div className="col">
-                        <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4">
-                            <ol className="breadcrumb mb-0">
-                                <li className="breadcrumb-item"><Link to="/"><dt>Dashboard</dt></Link></li>
-                                <li className="breadcrumb-item active" aria-current="page">Book</li>
-                            </ol>
-                        </nav>
-                    </div>
+        <main>
+            <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <div className="col">
+                    <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4">
+                        <ol className="breadcrumb mb-0">
+                            <li className="breadcrumb-item">
+                                <Link to="/"><dt>Dashboard</dt></Link>
+                            </li>
+                            <li className="breadcrumb-item active" aria-current="page">Booking</li>
+                        </ol>
+                    </nav>
                 </div>
-                <div className="row">
-                    <table className="table table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Booking Date</th>
-                                <th>Booking Time</th>
-                                <th>Number of Customer</th>
-                                <th>Table Id</th>
-                                <th>Booking Price</th>
-                                <th>Booking Status</th>
-                                <th>Payment Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {bookings.length > 0 ? bookings.map((booking) => (
-                                <tr>
-                                    <td>{booking.email}</td>
-                                    <td>{booking.phone}</td>
-                                    <td>{booking.bookingDate}</td>
-                                    <td>{booking.bookingTime}</td>
-                                    <td>{booking.numberOfCustomer}</td>
-                                    <td>{booking.tableId}</td>
-                                    <td>{booking.bookingPrice}</td>
-                                    <td className={
-                                        booking.bookingStatus === 'Waiting' ? 'text-warning' : booking.bookingStatus === 'Canceled' ? 'text-danger' : booking.bookingStatus === 'Assign' ? 'text-primary' : booking.bookingStatus === 'Completed' ? 'text-success' : booking.bookingStatus === 'Seated' ? 'text-info' : ''
-                                    }>
-                                        {booking.bookingStatus}
-                                    </td>
-                                    <td className={
-                                        booking.paymentStatus === 'Waiting' ? 'text-warning' : booking.paymentStatus === 'Paid' ? 'text-success' : booking.paymentStatus === 'Expired' ? 'text-danger' : ''
-                                    }
-                                    >{booking.paymentStatus}</td>
-                                    <td>
-                                        <Link to={`/arrangebooking/${booking.bookId}`} className="btn btn-success">Assign</Link>
-                                        <Link to={`bookingdetail/${booking.bookId}`} className="btn btn-info">Detail</Link>
+            </div>
 
-                                    </td>
-                                </tr>
-                            )) : (
-                                <tr>
-                                    <td colSpan={12} className="text-center">No bookings available</td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                    <div className="row mt-5">
-                        <nav aria-label="Page navigation example">
-                            <ul className="pagination">
-                                <li className={`page-item ${!hasPreviousPage && 'disabled'}`}>
-                                    <button className="page-link" onClick={handlePreviousPage}>Previous</button>
-                                </li>
-                                <li className="page-item disabled">
-                                    <span className="page-link">Page {pageIndex}</span>
-                                </li>
-                                <li className={`page-item ${!hasNextPage && 'disabled'}`}>
-                                    <button className="page-link" onClick={handleNextPage}>Next</button>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
+            <div className="container">
+                <Table
+                    columns={columns}
+                    dataSource={bookings}
+                    pagination={false}  // Disable internal pagination
+                    rowKey="bookId"
+                    scroll={{ x: 'max-content' }}
+                />
+                <div className="row mt-5">
+                    <Pagination
+                        current={pageIndex}
+                        total={totalCount}
+                        pageSize={pageSize}
+                        onChange={handlePageChange}
+                        showSizeChanger={false}
+                        showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+                    />
                 </div>
-            </main>
-        </>
+            </div>
+        </main>
     );
 };
 

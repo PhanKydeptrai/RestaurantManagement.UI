@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { TableDto } from "../../models/tableDto";
 import { AssignTableforCustomer, GetAllTableOfStatusEmpty, UnAssignTableforCustomer } from "../../services/table-services";
 import { Link } from "react-router-dom";
+import { Button, Select, Table, Space, Pagination, message } from "antd";
+import { SyncOutlined } from '@ant-design/icons';
 
 const AssignCustomerPage = () => {
     const [tables, setTable] = useState<TableDto[]>([]);
@@ -26,22 +28,11 @@ const AssignCustomerPage = () => {
             console.log(response.value.items);
         };
         fetchData();
-    }, [page, pageSize]);
+    }, [page, pageSize, filterTableType, filterActiveStatus, filterStatus, sortColumn, sortOrder]);
 
-    const handleFilterStatusChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
-
-
-        const newFilterStatus = event.target.value;
-        console.log(newFilterStatus);
-
-        // setFilterActiveStatus(newFilterStatus);
-
-
-        // console.log(activeStatus);
-        setFilterActiveStatus(newFilterStatus);
-
-        const response = await GetAllTableOfStatusEmpty(filterTableType, newFilterStatus, filterStatus, sortColumn, sortOrder, 1, 8);
-        console.log(response.value.items);
+    const handleFilterStatusChange = async (value: string) => {
+        setFilterActiveStatus(value);
+        const response = await GetAllTableOfStatusEmpty(filterTableType, value, filterStatus, sortColumn, sortOrder, 1, 8);
         setTable(response.value.items);
         setHasNextPage(response.hasNextPage);
         setHasPreviousPage(response.hasPreviousPage);
@@ -53,102 +44,126 @@ const AssignCustomerPage = () => {
             console.log("Assigning table with id: ", tableId);
             await AssignTableforCustomer(tableId);
             const response = await GetAllTableOfStatusEmpty(filterTableType, filterActiveStatus, filterStatus, sortColumn, sortOrder, 1, 8);
-            setPage(page);
-            console.log(response.value.items);
             setTable(response.value.items);
-            setHasNextPage(response.hasNextPage);
-            setHasPreviousPage(response.hasPreviousPage);
-            setTotalCount(response.totalCount);
-
+            message.success('Table assigned successfully!');
         }
         catch (error) {
             console.error("Error assigning table:", error);
+            message.error('Error assigning table');
         }
-    }
+    };
+
     const handleUnAssign = async (tableId: string) => {
         try {
             console.log("Unassigning table with id: ", tableId);
             await UnAssignTableforCustomer(tableId);
             const response = await GetAllTableOfStatusEmpty(filterTableType, filterActiveStatus, filterStatus, sortColumn, sortOrder, 1, 8);
-            setPage(page);
-            console.log(response.value.items);
             setTable(response.value.items);
-            setHasNextPage(response.hasNextPage);
-            setHasPreviousPage(response.hasPreviousPage);
-            setTotalCount(response.totalCount);
-
+            message.success('Table unassigned successfully!');
         }
         catch (error) {
             console.error("Error unassigning table:", error);
+            message.error('Error unassigning table');
         }
-    }
+    };
 
-
+    const columns = [
+        {
+            title: 'Table Id',
+            dataIndex: 'tableId',
+            key: 'tableId',
+        },
+        {
+            title: 'TableType Name',
+            dataIndex: 'tableTypeName',
+            key: 'tableTypeName',
+        },
+        {
+            title: 'Status',
+            dataIndex: 'tableStatus',
+            key: 'tableStatus',
+            render: (text: string) => (
+                <span className={text === 'empty' ? 'text-danger' : 'text-success'}>{text}</span>
+            ),
+        },
+        {
+            title: 'Active Status',
+            dataIndex: 'activeStatus',
+            key: 'activeStatus',
+            render: (text: string) => {
+                let statusClass = '';
+                switch (text) {
+                    case 'Occupied':
+                        statusClass = 'text-success';
+                        break;
+                    case 'Empty':
+                        statusClass = 'text-danger';
+                        break;
+                    default:
+                        statusClass = '';
+                }
+                return <span className={statusClass}>{text}</span>;
+            },
+        },
+        {
+            title: 'Actions',
+            key: 'actions',
+            render: (text: any, record: TableDto) => (
+                <Space size="middle">
+                    {record.activeStatus === 'Empty' ? (
+                        <Button type="primary" onClick={() => handleAssign(record.tableId)}>Assign</Button>
+                    ) : (
+                        <Button type="default" onClick={() => handleUnAssign(record.tableId)}>UnAssign</Button>
+                    )}
+                </Space>
+            ),
+        },
+    ];
 
     return (
-        <>
-            <main>
-                <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-3 border-bottom">
-                    <div className="col ">
-                        <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4 ">
-                            <ol className="breadcrumb mb-0 ">
-                                <li className="breadcrumb-item"><Link to="/dashboard"><dt>Dashboard</dt></Link></li>
-                                <li className="breadcrumb-item"><Link to="/tables">Tables</Link></li>
-                                <li className="breadcrumb-item active" aria-current="page">Table Assign</li>
-                            </ol>
-                        </nav>
-                    </div>
+        <div>
+            <div className="row mb-3">
+                <div className="col">
+                    <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4">
+                        <ol className="breadcrumb mb-0">
+                            <li className="breadcrumb-item"><Link to="/dashboard"><dt>Dashboard</dt></Link></li>
+                            <li className="breadcrumb-item"><Link to="/tables">Tables</Link></li>
+                            <li className="breadcrumb-item active" aria-current="page">Table Assign</li>
+                        </ol>
+                    </nav>
                 </div>
-                <div>
-                    <div className="col">
-                        {/* Add a select element to change the filter status */}
-                        <select onChange={handleFilterStatusChange} value={filterActiveStatus}>
-                            <option value="Empty">Empty</option>
-                            <option value="Occupied">Occupied</option>
-                        </select>
-                    </div>
-                    <div className="container mt-5">
-                        <div className="row">
-                            <table className="table table-striped table-hover">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Table Id</th>
-                                        <th scope="col">TableType Name</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col">ActiveStatus</th>
-                                        <th scope="col">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {tables.map((table) => (
-                                        <tr key={table.tableId}>
-                                            <td>{table.tableId}</td>
-                                            <td>{table.tableTypeName}</td>
-                                            <td className={table.tableStatus === 'empty' ? 'text-danger' : 'text-success'}>{table.tableStatus}</td>
-                                            <td className={
-                                                table.activeStatus === 'Empty' ? 'text-danger' : 'text-success'
-                                            }>
-                                                {table.activeStatus}
-                                            </td>
-                                            <td>
-                                                {table.activeStatus === 'Empty' ? (
-                                                    <button className="btn btn-info" onClick={() => handleAssign(table.tableId)}>Assign</button>
-                                                ) : (
-                                                    <button className="btn btn-warning" onClick={() => handleUnAssign(table.tableId)}>UnAssign</button>
+            </div>
 
-                                                )}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+            <div className="row mb-3">
+                <Space size="middle">
+                    <Select
+                        defaultValue={filterActiveStatus}
+                        onChange={handleFilterStatusChange}
+                        style={{ width: 150 }}
+                    >
+                        <Select.Option value="Empty">Empty</Select.Option>
+                        <Select.Option value="Occupied">Occupied</Select.Option>
+                    </Select>
+                </Space>
+            </div>
 
-                        </div>
-                    </div>
-                </div>
-            </main>
-        </>
-    )
-}
+            <Table
+                columns={columns}
+                dataSource={tables}
+                rowKey="tableId"
+                pagination={false} // Disable default pagination of Table component
+            />
 
-export default AssignCustomerPage
+            <Pagination
+                current={page}
+                pageSize={pageSize}
+                total={totalCount}
+                onChange={(page) => setPage(page)}
+                showSizeChanger={false} // Disable size changer, as we are using a fixed page size
+                style={{ marginTop: 20 }}
+            />
+        </div>
+    );
+};
+
+export default AssignCustomerPage;

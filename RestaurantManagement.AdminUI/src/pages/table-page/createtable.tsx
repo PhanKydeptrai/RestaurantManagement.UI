@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
-import { Link, useNavigate } from "react-router-dom";
 
-export interface TableTypeInfo {
+interface TableTypeInfo {
     tableTypeId: string;
     tableTypeName: string;
 }
+import { Link, useNavigate } from "react-router-dom";
+import { Button, Input, Select, notification, Form } from "antd";
+
+const { Option } = Select;
 
 const CreateTablePage = () => {
     const [quantity, setQuantity] = useState(0);
@@ -15,18 +17,20 @@ const CreateTablePage = () => {
     const navigate = useNavigate();
 
     const [tableTypeInfo, setTableTypeInfo] = useState<TableTypeInfo[]>([]);
+
     useEffect(() => {
         fetch('https://localhost:7057/api/tabletype/tabletype-info')
             .then(response => response.json())
             .then(data => setTableTypeInfo(data.value))
-            .catch(error => console.log(error))
+            .catch(error => console.log(error));
     }, []);
 
-    const handleTableTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedTableType = tableTypeInfo.find(table => table.tableTypeId === event.target.value);
-        setTableTypeId(event.target.value);
+    const handleTableTypeChange = (value: string) => {
+        const selectedTableType = tableTypeInfo.find(table => table.tableTypeId === value);
+        setTableTypeId(value);
         setTableTypeName(selectedTableType ? selectedTableType.tableTypeName : '');
     };
+
     const validationForm = () => {
         const newErrors: { quantity?: string, tableTypeName?: string, tableTypeId?: string } = {};
         if (!quantity) {
@@ -43,27 +47,18 @@ const CreateTablePage = () => {
     }
 
     const notifyError = () => {
-        toast.error('Vui lòng kiểm tra lại!', {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored"
+        notification.error({
+            message: 'Lỗi',
+            description: 'Vui lòng kiểm tra lại!',
+            placement: 'top',
         });
     }
-    const notifySucess = () => {
-        toast.success('Thành công!', {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored"
+
+    const notifySuccess = () => {
+        notification.success({
+            message: 'Thành công',
+            description: 'Tạo bàn thành công!',
+            placement: 'top',
         });
     }
 
@@ -73,7 +68,6 @@ const CreateTablePage = () => {
             notifyError();
             return;
         }
-
 
         const data = {
             quantity: quantity,
@@ -107,7 +101,7 @@ const CreateTablePage = () => {
 
             // Handle successful response
             console.log('Success:', await response.json());
-            notifySucess();
+            notifySuccess();
             setTimeout(() => {
                 navigate('/tables');
             }, 2000);
@@ -118,17 +112,13 @@ const CreateTablePage = () => {
         }
     };
 
-
-
-
     return (
-
         <>
-            <main className="">
+            <main className="container">
                 <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-3 border-bottom">
-                    <div className="col ">
-                        <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4 ">
-                            <ol className="breadcrumb mb-0 ">
+                    <div className="col">
+                        <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4">
+                            <ol className="breadcrumb mb-0">
                                 <li className="breadcrumb-item"><Link to="/dashboard"><dt>Dashboard</dt></Link></li>
                                 <li className="breadcrumb-item"><Link to="/tables">Tables</Link></li>
                                 <li className="breadcrumb-item active" aria-current="page">Create</li>
@@ -136,43 +126,58 @@ const CreateTablePage = () => {
                         </nav>
                     </div>
                 </div>
-                <form onSubmit={handleSubmit}>
+                <Form onSubmitCapture={handleSubmit} layout="vertical">
                     <div className="row">
                         <div className="col-12">
                             <div className="row">
                                 <div className="col-6">
-                                    <div className="form-group">
-                                        <label htmlFor="quanlity">Quanlity</label>
-                                        <input type="number" className="form-control" id="quanlity" placeholder="Enter quanlity" value={quantity} onChange={(e) => setQuantity(parseInt(e.target.value))} />
-                                        {errors?.quantity && <div className="text-danger">{errors.quantity}</div>}
-                                    </div>
+                                    <Form.Item
+                                        label="Quantity"
+                                        validateStatus={errors?.quantity ? 'error' : ''}
+                                        help={errors?.quantity}
+                                    >
+                                        <Input
+                                            type="number"
+                                            placeholder="Enter quantity"
+                                            value={quantity}
+                                            onChange={(e) => setQuantity(parseInt(e.target.value))}
+                                        />
+                                    </Form.Item>
                                 </div>
                                 <div className="col-6">
-                                    <div className="form-group">
-                                        <label htmlFor="tableTypeId">Table Type</label>
-                                        <select className="form-select" id="tableTypeId" value={tableTypeId} onChange={handleTableTypeChange}>
-                                            <option value="">Select Table Type</option>
+                                    <Form.Item
+                                        label="Table Type"
+                                        validateStatus={errors?.tableTypeId ? 'error' : ''}
+                                        help={errors?.tableTypeId}
+                                    >
+                                        <Select
+                                            placeholder="Select Table Type"
+                                            value={tableTypeId}
+                                            onChange={handleTableTypeChange}
+                                        >
+                                            <Option value="">Select Table Type</Option>
                                             {Array.isArray(tableTypeInfo) && tableTypeInfo.map((tableType: TableTypeInfo) => (
-                                                <option key={tableType.tableTypeId} value={tableType.tableTypeId}>{tableType.tableTypeName}</option>
+                                                <Option key={tableType.tableTypeId} value={tableType.tableTypeId}>
+                                                    {tableType.tableTypeName}
+                                                </Option>
                                             ))}
-                                        </select>
-                                        {errors?.tableTypeId && <div className="text-danger">{errors.tableTypeId}</div>}
-                                    </div>
+                                        </Select>
+                                    </Form.Item>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button type="submit" className="btn btn-primary">Create</button>
+                            <Button type="primary" htmlType="submit">
+                                Create
+                            </Button>
                         </div>
                     </div>
-                </form>
+                </Form>
             </main>
-            <ToastContainer />
         </>
-    )
-}
-
+    );
+};
 
 export default CreateTablePage;
