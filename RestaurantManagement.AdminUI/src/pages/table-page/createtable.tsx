@@ -90,9 +90,12 @@ const CreateTablePage = () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
+
                 body: JSON.stringify(data),
+
             });
 
+            console.log(response.body);
             if (!response.ok) {
                 const errorData = await response.json();
                 console.error('HTTP error! status:', response.status, 'Error data:', errorData);
