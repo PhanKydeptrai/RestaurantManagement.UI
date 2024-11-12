@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { MealDto } from "../../models/mealDto";
 import { DeleteMeal, GetAllMeals, RestoresMeal } from "../../services/meal-services";
 import { Link } from "react-router-dom";
-import { Button, Input, Select, Space, Table, Pagination, Row, Col, Breadcrumb } from "antd";
+import { Button, Input, Select, Space, Table, Pagination, Row, Col, Breadcrumb, Tag } from "antd";
 const { Option } = Select;
 
 const MealPage = () => {
@@ -119,7 +119,7 @@ const MealPage = () => {
         {
             title: 'Status', dataIndex: 'mealStatus', key: 'mealStatus',
             render: (mealStatus: string) => (
-                <span className={mealStatus === 'Active' ? 'text-success' : 'text-danger'}>{mealStatus}</span>
+                <Tag color={mealStatus === 'Active' ? 'green' : 'red'}>{mealStatus}</Tag>
             ),
         },
         {
