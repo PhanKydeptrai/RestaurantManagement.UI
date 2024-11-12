@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { MealDto } from "../../models/mealDto";
-import { DeleteMeal, GetAllMeal, GetAllMeals, RestoresMeal } from "../../services/meal-services";
+import { DeleteMeal, GetAllMeals, RestoresMeal } from "../../services/meal-services";
 import { Link } from "react-router-dom";
-import { Button, Input, Select, Space, Table, Pagination } from "antd";
+import { Button, Input, Select, Space, Table, Pagination, Row, Col, Breadcrumb } from "antd";
 const { Option } = Select;
 
 const MealPage = () => {
@@ -47,8 +47,8 @@ const MealPage = () => {
 
     //#region Filter
     const handleFilterSellStatus = async (value: string) => {
-        const results = await GetAllMeal(filterCategory, value, filterMealStatus, searchTerm, sortColumn, sortOrder, pageIndex, pageSize);
-        setMeals(results.value.items);
+        const results = await GetAllMeals(pageSize, pageIndex, value);
+        setMeals(results.items);
         setFilterSellStatus(value);
         setPageIndex(1);
         setHasNextPage(results.hasNextPage);
@@ -57,8 +57,8 @@ const MealPage = () => {
     };
 
     const handleFilterMealStatus = async (value: string) => {
-        const results = await GetAllMeal(filterCategory, filterSellStatus, value, searchTerm, sortColumn, sortOrder, pageIndex, pageSize);
-        setMeals(results.value.items);
+        const results = await GetAllMeals(pageSize, pageIndex, value);
+        setMeals(results.items);
         setFilterMealStatus(value);
         setPageIndex(1);
         setHasNextPage(results.hasNextPage);
@@ -74,7 +74,7 @@ const MealPage = () => {
 
     const handleSearchSubmit = async (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
-            const results = await GetAllMeal(filterCategory, filterSellStatus, filterMealStatus, searchTerm, sortColumn, sortOrder, pageIndex, pageSize);
+            const results = await GetAllMeals(pageSize, pageIndex, searchTerm);
             setPageIndex(1);
             setMeals(results.items);
             setHasNextPage(results.hasNextPage);
@@ -88,8 +88,8 @@ const MealPage = () => {
     const handleDelete = async (id: string) => {
         try {
             await DeleteMeal(id);
-            const results = await GetAllMeal(filterCategory, filterSellStatus, filterMealStatus, searchTerm, sortColumn, sortOrder, pageIndex, pageSize);
-            setMeals(results.value.items);
+            const results = await GetAllMeals(pageSize, pageIndex, searchTerm);
+            setMeals(results.items);
             setHasNextPage(results.hasNextPage);
             setHasPreviousPage(results.haspreviousPage);
             setTotalCount(results.totalCount);
@@ -101,8 +101,8 @@ const MealPage = () => {
     const handleRestore = async (id: string) => {
         try {
             await RestoresMeal(id);
-            const results = await GetAllMeal(filterCategory, filterSellStatus, filterMealStatus, searchTerm, sortColumn, sortOrder, pageIndex, pageSize);
-            setMeals(results.value.items);
+            const results = await GetAllMeals(pageSize, pageIndex, searchTerm);
+            setMeals(results.items);
             setHasNextPage(results.hasNextPage);
             setHasPreviousPage(results.haspreviousPage);
             setTotalCount(results.totalCount);
@@ -129,12 +129,12 @@ const MealPage = () => {
         {
             title: 'Actions', key: 'actions', render: (text: string, record: MealDto) => (
                 <Space size="middle">
-                    <Link to={`updatemeal/${record.mealId}`} className="btn btn-primary">Edit</Link>
-                    <Link to={`detailmeal/${record.mealId}`} className="btn btn-info">Detail</Link>
+                    <Link to={`updatemeal/${record.mealId}`}><Button type="primary">Update</Button></Link>
+                    <Link to={`detailmeal/${record.mealId}`}><Button type="primary">Detail</Button></Link>
                     {record.mealStatus === 'Active' ? (
-                        <button className="btn btn-danger" onClick={() => handleDelete(record.mealId)}>Delete</button>
+                        <Button type="primary" danger onClick={() => handleDelete(record.mealId)}>Delete</Button>
                     ) : (
-                        <button className="btn btn-warning" onClick={() => handleRestore(record.mealId)}>Restore</button>
+                        <Button style={{ backgroundColor: '#ffec3d', borderColor: '#ffec3d', color: 'white' }} onClick={() => handleRestore(record.mealId)}>Restore</Button>
                     )}
                 </Space>
             )
@@ -142,66 +142,63 @@ const MealPage = () => {
     ];
 
     return (
-        <>
-            <main className="container">
-                <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-3 border-bottom">
-                    <div className="col">
-                        <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4">
-                            <ol className="breadcrumb mb-0">
-                                <li className="breadcrumb-item"><Link to="/dashboard"><dt>Dashboard</dt></Link></li>
-                                <li className="breadcrumb-item active" aria-current="page">Meals</li>
-                            </ol>
-                        </nav>
-                    </div>
+        <main className="container">
+            <Row gutter={16} style={{ marginBottom: 24 }}>
+                <Col>
+                    <Breadcrumb>
+                        <Breadcrumb.Item>
+                            <Link to="/"><td>Dashboard</td></Link>
+                        </Breadcrumb.Item>
+                        <Breadcrumb.Item>Meal</Breadcrumb.Item>
+                    </Breadcrumb>
+                </Col>
+            </Row>
+
+            <div className="row mb-4">
+                <div className="col-md-2">
+                    <Link to="/createmeal"><Button type="primary" block>Create</Button></Link>
                 </div>
-
-                <div className="row mb-4">
-                    <div className="col-md-2">
-                        <Link to="/createmeal"><Button type="primary" block>Create</Button></Link>
-                    </div>
-                    <div className="col-md-2">
-                        <Select defaultValue="" style={{ width: '100%' }} onChange={handleFilterSellStatus}>
-                            <Option value="">All Sell Status</Option>
-                            <Option value="Active">Active</Option>
-                            <Option value="Inactive">Inactive</Option>
-                        </Select>
-                    </div>
-                    <div className="col-md-2">
-                        <Select defaultValue="" style={{ width: '100%' }} onChange={handleFilterMealStatus}>
-                            <Option value="">All Meal Status</Option>
-                            <Option value="Active">Active</Option>
-                            <Option value="Inactive">Inactive</Option>
-                        </Select>
-                    </div>
-                    <div className="col-md-4">
-                        <Input
-                            placeholder="Search by Name"
-                            value={searchTerm}
-                            onChange={handleSearchChange}
-                            onKeyDown={handleSearchSubmit}
-                        />
-                    </div>
+                <div className="col-md-2">
+                    <Select defaultValue="" style={{ width: '100%' }} onChange={handleFilterSellStatus}>
+                        <Option value="">All Sell Status</Option>
+                        <Option value="Active">Active</Option>
+                        <Option value="Inactive">Inactive</Option>
+                    </Select>
                 </div>
+                <div className="col-md-2">
+                    <Select defaultValue="" style={{ width: '100%' }} onChange={handleFilterMealStatus}>
+                        <Option value="">All Meal Status</Option>
+                        <Option value="Active">Active</Option>
+                        <Option value="Inactive">Inactive</Option>
+                    </Select>
+                </div>
+                <div className="col-md-4">
+                    <Input
+                        placeholder="Search by Name"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        onKeyDown={handleSearchSubmit}
+                    />
+                </div>
+            </div>
 
-                <Table
-                    columns={columns}
-                    dataSource={meals}
-                    rowKey="mealId"
-                    pagination={false}
-                />
+            <Table
+                columns={columns}
+                dataSource={meals}
+                rowKey="mealId"
+                pagination={false}
+            />
 
-                <Pagination
-                    current={pageIndex}
-                    total={totalCount}
-                    pageSize={pageSize}
-                    onChange={setPageIndex}
-                    showSizeChanger={false}
-                    showTotal={(total) => `Total ${total} items`}
-                    style={{ marginTop: '20px' }}
-                />
-            </main>
-        </>
+            <Pagination
+                current={pageIndex}
+                total={totalCount}
+                pageSize={pageSize}
+                onChange={setPageIndex}
+                showSizeChanger={false}
+                showQuickJumper={true}
+                showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+            />
+        </main>
     );
-};
-
+}
 export default MealPage;
