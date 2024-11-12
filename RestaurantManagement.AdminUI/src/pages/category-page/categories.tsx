@@ -1,8 +1,8 @@
-import { json, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { CategoryDto } from "../../models/categoryDto";
 import React, { useEffect, useState } from "react";
-import { DeleteCategory, GetAllCategory, GetCategory, GetCategoryFilter, GetCategorySearch, RestoreCategory, SortCategory } from "../../services/category-service";
-import { Button, Input, Pagination, Select, Space, Table } from "antd";
+import { DeleteCategory, GetAllCategory, GetCategoryFilter, GetCategorySearch, RestoreCategory, SortCategory } from "../../services/category-service";
+import { Breadcrumb, Button, Col, Input, Pagination, Row, Select, Space, Table, Tag } from "antd";
 
 const { Option } = Select;
 
@@ -12,17 +12,16 @@ const CategoryPage = () => {
     const [pageSize] = useState(8); // Setting page size to 8
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPreviousPage, setHasPreviousPage] = useState(false);
-    const [totalCount, setTotalCount] = useState();
+    const [totalCount, setTotalCount] = useState(0);
 
     const [searchTerm, setSearchTerm] = useState('');
     const [filter, setFilter] = useState('');
     const [sortColumn, setSortColumn] = useState('');
     const [sortOrder, setSortOrder] = useState('');
+
     useEffect(() => {
         const fetchData = async () => {
-            console.log("fetching data");
             const result = await GetAllCategory(filter, searchTerm, sortColumn, sortOrder, pageSize, pageIndex);
-            console.log(result.items);
             setCategories(result.items);
             setHasNextPage(result.hasNextPage);
             setHasPreviousPage(result.haspreviousPage);
@@ -32,21 +31,20 @@ const CategoryPage = () => {
     }, [pageIndex, pageSize, filter, searchTerm, sortColumn, sortOrder]); // Include pageSize in the dependency array
 
     //#region Pagination
-    // Xử lý chuyển trang 
     const handlePreviousPage = () => {
-        if (hasPreviousPage) { //nếu có trang trước đó
+        if (hasPreviousPage) {
             setPageIndex(pageIndex - 1);
         }
     };
 
     const handleNextPage = () => {
-        if (hasNextPage) { //nếu có trang tiếp theo
+        if (hasNextPage) {
             setPageIndex(pageIndex + 1);
         }
     };
     //#endregion
 
-    //#region filter
+    //#region Filter
     const handleFilterStatusChange = async (value: string) => {
         setFilter(value);
         const results = await GetCategoryFilter(pageSize, pageIndex, value);
@@ -55,25 +53,23 @@ const CategoryPage = () => {
         setHasNextPage(results.value.hasNextPage);
         setHasPreviousPage(results.value.haspreviousPage);
         setTotalCount(results.value.totalCount);
-    }
+    };
     //#endregion
 
     //#region Search
-
-    //truyền tham số cho searchTerm
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
 
-    //Thực hiện search
     const handleSearchSubmit = async (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             const results = await GetCategorySearch(pageSize, pageIndex, searchTerm);
             setCategories(results.items);
             setTotalCount(results.totalCount);
         };
-    }
+    };
     //#endregion
+
     //#region Sort
     const handleSortChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
         setSortOrder(event.target.value);
@@ -85,12 +81,9 @@ const CategoryPage = () => {
         setHasNextPage(results.hasNextPage);
         setHasPreviousPage(results.haspreviousPage);
         setTotalCount(results.totalCount);
-    }
+    };
+
     const handleSortChangeColumn = async (event: React.ChangeEvent<HTMLSelectElement>, type: 'column' | 'order') => {
-        // if (type === 'column') {
-        //     setSortColumn(event.target.value);
-        //     console.log(sortColumn);
-        // } else {
         setSortOrder(event.target.value);
         const results = await SortCategory(8, pageIndex, event.target.value, event.target.value);
         setPageIndex(pageIndex);
@@ -100,36 +93,31 @@ const CategoryPage = () => {
         setHasNextPage(results.hasNextPage);
         setHasPreviousPage(results.haspreviousPage);
         setTotalCount(results.totalCount);
-
-        // const column = type === 'column' ? event.target.value : sortColumn;
-        // const order = type === 'order' ? event.target.value : sortOrder;
-        // const results = await SortCategory(8, pageIndex, column, order);
-        // setPageIndex(pageIndex);
-        // setCategories(results.items);
-        // setHasNextPage(results.hasNextPage);
-        // setHasPreviousPage(results.haspreviousPage);
-        // setTotalCount(results.totalCount);
-    }
-
+    };
     //#endregion
+
     //#region Delete and Restore
     const handleDelete = async (id: string) => {
         await DeleteCategory(id);
         const results = await GetAllCategory(filter, searchTerm, sortColumn, sortOrder, pageSize, pageIndex);
         setCategories(results.items);
     };
+
     const handleRestore = async (id: string) => {
         await RestoreCategory(id);
         const results = await GetAllCategory(filter, searchTerm, sortColumn, sortOrder, pageSize, pageIndex);
         setCategories(results.items);
-    }
+    };
     //#endregion
+
     const columns = [
         { title: 'Tên loại món', dataIndex: 'categoryName', key: 'categoryName' },
         {
             title: 'Trạng thái', dataIndex: 'categoryStatus', key: 'categoryStatus',
-            render: (categoryStatus: string) => (
-                <span className={categoryStatus === 'Active' ? 'text-success' : 'text-danger'}>{categoryStatus}</span>
+            render: (status: string) => (
+                <Tag color={status === 'Active' ? 'green' : status === 'InActive' ? 'red' : ''}>
+                    {status}
+                </Tag>
             ),
         },
         {
@@ -141,12 +129,12 @@ const CategoryPage = () => {
         {
             title: 'Action', key: 'action', render: (text: string, record: CategoryDto) => (
                 <Space size="middle">
-                    <Link to={`/categories/updatecategory/${record.categoryId}`} className="btn btn-primary">Edit</Link>
-                    <Link to={`/categories/detailcategory/${record.categoryId}`} className="btn btn-info">Detail</Link>
+                    <Link to={`/categories/updatecategory/${record.categoryId}`}><Button type="primary">Update</Button></Link>
+                    <Link to={`/categories/detailcategory/${record.categoryId}`}><Button type="primary">Detail</Button></Link>
                     {record.categoryStatus === 'Active' ? (
-                        <button className="btn btn-danger" onClick={() => handleDelete(record.categoryId)}>Delete</button>
+                        <Button type="primary" danger onClick={() => handleDelete(record.categoryId)}>Delete</Button>
                     ) : (
-                        <button className="btn btn-warning" onClick={() => handleRestore(record.categoryId)}>Restore</button>
+                        <Button style={{ backgroundColor: '#ffec3d', borderColor: '#ffec3d', color: 'white' }} onClick={() => handleRestore(record.categoryId)}>Restore</Button>
                     )}
                 </Space>
             )
@@ -155,47 +143,44 @@ const CategoryPage = () => {
 
     return (
         <>
-            <main className="">
-                <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-3 border-bottom">
-                    <div className="col ">
-                        <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4 ">
-                            <ol className="breadcrumb mb-0 ">
-                                <li className="breadcrumb-item"><Link to="/"><dt>Dashboard</dt></Link></li>
-                                <li className="breadcrumb-item active" aria-current="page">Categories</li>
-                            </ol>
-                        </nav>
-                    </div>
-                </div>
+            <main>
+                <Row gutter={16} style={{ marginBottom: 24 }}>
+                    <Col>
+                        <Breadcrumb>
+                            <Breadcrumb.Item>
+                                <Link to="/"><td>Dashboard</td></Link>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item>Category</Breadcrumb.Item>
+                        </Breadcrumb>
+                    </Col>
+                </Row>
                 <div className="row">
                     <div className="row">
                         <div className="col-md-2">
                             <Link to="/categories/createcategory">
-                                <Button className="btn btn-success w-100">Create</Button>
+                                <Button type="primary" block>Create</Button>
                             </Link>
                         </div>
                         <div className="col-md-2">
-                            <Select defaultValue="" onChange={handleFilterStatusChange}>
+                            <Select defaultValue="" onChange={handleFilterStatusChange} style={{ width: '100%' }}>
                                 <Option value="">Filter</Option>
                                 <Option value="Active">Active</Option>
                                 <Option value="Inactive">Inactive</Option>
                             </Select>
                         </div>
-                        <div className="col-md-2">
-                            <Select value={sortColumn}>
-                                <Option value="">SortColumn</Option>
+                        {/* <div className="col-md-2">
+                            <Select value={sortColumn} onChange={handleSortChangeColumn} style={{ width: '100%' }}>
+                                <Option value="">Sort Column</Option>
                                 <Option value="categoryId">A-Z</Option>
                             </Select>
-                        </div>
-
+                        </div> */}
                         <div className="col-md-2">
-                            <Select value={sortOrder} onChange={(value) => handleSortChangeColumn({ target: { value } } as React.ChangeEvent<HTMLSelectElement>, 'order')}>
-                                <Option value="">SortOrder</Option>
+                            <Select value={sortOrder} onChange={(value) => handleSortChangeColumn({ target: { value } } as React.ChangeEvent<HTMLSelectElement>, 'order')} style={{ width: '100%' }}>
+                                <Option value="">Sort Order</Option>
                                 <Option value="asc">Ascending</Option>
                                 <Option value="desc">Descending</Option>
                             </Select>
-
                         </div>
-                        {/* Component for search */}
                         <div className="col-md-4">
                             <Input
                                 type="text"
@@ -205,14 +190,13 @@ const CategoryPage = () => {
                                 onKeyDown={handleSearchSubmit}
                             />
                         </div>
-                        {/* end */}
                     </div>
                     <div className="mt-5"></div>
                     <Table
                         columns={columns}
                         dataSource={categories}
                         pagination={false}
-                        rowKey={"categoryId"}
+                        rowKey="categoryId"
                     />
                     <Pagination
                         current={pageIndex}
