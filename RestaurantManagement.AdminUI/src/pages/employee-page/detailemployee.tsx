@@ -36,7 +36,7 @@ const DetailEmployeePage = () => {
                 <Col>
                     <Breadcrumb>
                         <Breadcrumb.Item>
-                            <Link to="/"><td>Dashboard</td></Link>
+                            <Link to="/">Dashboard</Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
                             <Link to="/employees">Employees</Link>
@@ -49,10 +49,10 @@ const DetailEmployeePage = () => {
             {/* Employee details */}
             <Row gutter={16}>
                 {/* Left Column: Profile image */}
-                <Col span={24} md={6}>
+                <Col xs={24} sm={8} md={6}>
                     <div className="d-flex flex-column align-items-center text-center p-3 py-5">
                         <Image
-                            width={200}
+                            width={150}  // Reduced size for smaller screens
                             src={
                                 employee?.value.userImage ||
                                 "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"
@@ -64,19 +64,19 @@ const DetailEmployeePage = () => {
                 </Col>
 
                 {/* Right Column: Employee Information */}
-                <Col span={24} md={18}>
+                <Col xs={24} sm={16} md={18}>
                     <div className="p-3 py-5">
                         <Form layout="vertical">
                             <Row gutter={16}>
                                 {/* First Name */}
-                                <Col span={12}>
+                                <Col xs={24} sm={12}>
                                     <Form.Item label="First Name">
                                         <Input value={employee?.value.firstName} readOnly />
                                     </Form.Item>
                                 </Col>
 
                                 {/* Last Name */}
-                                <Col span={12}>
+                                <Col xs={24} sm={12}>
                                     <Form.Item label="Last Name">
                                         <Input value={employee?.value.lastName} readOnly />
                                     </Form.Item>
@@ -85,14 +85,14 @@ const DetailEmployeePage = () => {
 
                             <Row gutter={16}>
                                 {/* Email */}
-                                <Col span={24}>
+                                <Col xs={24}>
                                     <Form.Item label="Email">
                                         <Input value={employee?.value.email} readOnly />
                                     </Form.Item>
                                 </Col>
 
                                 {/* Phone Number */}
-                                <Col span={24}>
+                                <Col xs={24}>
                                     <Form.Item label="Phone Number">
                                         <Input value={employee?.value.phoneNumber} readOnly />
                                     </Form.Item>
@@ -101,14 +101,14 @@ const DetailEmployeePage = () => {
 
                             <Row gutter={16}>
                                 {/* Gender */}
-                                <Col span={12}>
+                                <Col xs={24} sm={12}>
                                     <Form.Item label="Gender">
                                         <Input value={employee?.value.gender} readOnly />
                                     </Form.Item>
                                 </Col>
 
                                 {/* Role */}
-                                <Col span={12}>
+                                <Col xs={24} sm={12}>
                                     <Form.Item label="Role">
                                         <Input value={employee?.value.role} readOnly />
                                     </Form.Item>

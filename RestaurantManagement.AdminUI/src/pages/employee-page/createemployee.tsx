@@ -121,10 +121,10 @@ const CreateEmployeePage = () => {
 
                 <Row gutter={16}>
                     {/* Left Column: Profile image */}
-                    <Col span={24} md={6}>
+                    <Col xs={24} sm={8} md={6}>
                         <div className="d-flex flex-column align-items-center text-center p-3 py-5">
                             <Image
-                                width={200}
+                                width={150}
                                 src={userImage || 'https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg'}
                                 alt="Employee"
                                 style={{ borderRadius: "50%" }}
@@ -135,10 +135,10 @@ const CreateEmployeePage = () => {
                     </Col>
 
                     {/* Right Column: Employee Information */}
-                    <Col span={24} md={18}>
+                    <Col xs={24} sm={16} md={18}>
                         <div className="p-3 py-5">
                             <Row gutter={16}>
-                                <Col span={12}>
+                                <Col xs={24} sm={12}>
                                     <Form.Item label="First Name">
                                         <Input
                                             value={firstName}
@@ -148,7 +148,7 @@ const CreateEmployeePage = () => {
                                         {errors.firstName && <div className="text-danger">{errors.firstName}</div>}
                                     </Form.Item>
                                 </Col>
-                                <Col span={12}>
+                                <Col xs={24} sm={12}>
                                     <Form.Item label="Last Name">
                                         <Input
                                             value={lastName}
@@ -161,7 +161,7 @@ const CreateEmployeePage = () => {
                             </Row>
 
                             <Row gutter={16}>
-                                <Col span={24}>
+                                <Col xs={24}>
                                     <Form.Item label="Email">
                                         <Input
                                             value={email}
@@ -171,7 +171,7 @@ const CreateEmployeePage = () => {
                                         {errors.email && <div className="text-danger">{errors.email}</div>}
                                     </Form.Item>
                                 </Col>
-                                <Col span={24}>
+                                <Col xs={24}>
                                     <Form.Item label="Phone Number">
                                         <Input
                                             value={phoneNumber}
@@ -184,7 +184,7 @@ const CreateEmployeePage = () => {
                             </Row>
 
                             <Row gutter={16}>
-                                <Col span={12}>
+                                <Col xs={24} sm={12}>
                                     <Form.Item label="Gender">
                                         <Select
                                             value={gender}
@@ -199,7 +199,7 @@ const CreateEmployeePage = () => {
                                         {errors.gender && <div className="text-danger">{errors.gender}</div>}
                                     </Form.Item>
                                 </Col>
-                                <Col span={12}>
+                                <Col xs={24} sm={12}>
                                     <Form.Item label="Role">
                                         <Select
                                             value={role}
