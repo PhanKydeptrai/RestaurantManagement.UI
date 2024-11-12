@@ -145,23 +145,12 @@ const CreateOrderPage = () => {
 
         {/* Row for Table ID input */}
         <Row gutter={[16, 16]}>
-          <Col span={8}>
+          <Col xs={24} sm={12} md={8}>
             <Form.Item label="Table ID">
               <Input
                 value={tableId}
                 onChange={(e) => setTableId(e.target.value)}
                 placeholder="Enter Table ID"
-              />
-            </Form.Item>
-          </Col>
-          <Col span={16}>
-            {/* Search field for meals */}
-            <Form.Item label="Search Meals">
-              <Input
-                placeholder="Search for meals..."
-                prefix={<SearchOutlined />}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </Form.Item>
           </Col>
@@ -172,7 +161,7 @@ const CreateOrderPage = () => {
         <Spin spinning={loading}>
           <Row gutter={[16, 16]}>
             {meals.map((meal) => (
-              <Col key={meal.mealId} span={8}>
+              <Col key={meal.mealId} xs={24} sm={12} md={8} lg={6}>
                 <Card
                   hoverable
                   cover={<img src={meal.imageUrl} alt={meal.mealName} style={{ height: '150px', objectFit: 'cover' }} />}
