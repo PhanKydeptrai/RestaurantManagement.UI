@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Table, Select, Input, Button, Pagination } from "antd";
+import { Table, Select, Input, Button, Pagination, Tag } from "antd";
 import { CustomerDto } from "../../models/customerDto";
 import { GetAllCustomer, GetCusGender, GetCusStatus, GetFilterTypeCus, GetSreachCus } from "../../services/customer-services";
 
@@ -112,9 +112,9 @@ const CustomerPage = () => {
             dataIndex: 'customerStatus',
             key: 'customerStatus',
             render: (status: string) => (
-                <span className={status === 'Active' ? 'text-success' : 'text-danger'}>
+                <Tag color={status === 'Active' ? 'green' : status === 'InActive' ? 'red' : ''}>
                     {status}
-                </span>
+                </Tag>
             ),
         },
         {
