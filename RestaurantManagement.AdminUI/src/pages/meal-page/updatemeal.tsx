@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { CategoryInfo } from "./createmeal";
 import axios from "axios";
 import { UpdateMeal } from "../../services/meal-services";
 import { toast, ToastContainer } from "react-toastify";
+import { Breadcrumb, Col, Row } from "antd";
 
 const UpdateMealPage = () => {
 
@@ -19,7 +20,6 @@ const UpdateMealPage = () => {
 
     const navigate = useNavigate();
     const [errors, setErrors] = useState<{ mealName?: string, price?: string, description?: string, categoryId?: string }>();
-
 
     useEffect(() => {
         const fetchMealData = async () => {
@@ -56,6 +56,7 @@ const UpdateMealPage = () => {
             reader.readAsDataURL(file);
         }
     };
+
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         if (!validateForm()) {
@@ -86,17 +87,19 @@ const UpdateMealPage = () => {
         } catch (error) {
             console.error('Failed to update meal:', error);
         }
-    }
+    };
+
     const validateForm = () => {
         const newErrors: { mealName?: string, price?: string, description?: string, categoryId?: string } = {
             mealName: mealName ? '' : 'Tên món không được để trống',
             price: price ? '' : 'Giá không được để trống',
             description: description ? '' : 'Mô tả không được để trống',
             categoryId: categoryId ? '' : 'Loại món không được để trống'
-        }
+        };
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
-    }
+    };
+
     const notifySucess = () => {
         toast.success('Thành công!', {
             position: "top-center",
@@ -108,7 +111,8 @@ const UpdateMealPage = () => {
             progress: undefined,
             theme: "colored"
         });
-    }
+    };
+
     const notifyError = () => {
         toast.error('Vui lòng kiểm tra lại!', {
             position: "top-center",
@@ -120,64 +124,111 @@ const UpdateMealPage = () => {
             progress: undefined,
             theme: "colored"
         });
-    }
-
+    };
 
     return (
         <>
             <main className="container">
-                <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-3 border-bottom">
-                    <div className="col ">
-                        <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4 ">
-                            <ol className="breadcrumb mb-0 ">
-                                <li className="breadcrumb-item"><Link to="/dashboard"><dt>Dashboard</dt></Link></li>
-                                <li className="breadcrumb-item"><Link to="/meals">Meals</Link></li>
-                                <li className="breadcrumb-item active" aria-current="page">Update</li>
-                            </ol>
-                        </nav>
-                    </div>
-                </div>
+                <Row gutter={16} style={{ marginBottom: 24 }}>
+                    <Col>
+                        <Breadcrumb>
+                            <Breadcrumb.Item>
+                                <Link to="/"><td>Dashboard</td></Link>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item>
+                                <Link to="/meal"><td>Meal</td></Link>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item>Update</Breadcrumb.Item>
+                        </Breadcrumb>
+                    </Col>
+                </Row>
+
+                {/* Form for updating meal */}
                 <form onSubmit={handleSubmit}>
-                    <div className="mb-3">
-                        <label htmlFor="mealName" className="form-label">Meal Name</label>
-                        <input type="text" className="form-control" id="mealName" value={mealName} onChange={(event) => setMealName(event.target.value)} />
-                        {errors?.mealName && <div className="text-danger">{errors.mealName}</div>}
+                    <div className="row">
+                        <div className="col-12 col-md-4">
+                            <div className="d-flex flex-column align-items-center text-center p-3">
+                                <img
+                                    className=" mb-3"
+                                    style={{ maxWidth: '100%', height: 'auto' }}
+                                    src={imageUrl ?? 'https://via.placeholder.com/200'}
+                                    alt="Meal Image"
+                                />
+                                <input
+                                    type="file"
+                                    className="form-control"
+                                    ref={setfileInputRef}
+                                    onChange={handleFileChange}
+                                />
+                            </div>
+                        </div>
+                        <div className="col-12 col-md-8">
+                            <div className="p-3 py-5">
+                                <div className="mb-3">
+                                    <label htmlFor="mealName" className="form-label">Meal Name</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        id="mealName"
+                                        value={mealName}
+                                        onChange={(event) => setMealName(event.target.value)}
+                                    />
+                                    {errors?.mealName && <div className="text-danger">{errors.mealName}</div>}
+                                </div>
+
+                                <div className="mb-3">
+                                    <label htmlFor="price" className="form-label">Price</label>
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        id="price"
+                                        value={price}
+                                        onChange={(event) => setPrice(Number(event.target.value))}
+                                    />
+                                    {errors?.price && <div className="text-danger">{errors.price}</div>}
+                                </div>
+
+                                <div className="mb-3">
+                                    <label htmlFor="description" className="form-label">Description</label>
+                                    <textarea
+                                        className="form-control"
+                                        id="description"
+                                        value={description}
+                                        onChange={(event) => setDescription(event.target.value)}
+                                    />
+                                    {errors?.description && <div className="text-danger">{errors.description}</div>}
+                                </div>
+
+                                <div className="mb-3">
+                                    <label htmlFor="category" className="form-label">Category</label>
+                                    <select
+                                        className="form-select"
+                                        id="category"
+                                        value={categoryId}
+                                        onChange={(event) => {
+                                            const selectedCategory = categoryInfo.find(category => category.categoryId === event.target.value);
+                                            setCategoryId(event.target.value);
+                                            setCategoryName(selectedCategory ? selectedCategory.categoryName : '');
+                                        }}
+                                    >
+                                        {categoryInfo.map(category => (
+                                            <option key={category.categoryId} value={category.categoryId}>
+                                                {category.categoryName}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {errors?.categoryId && <div className="text-danger">{errors.categoryId}</div>}
+                                </div>
+
+                                <button type="submit" className="btn btn-primary w-100">Update</button>
+                            </div>
+                        </div>
                     </div>
-                    <div className="mb-3">
-                        <label htmlFor="price" className="form-label">Price</label>
-                        <input type="number" className="form-control" id="price" value={price} onChange={(event) => setPrice(Number(event.target.value))} />
-                        {errors?.price && <div className="text-danger">{errors.price}</div>}
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="description" className="form-label">Description</label>
-                        <textarea className="form-control" id="description" value={description} onChange={(event) => setDescription(event.target.value)} />
-                        {errors?.description && <div className="text-danger">{errors.description}</div>}
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="category" className="form-label">Category</label>
-                        <select className="form-select" id="category" value={categoryId} onChange={(event) => {
-                            const selectedCategory = categoryInfo.find(category => category.categoryId === event.target.value);
-                            setCategoryId(event.target.value);
-                            setCategoryName(selectedCategory ? selectedCategory.categoryName : '');
-                        }}>
-                            {categoryInfo.map(category => (
-                                <option key={category.categoryId} value={category.categoryId}>{category.categoryName}</option>
-                            ))}
-                        </select>
-                        {errors?.categoryId && <div className="text-danger">{errors.categoryId}</div>}
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="imageUrl" className="form-label">Image</label>
-                        <input type="file" className="form-control" id="imageUrl" ref={setfileInputRef} onChange={handleFileChange} />
-                        <img src={imageUrl ?? undefined} alt="Meal" className="img-fluid mt-2" />
-                    </div>
-                    <button type="submit" className="btn btn-primary">Update</button>
                 </form>
             </main>
             <ToastContainer />
-
         </>
-    )
-}
+    );
+};
 
 export default UpdateMealPage;

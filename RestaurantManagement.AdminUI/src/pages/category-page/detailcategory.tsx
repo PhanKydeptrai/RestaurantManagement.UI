@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { Form, Input, Row, Col, Image, Breadcrumb } from "antd";
 import { GetDetailCategory } from "../../services/category-service";
 
 const DetailCategoryPage = () => {
     const { categoryId } = useParams<{ categoryId: string }>();
-    const [category, setCategory] = useState<any>();
+    const [category, setCategory] = useState<any>(null);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -14,55 +16,50 @@ const DetailCategoryPage = () => {
             } catch (e) {
                 console.log(e);
             }
-        }; fetchData();
+        };
+        fetchData();
     }, [categoryId]);
 
     return (
         <>
-            <form className="">
-                <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-3 border-bottom">
-                    <div className="col ">
-                        <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4 ">
-                            <ol className="breadcrumb mb-0 ">
-                                <li className="breadcrumb-item"><Link to="/"><dt>Dashboard</dt></Link></li>
-                                <li className="breadcrumb-item"><Link to="/categories">Categories</Link></li>
-                                <li className="breadcrumb-item" aria-current="page">Detail</li>
-                            </ol>
-                        </nav>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-12">
-                        <div className="row" key={categoryId}>
-                            <div className="col-md-3 border-right">
-                                <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-                                    <img className="rounded-circle mt-5" width="200" src={category?.value.imageUrl || 'https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg'} alt="" />
-                                    <input type="file" ref={category?.imageUrl} style={{ display: "none" }} accept="image/*" />
-                                </div>
-                            </div>
+            <form className="form-container">
+                <Row gutter={16} style={{ marginBottom: 24 }}>
+                    <Col>
+                        <Breadcrumb>
+                            <Breadcrumb.Item>
+                                <Link to="/"><td>Dashboard</td></Link>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item>
+                                <Link to="/categories">Category</Link>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item>Detail</Breadcrumb.Item>
+                        </Breadcrumb>
+                    </Col>
+                </Row>
+
+                <Row gutter={16}>
+                    {/* Image and Category Name */}
+                    <Col span={24} md={12}>
+                        <div className="d-flex flex-column align-items-center text-center p-3 py-5">
+                            {/* Image Display */}
+                            <Image
+                                width={250} // Set width to 250
+                                height={250} // Set height to 250 to ensure the image is square
+                                src={category?.value?.imageUrl || 'https://via.placeholder.com/350'}
+                                alt="Category"
+                            />
+                            {/* Category Name Display */}
+                            <Form.Item label="Category Name" className="mt-3">
+                                <Input
+                                    value={category?.value?.categoryName || ''}
+                                    readOnly
+                                    placeholder="Category Name"
+                                    style={{ width: '250px' }} // Đảm bảo chiều rộng của input bằng với chiều rộng của ảnh
+                                />
+                            </Form.Item>
                         </div>
-                    </div>
-                    <div className="col-md-9 border-right">
-                        <div className="p-3 py-5">
-                            <div className="row mt-2">
-                                <div className="col-md-6">
-                                    <label className="labels">Category Name</label>
-                                    <input type="text" className="form-control" value={category?.value.categoryName} />
-                                </div>
-                                <div className="col-md-6">
-                                    <label className="labels">Category Description</label>
-                                    <input typeof="text" className="form-control" value={category?.value.categoryStatus} />
-                                </div>
-                            </div>
-                            <div className="row mt-3">
-                                <div className="col-md-12">
-                                    <label className="labels">Category Description</label>
-                                    <textarea typeof="text" className="form-control" value={category?.value.description} />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    </Col>
+                </Row>
             </form>
         </>
     );

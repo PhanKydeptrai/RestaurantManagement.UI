@@ -1,8 +1,9 @@
 import axios from 'axios';
 import React, { useRef, useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import { UpdateCategory } from '../../services/category-service';
+import { Breadcrumb, Col, Row } from 'antd';
 
 const UpdateCategoryPage = () => {
     const { categoryId } = useParams<{ categoryId: string }>();
@@ -10,7 +11,7 @@ const UpdateCategoryPage = () => {
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const [errors, setErrors] = useState<{ categoryName?: string }>({});
-    const [isSuccess, setIsSuccess] = useState();
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Fetch category data using categoryId and set initial state
@@ -92,6 +93,9 @@ const UpdateCategoryPage = () => {
                 console.log('Category updated successfully:', response);
                 if (response.isSuccess) {
                     console.log("Success");
+                    setTimeout(() => {
+                        navigate('/categories'); // Điều hướng đến trang danh sách sau khi lưu thành công
+                    }, 2000);
                     notifySucess();
                 } else {
                     console.log("Failed");
@@ -111,50 +115,60 @@ const UpdateCategoryPage = () => {
 
     return (
         <>
-            <main className="container">
-                <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-3 border-bottom">
-                    <div className="col ">
-                        <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4 ">
-                            <ol className="breadcrumb mb-0 ">
-                                <li className="breadcrumb-item"><Link to="/"><dt>Dashboard</dt></Link></li>
-                                <li className="breadcrumb-item"><Link to="/categories">Categories</Link></li>
-                                <li className="breadcrumb-item active" aria-current="page">Update</li>
-                            </ol>
-                        </nav>
-                    </div>
-                </div>
+            <form onSubmit={handleSubmit} className='col-md-12'>
+                <Row gutter={16} style={{ marginBottom: 24 }}>
+                    <Col>
+                        <Breadcrumb>
+                            <Breadcrumb.Item>
+                                <Link to="/"><td>Dashboard</td></Link>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item>
+                                <Link to="/categories">Category</Link>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item>Create</Breadcrumb.Item>
+                        </Breadcrumb>
+                    </Col>
+                </Row>
+                <Row gutter={16}>
+                    <Col span={24} md={12}>
+                        <div className="row" key={categoryId}>
+                            {imageUrl && (
+                                <div className="mb-3 col-md-6">
+                                    <img src={imageUrl} alt="Selected" className="img-thumbnail" />
+                                </div>
+                            )}
+                            <div className="col-md-6">
+                                <div className="mb-3">
+                                    <label htmlFor="fileInput" className="form-label">Upload Image:</label>
+                                    <input
+                                        type="file"
+                                        id="fileInput"
+                                        className="form-control"
+                                        ref={fileInputRef}
+                                        onChange={handleFileChange}
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <label htmlFor="categoryName" className="form-label">Category Name:</label>
+                                    <input
+                                        type="text"
+                                        id="categoryName"
+                                        className="form-control"
+                                        value={categoryName}
+                                        onChange={(e) => setCategoryName(e.target.value)}
+                                    />
+                                    {errors.categoryName && <div className="text-danger">{errors.categoryName}</div>}
+                                </div>
+                                <button type="submit" className="btn btn-primary">Update Category</button>
 
-                <div className="row" key={categoryId}>
-                    <form onSubmit={handleSubmit}>
-                        <div className="mb-3">
-                            <label htmlFor="categoryName" className="form-label">Category Name:</label>
-                            <input
-                                type="text"
-                                id="categoryName"
-                                className="form-control"
-                                value={categoryName}
-                                onChange={(e) => setCategoryName(e.target.value)}
-                            />
-                            {errors.categoryName && <div className="text-danger">{errors.categoryName}</div>}
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="fileInput" className="form-label">Upload Image:</label>
-                            <input
-                                type="file"
-                                id="fileInput"
-                                className="form-control"
-                                ref={fileInputRef}
-                                onChange={handleFileChange}
-                            />
-                        </div>
-                        {imageUrl && (
-                            <div className="mb-3">
-                                <img src={imageUrl} alt="Selected" className="img-thumbnail" />
                             </div>
-                        )}
-                        <button type="submit" className="btn btn-primary">Update Category</button>
-                    </form>
-                </div>
+
+                        </div>
+                    </Col>
+                </Row>
+            </form>
+            <main className="container">
+
             </main>
             <ToastContainer />
         </>

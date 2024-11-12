@@ -4,12 +4,13 @@ import { OrderDto, OrderDetailDto } from '../../models/orderDto';
 import { GetAllMeals } from '../../services/meal-services';
 import { CreateOrder } from '../../services/order-services';
 import { toast, ToastContainer } from 'react-toastify';
-// import { GetMeals } from '../../services/meal-services'; // Giả sử đây là service để lấy danh sách món ăn.
-// import { CreateOrder } from '../../services/order-services'; // Giả sử đây là service để tạo đơn hàng.
+import { Input, Button, Row, Col, Card, Typography, Spin, Form, Breadcrumb, Pagination } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
+
+const { Title } = Typography;
 
 const CreateOrderPage = () => {
   const [tableId, setTableId] = useState<string>('');
-  const [orderId, setOrderId] = useState<string>('');
   const [paymentStatus, setPaymentStatus] = useState<string>('');
   const [total, setTotal] = useState<string>('');
   const [orderTime, setOrderTime] = useState<string>('');
@@ -25,52 +26,55 @@ const CreateOrderPage = () => {
   const [hasNextPage, setHasNextPage] = useState(false);
   const [hasPreviousPage, setHasPreviousPage] = useState(false);
   const [totalCount, setTotalCount] = useState();
+  const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
+  const [loading, setLoading] = useState<boolean>(false);
+
   // Fetching meal data when the component mounts
   useEffect(() => {
     const fetchMeals = async () => {
+      setLoading(true);
       try {
-        console.log("fetching data");
+        console.log('fetching data');
         const result = await GetAllMeals(pageSize, pageIndex, searchTerm);
         console.log(result.items);
         setMeals(result.items);
         setHasNextPage(result.hasNextPage);
-        setHasPreviousPage(result.haspreviousPage);
+        setHasPreviousPage(result.hasPreviousPage);
         setTotalCount(result.totalCount);
       } catch (error) {
-        console.error("Error fetching meals:", error);
+        console.error('Error fetching meals:', error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchMeals();
-  }, [pageIndex, pageSize]);
+  }, [pageIndex, pageSize, searchTerm]);
 
   //#region Message
-  const notifySucess = () => {
+  const notifySuccess = () => {
     toast.success('Thành công!', {
-      position: "top-center",
+      position: 'top-center',
       autoClose: 5000,
       hideProgressBar: true,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
-      progress: undefined,
-      theme: "colored"
+      theme: 'colored',
     });
-  }
+  };
 
   const notifyError = () => {
     toast.error('Vui lòng kiểm tra lại!', {
-      position: "top-center",
+      position: 'top-center',
       autoClose: 5000,
       hideProgressBar: true,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
-      progress: undefined,
-      theme: "colored"
+      theme: 'colored',
     });
-  }
+  };
   //#endregion
-  const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
 
   const handleIncreaseQuantity = (mealId: string) => {
     setQuantities((prevQuantities) => ({
@@ -85,7 +89,6 @@ const CreateOrderPage = () => {
       [mealId]: Math.max((prevQuantities[mealId] || 0) - 1, 0),
     }));
   };
-
 
   // Xử lý khi người dùng tạo đơn hàng
   const handleCreateOrder = async (mealId: string) => {
@@ -104,19 +107,18 @@ const CreateOrderPage = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({ mealId, quantity }),
-      })
+      });
       console.log('Data to be sent:', { mealId, quantity });
       const data = await response.json();
       console.log('Order created:', data);
       if (response.ok) {
-        notifySucess();
+        notifySuccess();
       } else {
         notifyError();
       }
-
     } catch (error) {
       notifyError();
       console.error('Error creating order:', error);
@@ -125,89 +127,94 @@ const CreateOrderPage = () => {
 
   return (
     <>
-      <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-3 border-bottom">
-        <div className="col ">
-          <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4 ">
-            <ol className="breadcrumb mb-0 ">
-              <li className="breadcrumb-item"><Link to="/dashboard"><dt>Dashboard</dt></Link></li>
-              <li className="breadcrumb-item"><Link to="/orders">Order</Link></li>
-              <li className="breadcrumb-item active" aria-current="page">Create</li>
-            </ol>
-          </nav>
-        </div>
-      </div>
+      <Row gutter={16} style={{ marginBottom: 24 }}>
+        <Col>
+          <Breadcrumb>
+            <Breadcrumb.Item>
+              <Link to="/"><td>Dashboard</td></Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+              <Link to="/orders">Order</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>Create</Breadcrumb.Item>
+          </Breadcrumb>
+        </Col>
+      </Row>
+
       <div className="container mt-5">
-        <h2>Create Order</h2>
-        <div className="row">
-          <div className="col-md-6">
-            <div className="form-group">
-              <label htmlFor="tableId">Table ID</label>
-              <input
-                type="text"
-                id="tableId"
-                className="form-control"
+
+        {/* Row for Table ID input */}
+        <Row gutter={[16, 16]}>
+          <Col xs={24} sm={12} md={8}>
+            <Form.Item label="Table ID">
+              <Input
                 value={tableId}
                 onChange={(e) => setTableId(e.target.value)}
                 placeholder="Enter Table ID"
               />
-            </div>
-          </div>
-        </div>
+            </Form.Item>
+          </Col>
+        </Row>
 
-        <div>
-          <h3 className="mt-4">Select Meals</h3>
-          <div className="row">
+        {/* Meal Selection */}
+        <Title level={3}>Select Meals</Title>
+        <Spin spinning={loading}>
+          <Row gutter={[16, 16]}>
             {meals.map((meal) => (
-              <div key={meal.mealId} className="col-md-4">
-                <div className="card">
-                  <img
-                    src={meal.imageUrl}
-                    className="card-img-top"
-                    alt={meal.mealName}
-                    style={{ height: '150px', objectFit: 'cover' }}
-                  />
-                  <div className="card-body">
-                    <h5 className="card-title">{meal.mealName}</h5>
-                    <p className="card-text">Price: {meal.price} VND</p>
-                    <div className="d-flex align-items-center">
-                      <button
-                        className="btn btn-secondary"
-                        onClick={() => handleDecreaseQuantity(meal.mealId)}
-                      >
-                        -
-                      </button>
-                      <span className="mx-2">{quantities[meal.mealId] || 0}</span>
-                      <button
-                        className="btn btn-secondary"
-                        onClick={() => handleIncreaseQuantity(meal.mealId)}
-                      >
-                        +
-                      </button>
-                    </div>
-                    <button
-                      className="btn btn-primary mt-2"
-                      onClick={() => handleCreateOrder(meal.mealId)}
+              <Col key={meal.mealId} xs={24} sm={12} md={8} lg={6}>
+                <Card
+                  hoverable
+                  cover={<img src={meal.imageUrl} alt={meal.mealName} style={{ height: '150px', objectFit: 'cover' }} />}
+                >
+                  <Card.Meta title={meal.mealName} description={`Price: ${meal.price} VND`} />
+                  <div className="d-flex align-items-center mt-3">
+                    <Button
+                      className="btn-secondary"
+                      onClick={() => handleDecreaseQuantity(meal.mealId)}
                     >
-                      Add to Order
-                    </button>
+                      -
+                    </Button>
+                    <span className="mx-2">{quantities[meal.mealId] || 0}</span>
+                    <Button
+                      className="btn-secondary"
+                      onClick={() => handleIncreaseQuantity(meal.mealId)}
+                    >
+                      +
+                    </Button>
                   </div>
-                </div>
-              </div>
+                  <Button
+                    type="primary"
+                    block
+                    className="mt-3"
+                    onClick={() => handleCreateOrder(meal.mealId)}
+                  >
+                    Add to Order
+                  </Button>
+                </Card>
+              </Col>
             ))}
-          </div>
-        </div>
+          </Row>
+          <Pagination
+            className='mt-4'
+            current={pageIndex}
+            total={totalCount}
+            pageSize={pageSize}
+            onChange={setPageIndex}
+            showSizeChanger={false}
+            showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+          />
+        </Spin>
 
-
-
+        {/* Cancel and Create Buttons */}
         <div className="mt-4">
-
-          <Link to="/orders" className="btn btn-danger ml-2">
-            Cancel
+          <Link to="/orders">
+            <Button type="default" className="mr-2">
+              Cancel
+            </Button>
           </Link>
         </div>
-        <ToastContainer />
-
       </div>
+      <ToastContainer />
     </>
   );
 };

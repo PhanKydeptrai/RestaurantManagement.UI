@@ -24,18 +24,6 @@ const VoucherPage = () => {
         fetchData();
     }, [pageIndex, pageSize, searchTerm]);
 
-    const handlePreviousPage = () => {
-        if (hasPreviousPage) {
-            setPageIndex(pageIndex - 1);
-        }
-    };
-
-    const handleNextPage = () => {
-        if (hasNextPage) {
-            setPageIndex(pageIndex + 1);
-        }
-    };
-
     //#region Search
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
@@ -166,7 +154,7 @@ const VoucherPage = () => {
                         showSizeChanger={false}
                         onChange={(page) => setPageIndex(page)}
                         onShowSizeChange={() => { }}
-                        showTotal={(total) => `Total ${total} items`}
+                        showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
                     />
                 </div>
             </main>

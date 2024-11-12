@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 import { OrderDto } from "../../models/orderDto";
 import { useEffect, useState } from "react";
 import { GetAllOrders } from "../../services/order-services";
-import { Table, Button, Input, Pagination, Space, notification } from "antd";
+import { Table, Button, Input, Pagination, Space, notification, Row, Col, Breadcrumb, Tag } from "antd";
+import { render } from "react-dom";
 
 const OrderPage = () => {
     const [orders, setOrders] = useState<OrderDto[]>([]);
@@ -64,6 +65,12 @@ const OrderPage = () => {
             title: "Payment Status",
             dataIndex: "paymentStatus",
             key: "paymentStatus",
+            render: (status: string) => (
+                <Tag color={status === 'Paid' ? 'green' :
+                    status === 'Unpaid' ? 'red' : ''
+                }> {status}
+                </Tag>
+            ),
         },
         {
             title: "Total",
@@ -95,44 +102,34 @@ const OrderPage = () => {
 
     return (
         <main>
-            <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-3 border-bottom">
-                <div className="col">
-                    <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4">
-                        <ol className="breadcrumb mb-0">
-                            <li className="breadcrumb-item">
-                                <Link to="/"><dt>Dashboard</dt></Link>
-                            </li>
-                            <li className="breadcrumb-item active" aria-current="page">Orders</li>
-                        </ol>
-                    </nav>
-                </div>
-            </div>
+            <Row gutter={16} style={{ marginBottom: 24 }}>
+                <Col>
+                    <Breadcrumb>
+                        <Breadcrumb.Item>
+                            <Link to="/"><td>Dashboard</td></Link>
+                        </Breadcrumb.Item>
+                        <Breadcrumb.Item>Order</Breadcrumb.Item>
+                    </Breadcrumb>
+                </Col>
+            </Row>
 
             <div className="container">
                 {/* Create Order Button */}
-                <div className="col-md-2 mb-3">
-                    <Link to="/order/create">
-                        <Button type="primary" block>Create Order</Button>
-                    </Link>
-                </div>
+                <div className="row">
+                    <div className="col-md-2 mb-3">
+                        <Link to="/order/create">
+                            <Button type="primary" block>Create Order</Button>
+                        </Link>
+                    </div>
 
-                {/* Search Section */}
-                <div className="row mt-3">
-                    <div className="col-md-6">
+                    {/* Search Section */}
+                    <div className="col-md-2">
                         <Input
-                            placeholder="Search by Order ID or User ID"
+                            placeholder="Search by Table ID"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             style={{ width: "100%" }}
                         />
-                    </div>
-                    <div className="col-md-6">
-                        <Button
-                            onClick={() => setSearchTerm('')}
-                            style={{ marginTop: 8 }}
-                        >
-                            Clear Search
-                        </Button>
                     </div>
                 </div>
 

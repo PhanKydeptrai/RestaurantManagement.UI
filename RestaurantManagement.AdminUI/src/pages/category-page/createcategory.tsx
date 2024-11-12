@@ -1,8 +1,10 @@
 import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Form } from "antd";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { CreateCategory } from "../../services/category-service";
+import { Breadcrumb, Col, Row, Image, Button, Input } from "antd";
 
 
 
@@ -100,66 +102,93 @@ const CreateCategoryPage = () => {
     return (
         <>
             <form onSubmit={handleSubmit}>
-                <main className="container">
-                    <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-3 border-bottom">
-                        <div className="col ">
-                            <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4 ">
-                                <ol className="breadcrumb mb-0 ">
-                                    <li className="breadcrumb-item"><Link to="/"><dt>Dashboard</dt></Link></li>
-                                    <li className="breadcrumb-item"><Link to="/categories">Categories</Link></li>
-                                    <li className="breadcrumb-item active" aria-current="page">Create</li>
-                                </ol>
-                            </nav>
+                <Row gutter={16} style={{ marginBottom: 24 }}>
+                    <Col>
+                        <Breadcrumb>
+                            <Breadcrumb.Item>
+                                <Link to="/"><td>Dashboard</td></Link>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item>
+                                <Link to="/categories">Category</Link>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item>Create</Breadcrumb.Item>
+                        </Breadcrumb>
+                    </Col>
+                </Row>
+                <Row gutter={16}>
+                    <Col span={24} md={6}>
+                        <div className="d-flex flex-column align-items-center text-center p-3 py-5">
+                            <Image
+                                width={200}
+                                src={imageUrl || 'https://via.placeholder.com/350'}
+                                alt="Category"
+                            />
+                            <Button className="mt-3" onClick={handleFileSelect}>Chọn ảnh</Button>
+                            <input type="file" ref={fileInputRef} style={{ display: "none" }} accept="image/*" onChange={handleFileChange} />
                         </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <div className="row">
-                                <div className="col-md-3 border-right">
-                                    <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-                                        <img className=" mt-5" width="350px" src={imageUrl || 'https://via.placeholder.com/350'} alt="" />
-                                        <button type="button" className="btn btn-success mt-3" onClick={handleFileSelect}>
-                                            Chọn ảnh
-                                        </button>
-                                        <input
-                                            type="file"
-                                            ref={fileInputRef}
-                                            style={{ display: 'none' }}
-                                            accept="image/*"
-                                            onChange={handleFileChange}
+                    </Col>
+                    <Col span={24} md={18}>
+                        <div className="p-3 py-3">
+                            <Row gutter={16}>
+                                <Col span={12}>
+                                    <Form.Item label="Tên loại món">
+                                        <Input
+                                            value={name}
+                                            onChange={(e) => setName(e.target.value)}
+                                            placeholder="Nhập tên loại món"
                                         />
-                                    </div>
+                                        {errors.name && <p className="text-danger">{errors.name}</p>}
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+                            <Row justify="center">
+                                <Button className="text-center" type="primary" htmlType="submit">Lưu</Button>
+                            </Row>                        </div>
+                    </Col>
+                </Row>
+
+
+                {/* <div className="row">
+                    <div className="col-12 ">
+                        <div className="row">
+                            <div className="col-md-3 border-right">
+                                <div className="d-flex flex-column align-items-center text-center p-3 py-5">
+                                    <img className=" mt-5" width="350px" src={imageUrl || 'https://via.placeholder.com/350'} alt="" />
+                                    <button type="button" className="btn btn-success mt-3" onClick={handleFileSelect}>
+                                        Chọn ảnh
+                                    </button>
+                                    <input
+                                        type="file"
+                                        ref={fileInputRef}
+                                        style={{ display: 'none' }}
+                                        accept="image/*"
+                                        onChange={handleFileChange}
+                                    />
                                 </div>
-                                <div className="col-md-9 border-right">
-                                    <div className="p-3 py-5">
-                                        <div className="row mt-3">
-                                            <div className="col-md-9 m-lg-3">
-                                                <label className="labels">Tên loại món</label>
-                                                <input type="text" className="form-control" placeholder="Nhập tên loại danh mục"
-                                                    value={name}
-                                                    onChange={(e) => setName(e.target.value)} />
-                                                {errors.name && <p className="text-danger">{errors.name}</p>}
-                                            </div>
+                            </div>
+                            <div className="col-md-9 border-right">
+                                <div className="p-3 py-5">
+                                    <div className="row mt-3">
+                                        <div className="col-md-9 m-lg-3">
+                                            <label className="labels">Tên loại món</label>
+                                            <input type="text" className="form-control" placeholder="Nhập tên loại danh mục"
+                                                value={name}
+                                                onChange={(e) => setName(e.target.value)} />
+                                            {errors.name && <p className="text-danger">{errors.name}</p>}
                                         </div>
-                                        {/* <div className="row mt-3">
-                                            <div className="col-md-9 m-lg-3"><label className="labels">Mô tả</label>
-                                                <textarea className="form-control" placeholder="Nhập mô tả"
-                                                    value={description}
-                                                    onChange={(e) => setDescription(e.target.value)}>
-                                                </textarea>
-                                            </div>
-                                        </div> */}
-                                        <div className="row mt-2">
-                                            <span className="col-md-3"></span>
-                                            <div className="col-md-3"></div>
-                                            <span className="col-md-6"><button className="btn btn-success mt-3" type="submit">Lưu thay đổi</button></span>
-                                        </div>
+                                    </div>
+
+                                    <div className="row mt-2">
+                                        <span className="col-md-3"></span>
+                                        <div className="col-md-3"></div>
+                                        <span className="col-md-6"><button className="btn btn-success mt-3" type="submit">Lưu thay đổi</button></span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </main>
+                </div> */}
+
                 <ToastContainer />
             </form>
         </>
