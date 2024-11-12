@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { TableDto } from "../../models/tableDto";
 import { AssignTableforbook, AssignTableforCustomer, GetAllTableOfStatusEmpty, UnAssignTableforbook, UnAssignTableforCustomer } from "../../services/table-services";
 import { Link } from "react-router-dom";
-import { Button, Select, Table, Space, Pagination, message } from "antd";
+import { Button, Select, Table, Space, Pagination, message, Tag } from "antd";
 import { SyncOutlined } from '@ant-design/icons';
 
 const AssignCustomerPage = () => {
@@ -108,27 +108,22 @@ const AssignCustomerPage = () => {
             title: 'Status',
             dataIndex: 'tableStatus',
             key: 'tableStatus',
-            render: (text: string) => (
-                <span className={text === 'empty' ? 'text-danger' : 'text-success'}>{text}</span>
+            render: (status: string) => (
+                <Tag color={status === 'Active' ? 'green' : status === 'InActive' ? 'red' : ''}>
+                    {status}
+                </Tag>
             ),
         },
         {
             title: 'Active Status',
             dataIndex: 'activeStatus',
             key: 'activeStatus',
-            render: (text: string) => {
-                let statusClass = '';
-                switch (text) {
-                    case 'Occupied':
-                        statusClass = 'text-success';
-                        break;
-                    case 'Empty':
-                        statusClass = 'text-danger';
-                        break;
-                    default:
-                        statusClass = '';
-                }
-                return <span className={statusClass}>{text}</span>;
+            render: (Acstatus: string) => {
+                return (
+                    <Tag color={Acstatus === 'Occupied' ? 'green' : Acstatus === 'Empty' ? 'red' : Acstatus === 'Booked' ? 'yellow' : ''}>
+                        {Acstatus}
+                    </Tag>
+                );
             },
         },
         {

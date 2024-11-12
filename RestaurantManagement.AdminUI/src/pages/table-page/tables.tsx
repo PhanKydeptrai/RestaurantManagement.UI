@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { TableDto } from "../../models/tableDto";
 import { DeleteTable, GetAllTables, RestoreTable } from "../../services/table-services";
 import { Link } from "react-router-dom";
-import { Table, Button, Input, Pagination, Space, message } from "antd";
+import { Table, Button, Input, Pagination, Space, message, Tag } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
 const TableTypePage = () => {
@@ -77,30 +77,22 @@ const TableTypePage = () => {
             title: 'Status',
             dataIndex: 'tableStatus',
             key: 'tableStatus',
-            render: (text: string) => (
-                <span className={text === 'empty' ? 'text-danger' : 'text-success'}>{text}</span>
+            render: (status: string) => (
+                <Tag color={status === 'Active' ? 'green' : 'red'}>
+                    {status}
+                </Tag>
             ),
         },
         {
             title: 'Active Status',
             dataIndex: 'activeStatus',
             key: 'activeStatus',
-            render: (text: string) => {
-                let statusClass = '';
-                switch (text) {
-                    case 'Occupied':
-                        statusClass = 'text-success';
-                        break;
-                    case 'Empty':
-                        statusClass = 'text-danger';
-                        break;
-                    case 'Booked':
-                        statusClass = 'text-info';
-                        break;
-                    default:
-                        statusClass = '';
-                }
-                return <span className={statusClass}>{text}</span>;
+            render: (Acstatus: string) => {
+                return (
+                    <Tag color={Acstatus === 'Occupied' ? 'green' : Acstatus === 'Empty' ? 'red' : Acstatus === 'Booked' ? 'yellow' : ''}>
+                        {Acstatus}
+                    </Tag>
+                );
             },
         },
         {
