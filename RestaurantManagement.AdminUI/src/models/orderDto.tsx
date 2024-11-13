@@ -8,6 +8,7 @@ export interface OrderDto {
 }
 
 export interface OrderDetailDto {
+    key: string;
     orderDetailId: string;
     mealId: string;
     mealName: string;

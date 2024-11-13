@@ -22,10 +22,10 @@ const Header = () => {
                     </button>
                     <a className="navbar-brand" href="#">Name of Restaurant</a>
                     <div className="collapse navbar-collapse" id="navbarNav"></div>
-                    <a href="">
+                    {/* <a href="">
                         <span><FontAwesomeIcon icon={faBell} size="lg" /></span>
                         <span className="badge rounded-pill badge-notification bg-danger">999+</span>
-                    </a>
+                    </a> */}
                     <div className="ms-auto dropdown">
                         <a href="#" className="d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
                             <img src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg" alt="avatar" className="rounded-circle" width="40" height="40" />
