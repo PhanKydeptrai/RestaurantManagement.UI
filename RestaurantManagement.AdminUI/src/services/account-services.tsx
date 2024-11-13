@@ -1,7 +1,9 @@
 import { AxiosResponse } from "axios";
 import baseUrlDelete from "../apis/basedelete";
+import baseUrlPost from "../apis/basepost";
 
 export const Account = "account";
+export const Employee = "employee";
 // /api/account/change-password
 // Đảm bảo gửi đúng tên trường: "oldPass" và "newPass"
 export const EmployeeChangePassword = async (oldPassword: string, newPassword: string) => {
@@ -19,4 +21,16 @@ export const EmployeeChangePassword = async (oldPassword: string, newPassword: s
         });
 
     return res;
+}
+
+export const UpdateAccountEmp = async (formData: FormData, employeeId: string) => {
+    try {
+        const res = await baseUrlPost.putForm(`${Employee}/${employeeId}`, formData);
+        console.log(res.data);
+        return res.data;
+    }
+    catch (error: any) {
+        console.log(error.response.data);
+        return error.response.data;
+    }
 }

@@ -11,3 +11,10 @@ export interface EmployeeDto {
     employeeStatus: string;
     role: string;
 };
+export interface AccountDto {
+    userId: string;
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+    userImage: string
+}
