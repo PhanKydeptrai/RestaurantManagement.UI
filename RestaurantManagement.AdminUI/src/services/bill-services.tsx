@@ -16,3 +16,14 @@ export const GetAllBill = async (filterUserId: string, searchTerm: string, sortC
         return []; // Return an empty array on error to avoid mapping issues
     }
 }
+export const GetBillDetail = async (billId: string) => {
+    try {
+        const response: AxiosResponse = await baseUrl.get(`${Bill}/${billId}`);
+        console.log(response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error fetching bill detail:", error);
+        return [];
+    }
+}

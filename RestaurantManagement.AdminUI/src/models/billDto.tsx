@@ -12,6 +12,7 @@ export interface BillDto {
     orderId: string;
     totalPrice: string;
     paymentType: string;
+    createdDate: string;
     orderDetails: OrderDetailDto[];
 }
 export interface OrderDetailDto {
