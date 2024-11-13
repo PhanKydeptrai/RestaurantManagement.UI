@@ -115,7 +115,7 @@ const OrderDetailPage = () => {
             if (response?.isSuccess) {
                 notifySucess();
                 setTimeout(() => {
-                    navigate('/orders');
+                    navigate('/bills');
                 }, 2000);
             } else {
                 notifyError();

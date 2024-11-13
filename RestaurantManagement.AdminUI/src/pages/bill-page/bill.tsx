@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { BillDto } from "../../models/billDto";
-import { GetAllBill } from "../../services/bill-services";
-import { Pagination, Space, Table } from "antd";
+import { ExportBill, GetAllBill } from "../../services/bill-services";
+import { Button, Pagination, Space, Table } from "antd";
 import { Link, useParams } from "react-router-dom";
 
 const BillPage = () => {
@@ -22,6 +22,16 @@ const BillPage = () => {
         };
         fetchData();
     }, [pageIndex, pageSize]);
+    const handleExportBill = async (billId: string) => {
+        try {
+            const result = await ExportBill(billId); // Gọi API ExportBill
+            console.log(result);
+            console.log(billId);
+            console.log("Exported bill successfully");
+        } catch (error) {
+            console.error("Error exporting bill:", error);
+        }
+    };
 
     const columns = [
         { title: 'Bill ID', dataIndex: 'billId', key: 'billId' },
@@ -37,8 +47,12 @@ const BillPage = () => {
             key: 'orderDetails',
             render: (text: string, record: BillDto) => (
                 <Space>
-                    {/* Chuyển hướng đến trang chi tiết hóa đơn, truyền `billId` */}
-                    <Link to={`/bill/detailbill/${record.billId}`}>View Order Details</Link>
+                    <Button type="primary">
+                        <Link style={{ textDecoration: 'none' }} to={`/bill/detailbill/${record.billId}`}>View</Link>
+                    </Button>
+                    <Button type="primary" onClick={() => handleExportBill(record.billId)}>
+                        Export
+                    </Button>
                 </Space>
             ),
         }

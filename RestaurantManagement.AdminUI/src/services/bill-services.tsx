@@ -1,5 +1,6 @@
 import { AxiosResponse } from "axios";
 import baseUrl from "../apis/base";
+import baseUrlDelete from "../apis/basedelete";
 
 
 export const Bill = "bill";
@@ -25,5 +26,18 @@ export const GetBillDetail = async (billId: string) => {
     catch (error) {
         console.error("Error fetching bill detail:", error);
         return [];
+    }
+}
+
+export const ExportBill = async (billId: string) => {
+    try {
+        const response: AxiosResponse = await baseUrlDelete.get(`${Bill}/bill-export/${billId}`);
+        console.log(response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error exporting bill:", error);
+        return [];
+
     }
 }
