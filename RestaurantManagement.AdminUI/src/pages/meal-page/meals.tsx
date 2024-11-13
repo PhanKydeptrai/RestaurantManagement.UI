@@ -124,7 +124,10 @@ const MealPage = () => {
         },
         {
             title: 'Image', dataIndex: 'imageUrl', key: 'imageUrl',
-            render: (imageUrl: string) => <img src={imageUrl} alt="Meal" style={{ width: 50, height: 50, objectFit: 'cover' }} />
+            render: (imageUrl: string) => {
+                console.log(imageUrl); // Kiểm tra xem URL có đúng không
+                return <img src={imageUrl} alt="Meal" style={{ width: 50, height: 50, objectFit: 'cover' }} />;
+            }
         },
         {
             title: 'Actions', key: 'actions', render: (text: string, record: MealDto) => (

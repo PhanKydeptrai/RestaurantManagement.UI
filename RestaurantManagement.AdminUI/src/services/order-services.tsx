@@ -63,3 +63,15 @@ export const DeleteOrder = async (orderDetailId: string) => {
     }
 
 }
+
+export const OrderPayCash = async (tableId: string) => {
+    try {
+        const response: AxiosResponse = await baseUrlDelete.put(`${Order}/pay/${tableId}`);
+        console.log(response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error paying order:", error);
+        return null;
+    }
+}

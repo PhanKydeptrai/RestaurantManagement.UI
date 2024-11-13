@@ -82,12 +82,11 @@ const OrderPage = () => {
             key: "action",
             render: (text: string, record: OrderDto) => (
                 <Space size="middle">
-                    <Link to={`/orders/${record.tableId}`}>
-                        <Button type="primary">View</Button>
-                    </Link>
-                    {/* <Link to={`/orders/update/${record.tableId}`}>
-                        <Button>Update</Button>
-                    </Link> */}
+                    {record.paymentStatus !== 'Paid' && (
+                        <Link to={`/orders/${record.tableId}`}>
+                            <Button type="primary">View</Button>
+                        </Link>
+                    )}
                 </Space>
             ),
         },

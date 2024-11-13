@@ -30,6 +30,8 @@ import OrderPage from "./pages/order-page/orders";
 import CreateOrderPage from "./pages/order-page/createorder";
 import AssignCustomerPage from "./pages/table-page/assigncustomer";
 import BillPage from "./pages/bill-page/bill";
+import BillDetailPage from "./pages/bill-page/billdetail";
+import ChangePasswordPage from "./pages/account-page/change-password";
 
 function Controller() {
     return (
@@ -177,6 +179,16 @@ function Controller() {
                 <Route path="/bills" element={
                     <ProtectedRoute>
                         <BillPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/bill/detailbill/:billId" element={
+                    <ProtectedRoute>
+                        <BillDetailPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/account/changePassword" element={
+                    <ProtectedRoute>
+                        <ChangePasswordPage />
                     </ProtectedRoute>
                 } />
 

@@ -1,22 +1,27 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { DeleteOrder, GetOrderDetail, UpdateOrder } from "../../services/order-services";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { DeleteOrder, GetOrderDetail, OrderPayCash, UpdateOrder } from "../../services/order-services";
 import { toast, ToastContainer } from "react-toastify";
 import { Button, Input, Table, Space, Typography, Form, Row, Col, Breadcrumb } from "antd";
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined } from '@ant-design/icons';
+import { OrderDetailDto } from "../../models/orderDto";
 
 const { Title } = Typography;
 
 const OrderDetailPage = () => {
     const { tableId } = useParams<{ tableId: string }>();
     const [table, setTable] = useState<any>();
+    const [dataSource, setDataSource] = useState<OrderDetailDto[]>([]);
+    const navigate = useNavigate();
 
+    // Lấy dữ liệu order detail khi page load
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const result = await GetOrderDetail(tableId as string);
                 console.log(result);
                 setTable(result);
+                setDataSource(result?.value?.orderDetails || []); // Set dữ liệu ban đầu
             } catch (e) {
                 console.log(e);
             }
@@ -52,6 +57,26 @@ const OrderDetailPage = () => {
     };
     //#endregion
 
+    // Hàm xử lý tăng giảm số lượng
+    const handleQuantityChange = (key: string, change: number) => {
+        setDataSource(prevDataSource => {
+            // Tìm dòng có key cần thay đổi
+            const updatedDataSource = prevDataSource.map(item => {
+                if (item.orderDetailId === key) {
+                    // Chỉ cập nhật quantity của dòng này
+                    return { ...item, quantity: item.quantity + change };
+
+                }
+                console.log(updatedDataSource);
+                return item;
+            });
+
+            // Trả về updated dataSource với chỉ dòng đã thay đổi
+            return updatedDataSource;
+        });
+    };
+
+    // Hàm xóa order
     const handleDelete = async (OrderId: string) => {
         try {
             console.log("Deleting order: ", OrderId);
@@ -67,6 +92,7 @@ const OrderDetailPage = () => {
         }
     };
 
+    // Hàm cập nhật order
     const handleUpdate = async (tableId: string) => {
         try {
             console.log("Updating order: ", tableId);
@@ -81,7 +107,25 @@ const OrderDetailPage = () => {
             console.error("Error updating order:", error);
         }
     };
-
+    // cash => paymentStatus = "Paid"
+    const handleCash = async (tableId: string) => {
+        try {
+            console.log("Updating order: ", tableId);
+            const response = await OrderPayCash(tableId);
+            if (response?.isSuccess) {
+                notifySucess();
+                setTimeout(() => {
+                    navigate('/bills');
+                }, 2000);
+            } else {
+                notifyError();
+            }
+        } catch (error) {
+            notifyError();
+            console.error("Error updating order:", error);
+        }
+    }
+    // Cấu hình cột cho bảng
     const columns = [
         {
             title: "Order Detail Id",
@@ -95,14 +139,34 @@ const OrderDetailPage = () => {
         },
         {
             title: "Image",
-            dataIndex: "image",
-            key: "image",
-            render: (image: string) => <img src={image} alt="meal" width={100} height={100} />
+            dataIndex: "imageUrl",
+            key: "imageUrl",
+            render: (imageUrl: string) => {
+                return <img src={imageUrl} alt="Meal" style={{ width: 50, height: 50, objectFit: 'cover' }} />;
+            }
         },
         {
             title: "Quantity",
             dataIndex: "quantity",
             key: "quantity",
+            render: (quantity: number, record: OrderDetailDto) => (
+                <span style={{ margin: '0 8px' }}>{quantity}</span>
+
+                // <div>
+                //     <Button
+                //         onClick={() => handleQuantityChange(record.key, -1)}
+                //         disabled={quantity <= 1} // Disable decrease if quantity is 1
+                //     >
+                //         -
+                //     </Button>
+                //     <span style={{ margin: '0 8px' }}>{quantity}</span>
+                //     <Button
+                //         onClick={() => handleQuantityChange(record.key, 1)}
+                //     >
+                //         +
+                //     </Button>
+                // </div>
+            ),
         },
         {
             title: "Unit Price",
@@ -114,13 +178,6 @@ const OrderDetailPage = () => {
             key: "action",
             render: (_: any, record: any) => (
                 <Space size="middle">
-                    {/* <Button
-                        type="primary"
-                        icon={<EditOutlined />}
-                        onClick={() => handleUpdate(record.tableId)}
-                    >
-                        Update
-                    </Button> */}
                     <Button
                         type="primary" danger
                         icon={<DeleteOutlined />}
@@ -169,11 +226,13 @@ const OrderDetailPage = () => {
 
                     <Table
                         columns={columns}
-                        dataSource={table?.value.orderDetails}
+                        dataSource={dataSource}  // Sử dụng dataSource
                         rowKey="orderDetailId"
                         pagination={false}
                         bordered
                     />
+                    <Button type="primary" onClick={() => handleCash(table?.value.tableId)}>Cash</Button>
+
                 </div>
                 <ToastContainer />
             </main>
