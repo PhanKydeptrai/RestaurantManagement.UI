@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import axios from 'axios';
 import { useEffect, useState, useRef } from "react";
 import { EmployeeDto } from "../../models/employeeDto";
+import { Form, Input, Button, Row, Col, notification, Upload, Avatar, Image } from "antd";
+import { UploadOutlined } from '@ant-design/icons';
 
 const AccountPage = () => {
     const [userDetails, setUserDetails] = useState<EmployeeDto | null>(null);
@@ -45,19 +47,17 @@ const AccountPage = () => {
         }
     };
 
-    const handleImageChange = () => {
-        if (fileInputRef.current?.files) {
-            const file = fileInputRef.current.files[0];
-            if (file) {
-                // Here, you can handle the file upload logic.
-                console.log('Image file selected:', file);
-                // Example: Update user image URL after upload
-                setUserDetails({
-                    ...userDetails!,
-                    userImage: URL.createObjectURL(file) // This is just for demonstration, actual upload is required
-                });
-            }
+    const handleImageChange = (file: any) => {
+        if (file) {
+            // Here, you can handle the file upload logic.
+            console.log('Image file selected:', file);
+            // Example: Update user image URL after upload
+            setUserDetails({
+                ...userDetails!,
+                userImage: URL.createObjectURL(file) // This is just for demonstration, actual upload is required
+            });
         }
+        return false; // Prevents auto-upload behavior
     };
 
     if (!userDetails) {
@@ -85,90 +85,148 @@ const AccountPage = () => {
                         <div className="row">
                             <div className="col-md-3 border-right">
                                 <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-                                    <img
-                                        className="rounded-circle mt-5"
-                                        width="200"
+                                    <Image
+                                        width={150}  // Reduced size for smaller screens
+                                        src={
+                                            userDetails?.userImage ||
+                                            "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"
+                                        }
+                                        alt="Employee"
+                                        style={{ borderRadius: "50%" }}
+                                    />
+                                    {/* <Avatar
+                                        size={200}
                                         src={userDetails?.userImage || 'https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg'}
                                         alt="User"
-                                    />
-                                    <input
-                                        type="file"
+                                        style={{ marginTop: '1rem' }}
+                                    /> */}
+                                    <Upload
                                         ref={fileInputRef}
-                                        style={{ display: "none" }}
                                         accept="image/*"
-                                        onChange={handleImageChange}
-                                    />
-                                    <button type="button" onClick={() => fileInputRef.current?.click()} className="btn btn-primary mt-2">Change Image</button>
+                                        showUploadList={false}
+                                        beforeUpload={handleImageChange}
+                                    >
+                                        <Button
+                                            type="primary"
+                                            icon={<UploadOutlined />}
+                                            style={{ marginTop: '10px' }}
+                                        >
+                                            Change Image
+                                        </Button>
+                                    </Upload>
                                 </div>
                             </div>
                             <div className="col-md-9 border-right">
                                 <div className="p-3 py-5">
-                                    <div className="row mt-2">
-                                        <div className="col-md-6">
-                                            <label className="labels">First Name</label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                placeholder="Enter first name"
-                                                value={userDetails?.firstName || ''}
-                                                onChange={(e) => handleChange(e, 'firstName')}
-                                            />
-                                        </div>
-                                        <div className="col-md-6">
-                                            <label className="labels">Last Name</label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                placeholder="Enter last name"
-                                                value={userDetails?.lastName || ''}
-                                                onChange={(e) => handleChange(e, 'lastName')}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="row mt-3">
-                                        <div className="col-md-12">
-                                            <label className="labels">Email</label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                placeholder="Enter email"
-                                                value={userDetails?.email || ''}
-                                                onChange={(e) => handleChange(e, 'email')}
-                                            />
-                                        </div>
-                                        <div className="col-md-12">
-                                            <label className="labels">Phone Number</label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                placeholder="Enter phone number"
-                                                value={userDetails?.phoneNumber || ''}
-                                                onChange={(e) => handleChange(e, 'phoneNumber')}
-                                            />
-                                        </div>
-                                    </div>
+                                    <Form
+                                        layout="vertical"
+                                        initialValues={userDetails}
+                                        onFinish={(values) => {
+                                            console.log('Form submitted:', values);
+                                            // Handle saving profile logic here
+                                        }}
+                                    >
+                                        <Row gutter={16}>
+                                            <Col span={12}>
+                                                <Form.Item
+                                                    label="First Name"
+                                                    name="firstName"
+                                                    rules={[{ required: true, message: 'Please enter your first name!' }]}
+                                                >
+                                                    <Input
+                                                        placeholder="Enter first name"
+                                                        onChange={(e) => handleChange(e, 'firstName')}
+                                                    />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={12}>
+                                                <Form.Item
+                                                    label="Last Name"
+                                                    name="lastName"
+                                                    rules={[{ required: true, message: 'Please enter your last name!' }]}
+                                                >
+                                                    <Input
+                                                        placeholder="Enter last name"
+                                                        onChange={(e) => handleChange(e, 'lastName')}
+                                                    />
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
 
-                                    <div className="row mt-2">
-                                        <div className="col-md-6">
-                                            <label className="labels">Gender</label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                value={userDetails?.gender || ''}
-                                                onChange={(e) => handleChange(e, 'gender')}
-                                            />
-                                        </div>
-                                        <div className="col-md-6">
-                                            <label className="labels">Role</label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                value={userDetails?.role || ''}
-                                                onChange={(e) => handleChange(e, 'role')}
-                                            />
-                                        </div>
-                                    </div>
+                                        <Row gutter={16}>
+                                            <Col span={24}>
+                                                <Form.Item
+                                                    label="Email"
+                                                    name="email"
+                                                    rules={[{ required: true, message: 'Please enter your email!' }]}
+                                                >
+                                                    <Input
+                                                        placeholder="Enter email"
+                                                        onChange={(e) => handleChange(e, 'email')} readOnly
+                                                    />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={24}>
+                                                <Form.Item
+                                                    label="Phone Number"
+                                                    name="phoneNumber"
+                                                    rules={[{ required: true, message: 'Please enter your phone number!' }]}
+                                                >
+                                                    <Input
+                                                        placeholder="Enter phone number"
+                                                        onChange={(e) => handleChange(e, 'phoneNumber')}
+                                                    />
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
 
+                                        <Row gutter={16}>
+                                            <Col span={12}>
+                                                <Form.Item
+                                                    label="Gender"
+                                                    name="gender"
+                                                    rules={[{ required: true, message: 'Please enter your gender!' }]}
+                                                >
+                                                    <Input
+                                                        placeholder="Enter gender"
+                                                        onChange={(e) => handleChange(e, 'gender')}
+                                                    />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={12}>
+                                                <Form.Item
+                                                    label="Role"
+                                                    name="role"
+                                                    rules={[{ required: true, message: 'Please enter your role!' }]}
+                                                >
+                                                    <Input
+                                                        placeholder="Enter role"
+                                                        onChange={(e) => handleChange(e, 'role')}
+                                                    />
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+
+                                        <Row gutter={35}>
+                                            <div className="row mt-5">
+                                                <Col span={24}>
+                                                    <Form.Item>
+                                                        <Button type="primary" htmlType="submit" className="profile-button" block>
+                                                            Save Profile
+                                                        </Button>
+                                                    </Form.Item>
+                                                </Col>
+                                            </div>
+
+                                            <div className="row mt-5">
+                                                <Col span={24}>
+                                                    <Button type="primary">
+                                                        <Link to="/account/changePassword" style={{ textDecoration: 'none' }}>Change Password</Link>
+                                                    </Button>
+                                                </Col>
+                                            </div>
+                                        </Row>
+                                    </Form>
                                 </div>
                             </div>
                         </div>
