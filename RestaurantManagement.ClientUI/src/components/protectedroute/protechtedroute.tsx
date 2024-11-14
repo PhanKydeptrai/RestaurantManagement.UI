@@ -1,15 +1,16 @@
-
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-    // const token = sessionStorage.getItem('token');
-    // if (!token) {
-    //     // Nếu không có token, chuyển hướng đến trang đăng nhập
-    //     return <Navigate to="/" />;
-    // }
-    // Nếu có token, cho phép truy cập vào trang
-    return children;
+// ProtectedRoute checks if the user is authenticated
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+    const token = sessionStorage.getItem('authToken'); // Get auth token from sessionStorage
+
+    // If no token found, redirect to the login page
+    if (!token) {
+        return <Navigate to="/login" replace />;
+    }
+
+    return <>{children}</>;
 };
 
 export default ProtectedRoute;

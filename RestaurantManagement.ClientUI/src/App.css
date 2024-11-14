@@ -1,0 +1,66 @@
+/* Logo */
+.header .logo {
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px 0;
+  }
+  
+  /* Menu */
+  .menu {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .ant-menu-item {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  
+  /* Carousel */
+  .carousel-img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+  
+  /* Cards */
+  .ant-card {
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Giới thiệu hình ảnh */
+  .intro-img {
+    width: 100%;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+  
+  /* Liên hệ */
+  .contact-info .ant-col {
+    text-align: center;
+  }
+  
+  .contact-info .ant-icon {
+    font-size: 30px;
+    color: #1890ff;
+  }
+  
+  @media (max-width: 768px) {
+    .header .logo {
+      font-size: 20px;
+    }
+  
+    .ant-menu {
+      text-align: center;
+    }
+  
+    .intro-img {
+      width: 100%;
+      height: auto;
+    }
+  }
+  
+  

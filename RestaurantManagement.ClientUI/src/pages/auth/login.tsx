@@ -10,7 +10,7 @@ const LoginPage = () => {
         event.preventDefault();
         try {
             const token = await CustomerLogin(email, password);
-            navigate('/dashboard');
+            navigate('/LandingPages');
         } catch (error) {
             console.error('Login failed:', error);
         }
