@@ -83,7 +83,14 @@ const SliderBar = () => {
                 >
                     <Controller />
                 </Content>
-                <Footer style={{ textAlign: 'center' }}>
+                <Footer className="footer" style={{
+                    textAlign: 'center', position: 'fixed',
+                    left: '0',
+                    bottom: '0',
+                    width: '100%',
+                    backgroundColor: '#f1f1f1',
+                    padding: '10px 0'
+                }}>
                     3TK Team ©{new Date().getFullYear()}
                 </Footer>
             </Layout>
