@@ -97,3 +97,14 @@ export const UnAssignTableforCustomer = async (tableId: string) => {
     }
 
 }
+
+export const GetTableInfo = async () => {
+    try {
+        const res = await baseUrlDelete.get(`${Table}/table-info`);
+        return res.data;
+    }
+    catch (error) {
+        console.error("Error fetching table info:", error);
+        return null;
+    }
+}
