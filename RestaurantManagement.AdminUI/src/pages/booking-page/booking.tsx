@@ -94,7 +94,7 @@ const BookingPage = () => {
                 <Tag color={status === 'Waiting' ? 'orange' :
                     status === 'Canceled' ? 'red' :
                         status === 'Assign' ? 'blue' :
-                            status === 'Completed' ? 'green' :
+                            status === 'Occupied' ? 'green' :
                                 status === 'Seated' ? 'cyan' : ''}>
                     {status}
                 </Tag>
@@ -117,9 +117,13 @@ const BookingPage = () => {
             key: 'action',
             render: (_: any, record: BookDto) => (
                 <Space size="middle">
-                    <Link to={`/arrangebooking/${record.bookId}`}>
-                        <Button type="primary">Assign</Button>
-                    </Link>
+                    {record.bookingStatus === 'Waiting' ? (
+                        <Link to={`/arrangebooking/${record.bookId}`}>
+                            <Button type="primary">Assign</Button>
+                        </Link>
+                    ) : (
+                        <Button disabled>Assign</Button>
+                    )}
                     <Link to={`bookingdetail/${record.bookId}`}>
                         <Button>Detail</Button>
                     </Link>

@@ -43,7 +43,7 @@ const AssignCustomerPage = () => {
     };
 
     const handleAssign = async (tableId: string) => {
-        setLoading(true); // Set loading to true when submitting the form
+        setLoading(true);
         try {
             console.log("Assigning table with id: ", tableId);
             const response = await AssignTableforCustomer(tableId);
@@ -91,32 +91,44 @@ const AssignCustomerPage = () => {
         }
     };
     const handleAssignBook = async (tableId: string) => {
+        setLoading(true); // Set loading to true when submitting the form
         try {
             console.log("Assigning table with id: ", tableId);
-            await AssignTableforbook(tableId);
-            const response = await GetAllTableOfStatusEmpty(filterTableType, filterActiveStatus, filterStatus, sortColumn, sortOrder, 1, 8);
+            const response = await AssignTableforbook(tableId);
             setTable(response.value.items);
-            message.success('Table assigned successfully!');
+            if (response && response.isSuccess) {
+                notification.success({
+                    message: 'Assign table successfully',
+                    description: 'Table assigned successfully!. You can check the table in the table list.',
+                });
+            } else {
+                notification.error({
+                    message: 'Asign table Failed',
+                    description: response.errors[0].message || 'There was an error while assigning table.',
+                });
+            }
         }
         catch (error) {
             console.error("Error assigning table:", error);
-            message.error('Error assigning table');
+        }
+        finally {
+            setLoading(false); // Set loading to false after the operation finishes
         }
     }
-    const handleUnAssignBook = async (tableId: string) => {
-        try {
-            console.log("Unassigning table with id: ", tableId);
-            await UnAssignTableforbook(tableId);
-            const response = await GetAllTableOfStatusEmpty(filterTableType, filterActiveStatus, filterStatus, sortColumn, sortOrder, 1, 8);
-            setTable(response.value.items);
-            message.success('Table unassigned successfully!');
+    // const handleUnAssignBook = async (tableId: string) => {
+    //     try {
+    //         console.log("Unassigning table with id: ", tableId);
+    //         await UnAssignTableforbook(tableId);
+    //         const response = await GetAllTableOfStatusEmpty(filterTableType, filterActiveStatus, filterStatus, sortColumn, sortOrder, 1, 8);
+    //         setTable(response.value.items);
+    //         message.success('Table unassigned successfully!');
 
-        }
-        catch (error) {
-            console.error("Error unassigning table:", error);
-            message.error('Error unassigning table');
-        }
-    }
+    //     }
+    //     catch (error) {
+    //         console.error("Error unassigning table:", error);
+    //         message.error('Error unassigning table');
+    //     }
+    // }
 
     const columns = [
         {

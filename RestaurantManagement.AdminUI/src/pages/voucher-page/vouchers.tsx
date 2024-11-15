@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { VoucherDto } from "../../models/voucherDto";
 import { DeleteVoucher, GetAllVouchers } from "../../services/voucher-services";
-import { Button, Input, Table, Pagination, notification } from "antd";
+import { Button, Input, Table, Pagination, notification, Tag, Space } from "antd";
 
 const VoucherPage = () => {
     const [vouchers, setVouchers] = useState<VoucherDto[]>([]);
@@ -46,9 +46,7 @@ const VoucherPage = () => {
             await DeleteVoucher(id);
             const results = await GetAllVouchers(8, pageIndex, searchTerm);
             setVouchers(results.items);
-            setHasNextPage(results.hasNextPage);
-            setHasPreviousPage(results.haspreviousPage);
-            setTotalCount(results.totalCount);
+
             notification.success({ message: "Voucher Deleted", description: "Voucher has been successfully deleted." });
         } catch (error) {
             notification.error({ message: "Error", description: "Failed to delete the voucher." });
@@ -91,18 +89,26 @@ const VoucherPage = () => {
             dataIndex: 'status',
             key: 'status',
             render: (status: string) => (
-                <span className={status === 'Active' ? 'text-success' : 'text-danger'}>
+                <Tag color={status === 'Active' ? 'green' : 'red'}>
                     {status}
-                </span>
+                </Tag>
             ),
         },
         {
             title: 'Action',
             key: 'action',
             render: (text: string, record: VoucherDto) => (
-                <Button type="link" danger onClick={() => handleDelete(record.voucherId)}>
-                    Delete
-                </Button>
+                <Space size="middle">
+                    {record.status === 'Active' ? (
+                        <Button type="primary" danger onClick={() => handleDelete(record.voucherId)}>
+                            Delete
+                        </Button>
+                    ) : (
+                        <Button type="primary" danger disabled>
+                            Delete
+                        </Button>
+                    )}
+                </Space>
             ),
         },
     ];
