@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { MealDto } from "../../models/mealDto";
-import { DeleteMeal, GetAllMeals, RestoresMeal } from "../../services/meal-services";
+import { DeleteMeal, FilterMealStatus, FilterSellStatus, GetAllMeal, GetAllMeals, RestoresMeal } from "../../services/meal-services";
 import { Link } from "react-router-dom";
-import { Button, Input, Select, Space, Table, Pagination, Row, Col, Breadcrumb, Tag } from "antd";
+import { Button, Input, Select, Space, Table, Pagination, Row, Col, Breadcrumb, Tag, notification } from "antd";
 const { Option } = Select;
 
 const MealPage = () => {
     const [meals, setMeals] = useState<MealDto[]>([]);
     const [pageIndex, setPageIndex] = useState(1);
-    const [pageSize] = useState(8); // Setting page size to 8
+    const [pageSize] = useState(8);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPreviousPage, setHasPreviousPage] = useState(false);
     const [totalCount, setTotalCount] = useState(0);
@@ -17,19 +17,18 @@ const MealPage = () => {
     const [filterCategory, setFilterCategory] = useState('');
     const [filterSellStatus, setFilterSellStatus] = useState('');
     const [filterMealStatus, setFilterMealStatus] = useState('');
-    const [sortColumn, setSortColumn] = useState('');
-    const [sortOrder, setSortOrder] = useState('');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
-            const result = await GetAllMeals(pageSize, pageIndex, searchTerm);
-            setMeals(result.items);
+            const result = await GetAllMeal(filterCategory, filterSellStatus, filterMealStatus, searchTerm, '', '', pageIndex, pageSize);
+            setMeals(result.value.items);
             setHasNextPage(result.hasNextPage);
             setHasPreviousPage(result.haspreviousPage);
             setTotalCount(result.totalCount);
         };
         fetchData();
-    }, [pageIndex, pageSize, searchTerm]);
+    }, [pageIndex, pageSize]);
 
     //#region Pagination
     const handlePreviousPage = () => {
@@ -47,8 +46,8 @@ const MealPage = () => {
 
     //#region Filter
     const handleFilterSellStatus = async (value: string) => {
-        const results = await GetAllMeals(pageSize, pageIndex, value);
-        setMeals(results.items);
+        const results = await FilterSellStatus(value, pageIndex, pageSize);
+        setMeals(results.value.items);
         setFilterSellStatus(value);
         setPageIndex(1);
         setHasNextPage(results.hasNextPage);
@@ -57,8 +56,8 @@ const MealPage = () => {
     };
 
     const handleFilterMealStatus = async (value: string) => {
-        const results = await GetAllMeals(pageSize, pageIndex, value);
-        setMeals(results.items);
+        const results = await FilterMealStatus(value, pageIndex, pageSize);
+        setMeals(results.value.items);
         setFilterMealStatus(value);
         setPageIndex(1);
         setHasNextPage(results.hasNextPage);
@@ -85,30 +84,52 @@ const MealPage = () => {
     //#endregion
 
     //#region Delete and Restore
-    const handleDelete = async (id: string) => {
-        try {
-            await DeleteMeal(id);
-            const results = await GetAllMeals(pageSize, pageIndex, searchTerm);
-            setMeals(results.items);
-            setHasNextPage(results.hasNextPage);
-            setHasPreviousPage(results.haspreviousPage);
-            setTotalCount(results.totalCount);
-        } catch (error) {
-            console.error('Failed to delete meal:', error);
-        }
+    const handleDelete = (id: string) => {
+        setLoading(true);
+        DeleteMeal(id)
+            .then(() => {
+                setMeals(meals.filter(meal => meal.mealId !== id)); // Cập nhật bảng trực tiếp
+                notification.success({
+                    message: 'Delete meal successfully',
+                    description: 'Meal deleted successfully!',
+                });
+            })
+            .catch((error) => {
+                console.error('Failed to delete meal:', error);
+                notification.error({
+                    message: 'Delete meal Failed',
+                    description: 'There was an error while deleting the meal.',
+                });
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     };
 
-    const handleRestore = async (id: string) => {
-        try {
-            await RestoresMeal(id);
-            const results = await GetAllMeals(pageSize, pageIndex, searchTerm);
-            setMeals(results.items);
-            setHasNextPage(results.hasNextPage);
-            setHasPreviousPage(results.haspreviousPage);
-            setTotalCount(results.totalCount);
-        } catch (error) {
-            console.error('Failed to restore meal:', error);
-        }
+    const handleRestore = (id: string) => {
+        setLoading(true);
+        RestoresMeal(id)
+            .then(() => {
+                const restoredMeal = meals.find(meal => meal.mealId === id);
+                if (restoredMeal) {
+                    restoredMeal.mealStatus = 'Active'; // Cập nhật trạng thái meal
+                    setMeals([...meals]); // Buộc re-render bảng với dữ liệu mới
+                }
+                notification.success({
+                    message: 'Restore meal successfully',
+                    description: 'Meal restored successfully!',
+                });
+            })
+            .catch((error) => {
+                console.error('Failed to restore meal:', error);
+                notification.error({
+                    message: 'Restore meal Failed',
+                    description: 'There was an error while restoring the meal.',
+                });
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     };
     //#endregion
 
@@ -124,10 +145,9 @@ const MealPage = () => {
         },
         {
             title: 'Image', dataIndex: 'imageUrl', key: 'imageUrl',
-            render: (imageUrl: string) => {
-                console.log(imageUrl); // Kiểm tra xem URL có đúng không
-                return <img src={imageUrl} alt="Meal" style={{ width: 50, height: 50, objectFit: 'cover' }} />;
-            }
+            render: (imageUrl: string) => (
+                <img src={imageUrl} alt="Meal" style={{ width: 50, height: 50, objectFit: 'cover' }} />
+            ),
         },
         {
             title: 'Actions', key: 'actions', render: (text: string, record: MealDto) => (
@@ -150,7 +170,7 @@ const MealPage = () => {
                 <Col>
                     <Breadcrumb>
                         <Breadcrumb.Item>
-                            <Link to="/"><td>Dashboard</td></Link>
+                            <Link to="/">Dashboard</Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>Meal</Breadcrumb.Item>
                     </Breadcrumb>
@@ -161,13 +181,13 @@ const MealPage = () => {
                 <div className="col-md-2">
                     <Link to="/createmeal"><Button type="primary" block>Create</Button></Link>
                 </div>
-                <div className="col-md-2">
+                {/* <div className="col-md-2">
                     <Select defaultValue="" style={{ width: '100%' }} onChange={handleFilterSellStatus}>
                         <Option value="">All Sell Status</Option>
                         <Option value="Active">Active</Option>
                         <Option value="Inactive">Inactive</Option>
                     </Select>
-                </div>
+                </div> */}
                 <div className="col-md-2">
                     <Select defaultValue="" style={{ width: '100%' }} onChange={handleFilterMealStatus}>
                         <Option value="">All Meal Status</Option>
@@ -204,4 +224,5 @@ const MealPage = () => {
         </main>
     );
 }
+
 export default MealPage;
