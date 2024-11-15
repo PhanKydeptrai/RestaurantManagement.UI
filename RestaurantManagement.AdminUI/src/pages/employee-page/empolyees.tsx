@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Table, Button, Select, Input, Space, Pagination, Row, Col, Breadcrumb, Tag } from 'antd';
+import { Table, Button, Select, Input, Space, Pagination, Row, Col, Breadcrumb, Tag, notification } from 'antd';
 import { EmployeeDto } from "../../models/employeeDto";
 import { DeleteEmployee, GetAllEmployee, GetEmpGender, GetEmpRole, GetEmpStatus, GetEmpSearch, RestoreEmployee } from "../../services/employee-service";
 const { Option } = Select;
@@ -16,6 +16,7 @@ const EmployeePage = () => {
     const [filterStatus, setFilterStatus] = useState<string>('');
     const [filterGender, setFilterGender] = useState('');
     const [filterRole, setFilterRole] = useState('');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -68,15 +69,67 @@ const EmployeePage = () => {
     };
 
     const handleDelete = async (id: string) => {
-        await DeleteEmployee(id);
-        const results = await GetAllEmployee(filterGender, filterRole, filterStatus, searchTerm, '', '', pageSize, pageIndex);
-        setEmployees(results.items);
+        setLoading(true);
+        try {
+            // Gọi API xóa nhân viên
+            const result = await DeleteEmployee(id);
+
+            // Kiểm tra kết quả trả về của API
+            if (result && result.isSuccess) {
+                // Nếu xóa thành công, cập nhật lại danh sách nhân viên
+                const results = await GetAllEmployee(filterGender, filterRole, filterStatus, searchTerm, '', '', pageSize, pageIndex);
+                setEmployees(results.items);
+
+                notification.success({
+                    message: 'Xoá thành công!',
+                    description: 'Nhân viên đã được xoá thành công!',
+                });
+            } else {
+                // Nếu API không trả về thành công
+                notification.error({
+                    message: 'Xoá thất bại!',
+                    description: result.errors[0]?.message || 'Nhân viên chưa được xoá!',
+                });
+            }
+        }
+        catch (error) {
+            // Xử lý lỗi khi gọi API
+            console.error('Error deleting employee:', error);
+            notification.error({
+                message: 'Xoá Thất Bại!',
+                description: 'An unexpected error occurred while deleting the employee.',
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
+
     const handleRestore = async (id: string) => {
-        await RestoreEmployee(id);
-        const results = await GetAllEmployee(filterGender, filterRole, filterStatus, searchTerm, '', '', pageSize, pageIndex);
-        setEmployees(results.items);
+        setLoading(true);
+        try {
+            const result = await RestoreEmployee(id);
+            if (result && result.isSuccess) {
+                const results = await GetAllEmployee(filterGender, filterRole, filterStatus, searchTerm, '', '', pageSize, pageIndex);
+                setEmployees(results.items);
+                notification.success({
+                    message: 'Khôi phục nhân viên thành công!',
+                    description: 'Nhân viên đã được khôi phục thành công!',
+                });
+            } else {
+                notification.error({
+                    message: 'Khôi phục nhân viên thất bại!',
+                    description: 'Nhân viên chưa được khôi phục!',
+                });
+            }
+        } catch (error) {
+            notification.error({
+                message: 'Khôi Phục Thất Bại!',
+                description: 'This employee has not been restored!',
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     const columns = [
