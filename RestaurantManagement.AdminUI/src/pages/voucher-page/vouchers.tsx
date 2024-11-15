@@ -42,14 +42,14 @@ const VoucherPage = () => {
     //#endregion
 
     const handleDelete = async (id: string) => {
+
         try {
             await DeleteVoucher(id);
             const results = await GetAllVouchers(8, pageIndex, searchTerm);
             setVouchers(results.items);
-
-            notification.success({ message: "Voucher Deleted", description: "Voucher has been successfully deleted." });
+            notification.success({ message: "Xoá voucher thành công", description: "Voucher đã được xoá" });
         } catch (error) {
-            notification.error({ message: "Error", description: "Failed to delete the voucher." });
+            notification.error({ message: "Error", description: "Xoá thất bại. Vui lòng kiểm tra lại" });
         }
     };
 
