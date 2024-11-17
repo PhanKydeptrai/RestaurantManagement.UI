@@ -3,35 +3,34 @@ import { TableDto } from "../../models/tableDto";
 import { AssignTableforbook, AssignTableforCustomer, GetAllTableOfStatusEmpty, UnAssignTableforbook, UnAssignTableforCustomer } from "../../services/table-services";
 import { Link } from "react-router-dom";
 import { Button, Select, Table, Space, Pagination, message, Tag, notification } from "antd";
-import { SyncOutlined } from '@ant-design/icons';
+import { SyncOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import form from "antd/es/form";
 
 const AssignCustomerPage = () => {
     const [tables, setTable] = useState<TableDto[]>([]);
+    const [pageIndex, setPageIndex] = useState(1);
+    const [pageSize, setPageSize] = useState(8);
+    const [hasNextPage, setHasNextPage] = useState(false);
+    const [hasPreviousPage, setHasPreviousPage] = useState(false);
+    const [totalCount, setTotalCount] = useState(0);
+
     const [filterTableType, setFilterTableType] = useState('');
     const [filterActiveStatus, setFilterActiveStatus] = useState('Empty');
     const [filterStatus, setFilterStatus] = useState('');
     const [sortColumn, setSortColumn] = useState('');
     const [sortOrder, setSortOrder] = useState('');
-    const [page, setPage] = useState(1);
-    const [pageSize, setPageSize] = useState(8);
-    const [hasNextPage, setHasNextPage] = useState(false);
-    const [hasPreviousPage, setHasPreviousPage] = useState(false);
-    const [totalCount, setTotalCount] = useState(0);
     const [loading, setLoading] = useState(false); // To handle loading state during password change
-
-
     useEffect(() => {
         const fetchData = async () => {
-            const response = await GetAllTableOfStatusEmpty(filterTableType, filterActiveStatus, filterStatus, sortColumn, sortOrder, page, pageSize);
-            setTable(response.value.items);
+            const response = await GetAllTableOfStatusEmpty(filterTableType, filterActiveStatus, filterStatus, sortColumn, sortOrder, pageIndex, pageSize);
+            setTable(response.items);
             setHasNextPage(response.hasNextPage);
             setHasPreviousPage(response.hasPreviousPage);
             setTotalCount(response.totalCount);
-            console.log(response.value.items);
+            console.log(response.items);
         };
         fetchData();
-    }, [page, pageSize, filterTableType, filterActiveStatus, filterStatus, sortColumn, sortOrder]);
+    }, [pageIndex, pageSize, filterTableType, filterActiveStatus, filterStatus, sortColumn, sortOrder]);
 
     const handleFilterStatusChange = async (value: string) => {
         setFilterActiveStatus(value);
@@ -221,12 +220,27 @@ const AssignCustomerPage = () => {
             />
 
             <Pagination
-                current={page}
-                pageSize={pageSize}
+                current={pageIndex}
                 total={totalCount}
-                onChange={(page) => setPage(page)}
-                showSizeChanger={false} // Disable size changer, as we are using a fixed page size
-                style={{ marginTop: 20 }}
+                pageSize={pageSize}
+                onChange={(page) => setPageIndex(page)} // Cập nhật pageIndex khi người dùng thay đổi trang
+                showSizeChanger={false}
+                showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+                disabled={loading} // Vô hiệu hóa phân trang khi đang tải dữ liệu
+                prevIcon={
+                    hasPreviousPage ? (
+                        <LeftOutlined style={{ fontSize: 16, color: '#1890ff' }} /> // Hiển thị màu xanh nếu có trang trước
+                    ) : (
+                        <LeftOutlined style={{ fontSize: 16, color: 'grey' }} /> // Hiển thị màu xám nếu không có trang trước
+                    )
+                }
+                nextIcon={
+                    hasNextPage ? (
+                        <RightOutlined style={{ fontSize: 16, color: '#1890ff' }} /> // Hiển thị màu xanh nếu có trang tiếp theo
+                    ) : (
+                        <RightOutlined style={{ fontSize: 16, color: 'grey' }} /> // Hiển thị màu xám nếu không có trang tiếp theo
+                    )
+                }
             />
         </div>
     );

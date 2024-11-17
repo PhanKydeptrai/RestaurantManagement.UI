@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Table, Button, Select, Input, Space, Pagination, Row, Col, Breadcrumb, Tag, notification } from 'antd';
 import { EmployeeDto } from "../../models/employeeDto";
 import { DeleteEmployee, GetAllEmployee, GetEmpGender, GetEmpRole, GetEmpStatus, GetEmpSearch, RestoreEmployee } from "../../services/employee-service";
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 const { Option } = Select;
 const EmployeePage = () => {
     const [employees, setEmployees] = useState<EmployeeDto[]>([]);
@@ -209,7 +210,7 @@ const EmployeePage = () => {
                         <Option value="">All</Option>
                         <Option value="Male">Male</Option>
                         <Option value="Female">Female</Option>
-                        <Option value="Orther">Other</Option>
+                        <Option value="Orther">Orther</Option>
                     </Select>
                 </div>
                 <div className="col-md-2">
@@ -235,8 +236,24 @@ const EmployeePage = () => {
                 total={totalCount}
                 pageSize={pageSize}
                 onChange={setPageIndex}
-                showSizeChanger={false}
-                showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+                showSizeChanger={false} // Ẩn tùy chọn thay đổi kích thước trang
+                showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`} // Hiển thị tổng số mục
+                disabled={loading} // Vô hiệu hóa phân trang khi đang tải dữ liệu
+                showQuickJumper={false} // Tắt chức năng nhảy nhanh giữa các trang
+                prevIcon={
+                    hasPreviousPage ? (
+                        <LeftOutlined style={{ fontSize: 16, color: '#1890ff' }} /> // Mũi tên trái (Previous) nếu có trang trước
+                    ) : (
+                        <LeftOutlined style={{ fontSize: 16, color: 'grey' }} /> // Mũi tên trái (Previous) màu xám nếu không có trang trước
+                    )
+                }
+                nextIcon={
+                    hasNextPage ? (
+                        <RightOutlined style={{ fontSize: 16, color: '#1890ff' }} /> // Mũi tên phải (Next) nếu có trang tiếp theo
+                    ) : (
+                        <RightOutlined style={{ fontSize: 16, color: 'grey' }} /> // Mũi tên phải (Next) màu xám nếu không có trang tiếp theo
+                    )
+                }
             />
         </main>
     );

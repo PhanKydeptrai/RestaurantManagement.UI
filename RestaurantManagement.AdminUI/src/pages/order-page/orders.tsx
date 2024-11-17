@@ -4,18 +4,21 @@ import React, { useEffect, useState } from "react";
 import { GetAllOrders, GetOrderSearchTable, GetPaymentStatus } from "../../services/order-services";
 import { Table, Button, Input, Pagination, Space, notification, Row, Col, Breadcrumb, Tag, Select } from "antd";
 import { render } from "react-dom";
-
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 const OrderPage = () => {
     const [orders, setOrders] = useState<OrderDto[]>([]);
     const [pageIndex, setPageIndex] = useState(1);
     const [pageSize] = useState(8); // Setting page size to 8
+    const [hasNextPage, setHasNextPage] = useState(false);
+    const [hasPreviousPage, setHasPreviousPage] = useState(false);
     const [totalCount, setTotalCount] = useState(0);
+
 
     const [filterUserId, setFilterUserId] = useState("");
     const [filterTableId, setFilterTableId] = useState("");
     const [filterPaymentStatus, setFilterPaymentStatus] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
-
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -168,9 +171,24 @@ const OrderPage = () => {
                         current={pageIndex}
                         total={totalCount}
                         pageSize={pageSize}
-                        onChange={handlePageChange}
+                        onChange={(page) => setPageIndex(page)} // Cập nhật pageIndex khi người dùng thay đổi trang
                         showSizeChanger={false}
                         showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+                        disabled={loading} // Vô hiệu hóa phân trang khi đang tải dữ liệu
+                        prevIcon={
+                            hasPreviousPage ? (
+                                <LeftOutlined style={{ fontSize: 16, color: '#1890ff' }} /> // Hiển thị màu xanh nếu có trang trước
+                            ) : (
+                                <LeftOutlined style={{ fontSize: 16, color: 'grey' }} /> // Hiển thị màu xám nếu không có trang trước
+                            )
+                        }
+                        nextIcon={
+                            hasNextPage ? (
+                                <RightOutlined style={{ fontSize: 16, color: '#1890ff' }} /> // Hiển thị màu xanh nếu có trang tiếp theo
+                            ) : (
+                                <RightOutlined style={{ fontSize: 16, color: 'grey' }} /> // Hiển thị màu xám nếu không có trang tiếp theo
+                            )
+                        }
                     />
                 </div>
             </div>

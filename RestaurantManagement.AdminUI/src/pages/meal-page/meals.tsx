@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { MealDto } from "../../models/mealDto";
-import { DeleteMeal, FilterMealStatus, FilterSellStatus, GetAllMeal, GetAllMeals, RestoresMeal } from "../../services/meal-services";
+import { DeleteMeal, FilterCategory, FilterMealStatus, FilterSellStatus, GetAllMeal, GetAllMeals, RestoresMeal } from "../../services/meal-services";
 import { Link } from "react-router-dom";
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { Button, Input, Select, Space, Table, Pagination, Row, Col, Breadcrumb, Tag, notification } from "antd";
 const { Option } = Select;
 
 const MealPage = () => {
     const [meals, setMeals] = useState<MealDto[]>([]);
     const [pageIndex, setPageIndex] = useState(1);
-    const [pageSize] = useState(8);
+    const [pageSize, setPageSize] = useState(8);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPreviousPage, setHasPreviousPage] = useState(false);
     const [totalCount, setTotalCount] = useState(0);
@@ -82,54 +83,77 @@ const MealPage = () => {
         }
     };
     //#endregion
+    const handleSearchCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFilterCategory(event.target.value);
+    };
+    const handleSearchCategorySubmit = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            const results = await FilterCategory(filterCategory, pageIndex, pageSize);
+            setPageIndex(1);
+            setMeals(results.items);
+            setHasNextPage(results.hasNextPage);
+            setHasPreviousPage(results.haspreviousPage);
+            setTotalCount(results.totalCount);
+        }
+    }
 
     //#region Delete and Restore
-    const handleDelete = (id: string) => {
+    const handleDelete = async (id: string) => {
         setLoading(true);
-        DeleteMeal(id)
-            .then(() => {
-                setMeals(meals.filter(meal => meal.mealId !== id)); // Cập nhật bảng trực tiếp
+        try {
+            const result = await DeleteMeal(id)
+            if (result && result.isSuccess) {
+                const results = await GetAllMeals(pageSize, pageIndex, searchTerm);
+                setMeals(results.items);
                 notification.success({
-                    message: 'Delete meal successfully',
-                    description: 'Meal deleted successfully!',
+                    message: 'Xoá thành công',
+                    description: 'Món ăn đã được xoá thành công!'
                 });
-            })
-            .catch((error) => {
-                console.error('Failed to delete meal:', error);
+            } else {
                 notification.error({
-                    message: 'Delete meal Failed',
-                    description: 'There was an error while deleting the meal.',
+                    message: 'Xoá thất bại',
+                    description: 'Có lỗi xảy ra khi xoá món ăn!'
                 });
-            })
-            .finally(() => {
-                setLoading(false);
+            }
+        }
+        catch (error) {
+            console.error('Failed to delete meal:', error);
+            notification.error({
+                message: 'Delete meal Failed',
+                description: 'There was an error while deleting the meal.',
             });
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const handleRestore = (id: string) => {
+    const handleRestore = async (id: string) => {
         setLoading(true);
-        RestoresMeal(id)
-            .then(() => {
-                const restoredMeal = meals.find(meal => meal.mealId === id);
-                if (restoredMeal) {
-                    restoredMeal.mealStatus = 'Active'; // Cập nhật trạng thái meal
-                    setMeals([...meals]); // Buộc re-render bảng với dữ liệu mới
-                }
+        try {
+            const result = await RestoresMeal(id);
+            if (result && result.isSuccess) {
+                const results = await GetAllMeals(pageSize, pageIndex, searchTerm);
+                setMeals(results.items);
                 notification.success({
-                    message: 'Restore meal successfully',
-                    description: 'Meal restored successfully!',
+                    message: 'Khôi phục thành công',
+                    description: 'Món ăn đã được khôi phục thành công!'
                 });
-            })
-            .catch((error) => {
-                console.error('Failed to restore meal:', error);
+            } else {
                 notification.error({
-                    message: 'Restore meal Failed',
-                    description: 'There was an error while restoring the meal.',
+                    message: 'Khôi phục thất bại',
+                    description: 'Có lỗi xảy ra khi khôi phục món ăn!'
                 });
-            })
-            .finally(() => {
-                setLoading(false);
+            }
+        }
+        catch (error) {
+            console.error('Failed to restore meal:', error);
+            notification.error({
+                message: 'Restore meal Failed',
+                description: 'There was an error while restoring the meal.',
             });
+        } finally {
+            setLoading(false);
+        }
     };
     //#endregion
 
@@ -181,13 +205,6 @@ const MealPage = () => {
                 <div className="col-md-2">
                     <Link to="/createmeal"><Button type="primary" block>Create</Button></Link>
                 </div>
-                {/* <div className="col-md-2">
-                    <Select defaultValue="" style={{ width: '100%' }} onChange={handleFilterSellStatus}>
-                        <Option value="">All Sell Status</Option>
-                        <Option value="Active">Active</Option>
-                        <Option value="Inactive">Inactive</Option>
-                    </Select>
-                </div> */}
                 <div className="col-md-2">
                     <Select defaultValue="" style={{ width: '100%' }} onChange={handleFilterMealStatus}>
                         <Option value="">All Meal Status</Option>
@@ -195,7 +212,15 @@ const MealPage = () => {
                         <Option value="Inactive">Inactive</Option>
                     </Select>
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-3">
+                    <Input
+                        placeholder="Search by Category"
+                        value={filterCategory}
+                        onChange={handleSearchCategoryChange}
+                        onKeyDown={handleSearchCategorySubmit}
+                    />
+                </div>
+                <div className="col-md-3">
                     <Input
                         placeholder="Search by Name"
                         value={searchTerm}
@@ -216,11 +241,26 @@ const MealPage = () => {
                 current={pageIndex}
                 total={totalCount}
                 pageSize={pageSize}
-                onChange={setPageIndex}
+                onChange={(page) => setPageIndex(page)} // Cập nhật pageIndex khi người dùng thay đổi trang
                 showSizeChanger={false}
-                showQuickJumper={true}
                 showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+                disabled={loading} // Vô hiệu hóa phân trang khi đang tải dữ liệu
+                prevIcon={
+                    hasPreviousPage ? (
+                        <LeftOutlined style={{ fontSize: 16, color: '#1890ff' }} /> // Hiển thị màu xanh nếu có trang trước
+                    ) : (
+                        <LeftOutlined style={{ fontSize: 16, color: 'grey' }} /> // Hiển thị màu xám nếu không có trang trước
+                    )
+                }
+                nextIcon={
+                    hasNextPage ? (
+                        <RightOutlined style={{ fontSize: 16, color: '#1890ff' }} /> // Hiển thị màu xanh nếu có trang tiếp theo
+                    ) : (
+                        <RightOutlined style={{ fontSize: 16, color: 'grey' }} /> // Hiển thị màu xám nếu không có trang tiếp theo
+                    )
+                }
             />
+
         </main>
     );
 }

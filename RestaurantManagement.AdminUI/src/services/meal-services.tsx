@@ -66,6 +66,17 @@ export const FilterSellStatus = async (filterSellStatus: string, page: number, p
         });
     return res;
 }
+export const FilterCategory = async (filterCategory: string, page: number, pageSize: number) => {
+    const res = await baseUrl.get<MealDto[]>(`${Meal}?filterCategory=${filterCategory}&page=${page}&pageSize=${pageSize}`)
+        .then((response: AxiosResponse) => {
+            console.log(response.data);
+            return response.data;
+        }).catch((error) => {
+            console.log(error);
+            return error;
+        });
+    return res;
+}
 export const FilterMealStatus = async (filterMealStatus: string, page: number, pageSize: number) => {
     const res = await baseUrl.get<MealDto[]>(`${Meal}?filterMealStatus=${filterMealStatus}&page=${page}&pageSize=${pageSize}`)
         .then((response: AxiosResponse) => {

@@ -194,7 +194,7 @@ const CreateEmployeePage = () => {
                                             <Option value="">Chọn giới tính</Option>
                                             <Option value="Male">Male</Option>
                                             <Option value="Female">Female</Option>
-                                            <Option value="Other">Other</Option>
+                                            <Option value="Orther">Orther</Option>
                                         </Select>
                                         {errors.gender && <div className="text-danger">{errors.gender}</div>}
                                     </Form.Item>

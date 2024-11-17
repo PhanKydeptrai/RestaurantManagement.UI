@@ -3,12 +3,16 @@ import { FilterBookingStatus, FilterPaymentStatus, GetAllBooking } from "../../s
 import { Link } from "react-router-dom";
 import { BookDto } from "../../models/bookDto";
 import { Table, Button, Pagination, Space, notification, Tag, Select } from "antd";
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+
 const { Option } = Select;
 const BookingPage = () => {
     const [bookings, setBookings] = useState<BookDto[]>([]);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPreviousPage, setHasPreviousPage] = useState(false);
     const [totalCount, setTotalCount] = useState(0);
+    const [loading, setLoading] = useState(false);
+
 
     const [filterBookingStatus, setFilterBookingStatus] = useState('');
     const [filterPaymentStatus, setFilterPaymentStatus] = useState('');
@@ -188,16 +192,29 @@ const BookingPage = () => {
                     rowKey="bookId"
                     scroll={{ x: 'max-content' }}
                 />
-                <div className="row mt-5">
-                    <Pagination
-                        current={pageIndex}
-                        total={totalCount}
-                        pageSize={pageSize}
-                        onChange={handlePageChange}
-                        showSizeChanger={false}
-                        showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
-                    />
-                </div>
+                <Pagination
+                    current={pageIndex}
+                    total={totalCount}
+                    pageSize={pageSize}
+                    onChange={(page) => setPageIndex(page)} // Cập nhật pageIndex khi người dùng thay đổi trang
+                    showSizeChanger={false}
+                    showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+                    disabled={loading} // Vô hiệu hóa phân trang khi đang tải dữ liệu
+                    prevIcon={
+                        hasPreviousPage ? (
+                            <LeftOutlined style={{ fontSize: 16, color: '#1890ff' }} /> // Hiển thị màu xanh nếu có trang trước
+                        ) : (
+                            <LeftOutlined style={{ fontSize: 16, color: 'grey' }} /> // Hiển thị màu xám nếu không có trang trước
+                        )
+                    }
+                    nextIcon={
+                        hasNextPage ? (
+                            <RightOutlined style={{ fontSize: 16, color: '#1890ff' }} /> // Hiển thị màu xanh nếu có trang tiếp theo
+                        ) : (
+                            <RightOutlined style={{ fontSize: 16, color: 'grey' }} /> // Hiển thị màu xám nếu không có trang tiếp theo
+                        )
+                    }
+                />
             </div>
         </main>
     );

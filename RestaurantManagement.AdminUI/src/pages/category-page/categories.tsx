@@ -3,6 +3,7 @@ import { CategoryDto } from "../../models/categoryDto";
 import React, { useEffect, useState } from "react";
 import { DeleteCategory, GetAllCategory, GetCategoryFilter, GetCategorySearch, RestoreCategory, SortCategory } from "../../services/category-service";
 import { Breadcrumb, Button, Col, Input, notification, Pagination, Row, Select, Space, Table, Tag } from "antd";
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
@@ -231,8 +232,24 @@ const CategoryPage = () => {
                         total={totalCount}
                         pageSize={pageSize}
                         onChange={setPageIndex}
-                        showSizeChanger={false}
-                        showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+                        showSizeChanger={false} // Ẩn tùy chọn thay đổi kích thước trang
+                        showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`} // Hiển thị tổng số mục
+                        disabled={loading} // Vô hiệu hóa phân trang khi đang tải dữ liệu
+                        showQuickJumper={false} // Tắt chức năng nhảy nhanh giữa các trang
+                        prevIcon={
+                            hasPreviousPage ? (
+                                <LeftOutlined style={{ fontSize: 16, color: '#1890ff' }} /> // Mũi tên trái (Previous) nếu có trang trước
+                            ) : (
+                                <LeftOutlined style={{ fontSize: 16, color: 'grey' }} /> // Mũi tên trái (Previous) màu xám nếu không có trang trước
+                            )
+                        }
+                        nextIcon={
+                            hasNextPage ? (
+                                <RightOutlined style={{ fontSize: 16, color: '#1890ff' }} /> // Mũi tên phải (Next) nếu có trang tiếp theo
+                            ) : (
+                                <RightOutlined style={{ fontSize: 16, color: 'grey' }} /> // Mũi tên phải (Next) màu xám nếu không có trang tiếp theo
+                            )
+                        }
                     />
                 </div>
             </main>
