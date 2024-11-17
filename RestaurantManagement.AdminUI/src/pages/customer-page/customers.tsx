@@ -38,8 +38,6 @@ const CustomerPage = () => {
         setFilterUserType(value);
         const results = await GetFilterTypeCus(value, pageIndex, pageSize);
         setCustomers(results.items);
-        setHasNextPage(results.hasNextPage);
-        setHasPreviousPage(results.haspreviousPage);
         setTotalCount(results.totalCount);
     };
 
@@ -48,8 +46,6 @@ const CustomerPage = () => {
         setFilterGender(value);
         const results = await GetCusGender(pageSize, pageIndex, value);
         setCustomers(results.items);
-        setHasNextPage(results.hasNextPage);
-        setHasPreviousPage(results.haspreviousPage);
         setTotalCount(results.totalCount);
     };
 
@@ -58,8 +54,6 @@ const CustomerPage = () => {
         setFilterStatus(value);
         const results = await GetCusStatus(pageSize, pageIndex, value);
         setCustomers(results.items);
-        setHasNextPage(results.hasNextPage);
-        setHasPreviousPage(results.haspreviousPage);
         setTotalCount(results.totalCount);
     };
 
@@ -72,10 +66,7 @@ const CustomerPage = () => {
     const handleSearchSubmit = async (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             const results = await GetSreachCus(searchTerm, pageIndex, pageSize);
-            setPageIndex(1);
             setCustomers(results.items);
-            setHasNextPage(results.hasNextPage);
-            setHasPreviousPage(results.haspreviousPage);
             setTotalCount(results.totalCount);
         }
     };
@@ -142,24 +133,14 @@ const CustomerPage = () => {
                     {/* You can add a "Create" button here if needed */}
                 </div>
                 <div className="col-md-2">
-                    <Select
-
-                        value={filterUserType}
-                        onChange={handleFilterUserType}
-                        style={{ width: '100%' }}
-                    >
+                    <Select value={filterUserType} onChange={handleFilterUserType} style={{ width: '100%' }} >
                         <Option value="">Customer Type</Option>
                         <Option value="Subscriber">Subscriber</Option>
                         <Option value="Normal">Normal</Option>
                     </Select>
                 </div>
                 <div className="col-md-2">
-                    <Select
-
-                        value={filterGender}
-                        onChange={handleFilterGenderChange}
-                        style={{ width: '100%' }}
-                    >
+                    <Select value={filterGender} onChange={handleFilterGenderChange} style={{ width: '100%' }} >
                         <Option value="">Gender</Option>
                         <Option value="Male">Male</Option>
                         <Option value="Female">Female</Option>
@@ -167,12 +148,7 @@ const CustomerPage = () => {
                     </Select>
                 </div>
                 <div className="col-md-2">
-                    <Select
-
-                        value={filterStatus}
-                        onChange={handleFilterStatusChange}
-                        style={{ width: '100%' }}
-                    >
+                    <Select value={filterStatus} onChange={handleFilterStatusChange} style={{ width: '100%' }} >
                         <Option value="">Status</Option>
                         <Option value="Active">Active</Option>
                         <Option value="Inactive">Inactive</Option>
