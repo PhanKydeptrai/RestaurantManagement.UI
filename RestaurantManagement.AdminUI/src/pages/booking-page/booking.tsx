@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { GetAllBooking } from "../../services/book-services";
+import { FilterBookingStatus, FilterPaymentStatus, GetAllBooking } from "../../services/book-services";
 import { Link } from "react-router-dom";
 import { BookDto } from "../../models/bookDto";
-import { Table, Button, Pagination, Space, notification, Tag } from "antd";
-
+import { Table, Button, Pagination, Space, notification, Tag, Select } from "antd";
+const { Option } = Select;
 const BookingPage = () => {
     const [bookings, setBookings] = useState<BookDto[]>([]);
     const [hasNextPage, setHasNextPage] = useState(false);
@@ -49,6 +49,18 @@ const BookingPage = () => {
         setPageIndex(page);
     };
 
+    const handleFilterBookingStatusChange = async (value: string) => {
+        setFilterBookingStatus(value);
+        const results = await FilterBookingStatus(value, pageIndex, pageSize);
+        setBookings(results.items);
+        setTotalCount(results.totalCount);
+    };
+    const handleFilterPaymentStatusChange = async (value: string) => {
+        setFilterPaymentStatus(value);
+        const results = await FilterPaymentStatus(value, pageIndex, pageSize);
+        setBookings(results.items);
+        setTotalCount(results.totalCount);
+    }
     // Columns configuration for the table
     const columns = [
         {
@@ -144,6 +156,27 @@ const BookingPage = () => {
                             <li className="breadcrumb-item active" aria-current="page">Booking</li>
                         </ol>
                     </nav>
+                </div>
+            </div>
+
+            <div className="row">
+                <div className="col-md-2">
+                    <Link to={""}></Link>
+                </div>
+                <div className="col-md-2">
+                    <Select value={filterBookingStatus} onChange={handleFilterBookingStatusChange} style={{ width: '100%' }}>
+                        <Option value="">All Book Status</Option>
+                        <Option value="Waiting">Waiting</Option>
+                        <Option value="Seated">Seated</Option>
+                        <Option value="Occupied">Occupied</Option>
+                    </Select>
+                </div>
+                <div className="col-md-2">
+                    <Select value={filterPaymentStatus} onChange={handleFilterPaymentStatusChange} style={{ width: "100%" }}>
+                        <Option value="">All Payment Status</Option>
+                        <Option value="Waiting">Waiting</Option>
+                        <Option value="Paid">Paid</Option>
+                    </Select>
                 </div>
             </div>
 
