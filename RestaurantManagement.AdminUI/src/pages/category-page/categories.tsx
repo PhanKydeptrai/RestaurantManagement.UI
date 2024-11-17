@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { CategoryDto } from "../../models/categoryDto";
 import React, { useEffect, useState } from "react";
 import { DeleteCategory, GetAllCategory, GetCategoryFilter, GetCategorySearch, RestoreCategory, SortCategory } from "../../services/category-service";
-import { Breadcrumb, Button, Col, Input, Pagination, Row, Select, Space, Table, Tag } from "antd";
+import { Breadcrumb, Button, Col, Input, notification, Pagination, Row, Select, Space, Table, Tag } from "antd";
 
 const { Option } = Select;
 
@@ -18,6 +18,8 @@ const CategoryPage = () => {
     const [filter, setFilter] = useState('');
     const [sortColumn, setSortColumn] = useState('');
     const [sortOrder, setSortOrder] = useState('');
+    const [loading, setLoading] = useState(false);
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -30,29 +32,12 @@ const CategoryPage = () => {
         fetchData();
     }, [pageIndex, pageSize, filter, searchTerm, sortColumn, sortOrder]); // Include pageSize in the dependency array
 
-    //#region Pagination
-    const handlePreviousPage = () => {
-        if (hasPreviousPage) {
-            setPageIndex(pageIndex - 1);
-        }
-    };
-
-    const handleNextPage = () => {
-        if (hasNextPage) {
-            setPageIndex(pageIndex + 1);
-        }
-    };
-    //#endregion
-
     //#region Filter
     const handleFilterStatusChange = async (value: string) => {
         setFilter(value);
         const results = await GetCategoryFilter(pageSize, pageIndex, value);
-        setPageIndex(1);
-        setCategories(results.value.items);
-        setHasNextPage(results.value.hasNextPage);
-        setHasPreviousPage(results.value.haspreviousPage);
-        setTotalCount(results.value.totalCount);
+        setCategories(results.items);
+        setTotalCount(results.length);
     };
     //#endregion
 
@@ -98,15 +83,59 @@ const CategoryPage = () => {
 
     //#region Delete and Restore
     const handleDelete = async (id: string) => {
-        await DeleteCategory(id);
-        const results = await GetAllCategory(filter, searchTerm, sortColumn, sortOrder, pageSize, pageIndex);
-        setCategories(results.items);
+        setLoading(true);
+        try {
+            const result = await DeleteCategory(id);
+            if (result && result.isSuccess) {
+                const results = await GetAllCategory(filter, searchTerm, sortColumn, sortOrder, pageSize, pageIndex);
+                setCategories(results.items);
+
+                notification.success({
+                    message: 'Xoá loại món thành công',
+                    description: 'Loại món đã được xoá',
+                });
+            } else {
+                notification.error({
+                    message: 'Xoá loại món thất bại',
+                    description: result.error[0]?.message || 'Xoá loại món không thành công',
+                });
+            }
+        } catch (error) {
+            notification.error({
+                message: 'Xoá loại món thất bại',
+                description: 'Xoá loại món không thành công',
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleRestore = async (id: string) => {
-        await RestoreCategory(id);
-        const results = await GetAllCategory(filter, searchTerm, sortColumn, sortOrder, pageSize, pageIndex);
-        setCategories(results.items);
+        setLoading(true);
+        try {
+            const result = await RestoreCategory(id);
+            if (result && result.isSuccess) {
+                const results = await GetAllCategory(filter, searchTerm, sortColumn, sortOrder, pageSize, pageIndex);
+                setCategories(results.items);
+
+                notification.success({
+                    message: 'Khôi phục loại món thành công',
+                    description: 'Loại món đã được khôi phục',
+                });
+            } else {
+                notification.error({
+                    message: 'Khôi phục loại món thất bại',
+                    description: result.error[0]?.message || 'Khôi phục loại món không thành công',
+                });
+            }
+        } catch (error) {
+            notification.error({
+                message: 'Khôi phục loại món thất bại',
+                description: 'Khôi phục loại món không thành công',
+            });
+        } finally {
+            setLoading(false);
+        }
     };
     //#endregion
 
@@ -183,7 +212,6 @@ const CategoryPage = () => {
                         </div>
                         <div className="col-md-4">
                             <Input
-                                type="text"
                                 placeholder="Search"
                                 value={searchTerm}
                                 onChange={handleSearchChange}

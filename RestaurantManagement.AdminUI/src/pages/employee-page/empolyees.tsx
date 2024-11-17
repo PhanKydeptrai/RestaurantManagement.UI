@@ -22,8 +22,6 @@ const EmployeePage = () => {
         const fetchData = async () => {
             const results = await GetAllEmployee(filterGender, filterRole, filterStatus, searchTerm, '', '', pageSize, pageIndex);
             setEmployees(results.items);
-            // setPageIndex(results.pageIndex);
-            // setPageSize(results.pageSize);
             setHasNextPage(results.hasNextPage);
             setHasPreviousPage(results.haspreviousPage);
             setTotalCount(results.totalCount);

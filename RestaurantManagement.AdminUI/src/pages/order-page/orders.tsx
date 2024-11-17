@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { OrderDto } from "../../models/orderDto";
-import { useEffect, useState } from "react";
-import { GetAllOrders } from "../../services/order-services";
-import { Table, Button, Input, Pagination, Space, notification, Row, Col, Breadcrumb, Tag } from "antd";
+import React, { useEffect, useState } from "react";
+import { GetAllOrders, GetOrderSearchTable, GetPaymentStatus } from "../../services/order-services";
+import { Table, Button, Input, Pagination, Space, notification, Row, Col, Breadcrumb, Tag, Select } from "antd";
 import { render } from "react-dom";
 
 const OrderPage = () => {
@@ -32,11 +32,7 @@ const OrderPage = () => {
                 setOrders(results.items);
                 setTotalCount(results.totalCount);
             } catch (error) {
-                if (error instanceof Error) {
-                    notification.error({ message: "Failed to load orders", description: error.message });
-                } else {
-                    notification.error({ message: "Failed to load orders", description: "An unknown error occurred" });
-                }
+                return error;
             }
         };
         fetchData();
@@ -49,6 +45,22 @@ const OrderPage = () => {
         searchTerm,
     ]);
 
+    const handleFilterPaymentStatusChange = async (value: string) => {
+        setFilterPaymentStatus(value);
+        const results = await GetPaymentStatus(value, pageSize, pageIndex);
+        setOrders(results.items);
+        setTotalCount(results.totalCount);
+    };
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFilterTableId(e.target.value);
+    };
+    const handleSearchSubmit = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            const results = await GetOrderSearchTable(pageSize, pageIndex, filterTableId);
+            setOrders(results.items);
+            setTotalCount(results.totalCount);
+        }
+    };
     //#region Table Columns
     const columns = [
         {
@@ -120,14 +132,20 @@ const OrderPage = () => {
                             <Button type="primary" block>Create Order</Button>
                         </Link>
                     </div>
-
+                    <div className="col-md-2">
+                        <Select value={filterPaymentStatus} onChange={handleFilterPaymentStatusChange} style={{ width: '100%' }}>
+                            <Select.Option value="">All</Select.Option>
+                            <Select.Option value="Paid">Paid</Select.Option>
+                            <Select.Option value="Unpaid">Unpaid</Select.Option>
+                        </Select>
+                    </div>
                     {/* Search Section */}
                     <div className="col-md-2">
                         <Input
                             placeholder="Search by Table ID"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            style={{ width: "100%" }}
+                            value={filterTableId}
+                            onChange={handleSearchChange}
+                            onKeyDown={handleSearchSubmit}
                         />
                     </div>
                 </div>
