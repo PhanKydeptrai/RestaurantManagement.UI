@@ -37,7 +37,7 @@ const CategoryPage = () => {
         setFilter(value);
         const results = await GetCategoryFilter(pageSize, pageIndex, value);
         setCategories(results.items);
-        setTotalCount(results.length);
+        setTotalCount(results.totalCount);
     };
     //#endregion
 
@@ -191,8 +191,8 @@ const CategoryPage = () => {
                             </Link>
                         </div>
                         <div className="col-md-2">
-                            <Select defaultValue="" onChange={handleFilterStatusChange} style={{ width: '100%' }}>
-                                <Option value="">Filter</Option>
+                            <Select value={filter} onChange={handleFilterStatusChange} style={{ width: '100%' }}>
+                                <Option value="">All</Option>
                                 <Option value="Active">Active</Option>
                                 <Option value="Inactive">Inactive</Option>
                             </Select>
@@ -205,7 +205,7 @@ const CategoryPage = () => {
                         </div> */}
                         <div className="col-md-2">
                             <Select value={sortOrder} onChange={(value) => handleSortChangeColumn({ target: { value } } as React.ChangeEvent<HTMLSelectElement>, 'order')} style={{ width: '100%' }}>
-                                <Option value="">Sort Order</Option>
+                                <Option value="">Normal</Option>
                                 <Option value="asc">Ascending</Option>
                                 <Option value="desc">Descending</Option>
                             </Select>
