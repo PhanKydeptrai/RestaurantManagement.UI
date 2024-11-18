@@ -16,7 +16,26 @@ export const GetOrderDetail = async (orderId: string) => {
         return null;
     }
 }
-
+export const GetOrderSearchTable = async (pageSize: number, pageIndex: number, filterTableId: string) => {
+    try {
+        const response: AxiosResponse = await baseUrl.get(`${Order}?filterTableId=${filterTableId}&page=${pageIndex}&pageSize=${pageSize}`);
+        console.log(response.data.value);
+        return response.data.value;
+    } catch (error) {
+        console.error("Error fetching order by search term:", error);
+        return null;
+    }
+}
+export const GetPaymentStatus = async (filterPaymentStatus: string, pageSize: number, pageIndex: number) => {
+    try {
+        const response: AxiosResponse = await baseUrl.get(`${Order}?filterPaymentStatus=${filterPaymentStatus}&page=${pageIndex}&pageSize=${pageSize}`);
+        console.log(response.data.value);
+        return response.data.value;
+    } catch (error) {
+        console.error("Error fetching order by payment status:", error);
+        return null;
+    }
+}
 export const GetAllOrders = async (filterUserId: string, filterTableId: string, filterPaymentStatus: string, searchTerm: string, sortColumn: string, sortOrder: string, page: number, pageSize: number) => {
     try {
         const response: AxiosResponse = await baseUrl.get(`${Order}?filterUserId=${filterUserId}&filterTableId=${filterTableId}&filterPaymentStatus=${filterPaymentStatus}&searchTerm=${searchTerm}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&page=${page}&pageSize=${pageSize}`);

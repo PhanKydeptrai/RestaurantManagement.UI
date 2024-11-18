@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { MealDto } from "../../models/mealDto";
-import { DeleteMeal, GetAllMeals, RestoresMeal } from "../../services/meal-services";
+import { DeleteMeal, FilterCategory, FilterMealStatus, FilterSellStatus, GetAllMeal, GetAllMeals, RestoresMeal } from "../../services/meal-services";
 import { Link } from "react-router-dom";
-import { Button, Input, Select, Space, Table, Pagination, Row, Col, Breadcrumb, Tag } from "antd";
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { Button, Input, Select, Space, Table, Pagination, Row, Col, Breadcrumb, Tag, notification } from "antd";
 const { Option } = Select;
 
 const MealPage = () => {
     const [meals, setMeals] = useState<MealDto[]>([]);
     const [pageIndex, setPageIndex] = useState(1);
-    const [pageSize] = useState(8); // Setting page size to 8
+    const [pageSize, setPageSize] = useState(8);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPreviousPage, setHasPreviousPage] = useState(false);
     const [totalCount, setTotalCount] = useState(0);
@@ -17,48 +18,24 @@ const MealPage = () => {
     const [filterCategory, setFilterCategory] = useState('');
     const [filterSellStatus, setFilterSellStatus] = useState('');
     const [filterMealStatus, setFilterMealStatus] = useState('');
-    const [sortColumn, setSortColumn] = useState('');
-    const [sortOrder, setSortOrder] = useState('');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
-            const result = await GetAllMeals(pageSize, pageIndex, searchTerm);
+            const result = await GetAllMeal(filterCategory, filterSellStatus, filterMealStatus, searchTerm, '', '', pageIndex, pageSize);
             setMeals(result.items);
             setHasNextPage(result.hasNextPage);
             setHasPreviousPage(result.haspreviousPage);
             setTotalCount(result.totalCount);
         };
         fetchData();
-    }, [pageIndex, pageSize, searchTerm]);
-
-    //#region Pagination
-    const handlePreviousPage = () => {
-        if (hasPreviousPage) {
-            setPageIndex(pageIndex - 1);
-        }
-    };
-
-    const handleNextPage = () => {
-        if (hasNextPage) {
-            setPageIndex(pageIndex + 1);
-        }
-    };
-    //#endregion
+    }, [pageIndex, pageSize]);
 
     //#region Filter
-    const handleFilterSellStatus = async (value: string) => {
-        const results = await GetAllMeals(pageSize, pageIndex, value);
-        setMeals(results.items);
-        setFilterSellStatus(value);
-        setPageIndex(1);
-        setHasNextPage(results.hasNextPage);
-        setHasPreviousPage(results.haspreviousPage);
-        setTotalCount(results.totalCount);
-    };
 
     const handleFilterMealStatus = async (value: string) => {
-        const results = await GetAllMeals(pageSize, pageIndex, value);
-        setMeals(results.items);
+        const results = await FilterMealStatus(value, pageIndex, pageSize);
+        setMeals(results.value.items);
         setFilterMealStatus(value);
         setPageIndex(1);
         setHasNextPage(results.hasNextPage);
@@ -83,31 +60,76 @@ const MealPage = () => {
         }
     };
     //#endregion
-
-    //#region Delete and Restore
-    const handleDelete = async (id: string) => {
-        try {
-            await DeleteMeal(id);
-            const results = await GetAllMeals(pageSize, pageIndex, searchTerm);
+    const handleSearchCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFilterCategory(event.target.value);
+    };
+    const handleSearchCategorySubmit = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            const results = await FilterCategory(filterCategory, pageIndex, pageSize);
+            setPageIndex(1);
             setMeals(results.items);
             setHasNextPage(results.hasNextPage);
             setHasPreviousPage(results.haspreviousPage);
             setTotalCount(results.totalCount);
-        } catch (error) {
+        }
+    }
+
+    //#region Delete and Restore
+    const handleDelete = async (id: string) => {
+        setLoading(true);
+        try {
+            const result = await DeleteMeal(id)
+            if (result && result.isSuccess) {
+                const results = await GetAllMeals(pageSize, pageIndex, searchTerm);
+                setMeals(results.items);
+                notification.success({
+                    message: 'Xoá thành công',
+                    description: 'Món ăn đã được xoá thành công!'
+                });
+            } else {
+                notification.error({
+                    message: 'Xoá thất bại',
+                    description: 'Có lỗi xảy ra khi xoá món ăn!'
+                });
+            }
+        }
+        catch (error) {
             console.error('Failed to delete meal:', error);
+            notification.error({
+                message: 'Delete meal Failed',
+                description: 'There was an error while deleting the meal.',
+            });
+        } finally {
+            setLoading(false);
         }
     };
 
     const handleRestore = async (id: string) => {
+        setLoading(true);
         try {
-            await RestoresMeal(id);
-            const results = await GetAllMeals(pageSize, pageIndex, searchTerm);
-            setMeals(results.items);
-            setHasNextPage(results.hasNextPage);
-            setHasPreviousPage(results.haspreviousPage);
-            setTotalCount(results.totalCount);
-        } catch (error) {
+            const result = await RestoresMeal(id);
+            if (result && result.isSuccess) {
+                const results = await GetAllMeals(pageSize, pageIndex, searchTerm);
+                setMeals(results.items);
+                notification.success({
+                    message: 'Khôi phục thành công',
+                    description: 'Món ăn đã được khôi phục thành công!'
+                });
+            } else {
+                notification.error({
+                    message: 'Khôi phục thất bại',
+                    description: 'Có lỗi xảy ra khi khôi phục món ăn!'
+                });
+            }
+        }
+        catch (error) {
             console.error('Failed to restore meal:', error);
+            notification.error({
+                message: 'Restore meal Failed',
+                description: 'There was an error while restoring the meal.',
+            });
+        } finally {
+            setLoading(false);
         }
     };
     //#endregion
@@ -124,10 +146,9 @@ const MealPage = () => {
         },
         {
             title: 'Image', dataIndex: 'imageUrl', key: 'imageUrl',
-            render: (imageUrl: string) => {
-                console.log(imageUrl); // Kiểm tra xem URL có đúng không
-                return <img src={imageUrl} alt="Meal" style={{ width: 50, height: 50, objectFit: 'cover' }} />;
-            }
+            render: (imageUrl: string) => (
+                <img src={imageUrl} alt="Meal" style={{ width: 50, height: 50, objectFit: 'cover' }} />
+            ),
         },
         {
             title: 'Actions', key: 'actions', render: (text: string, record: MealDto) => (
@@ -150,7 +171,7 @@ const MealPage = () => {
                 <Col>
                     <Breadcrumb>
                         <Breadcrumb.Item>
-                            <Link to="/"><td>Dashboard</td></Link>
+                            <Link to="/">Dashboard</Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>Meal</Breadcrumb.Item>
                     </Breadcrumb>
@@ -162,20 +183,21 @@ const MealPage = () => {
                     <Link to="/createmeal"><Button type="primary" block>Create</Button></Link>
                 </div>
                 <div className="col-md-2">
-                    <Select defaultValue="" style={{ width: '100%' }} onChange={handleFilterSellStatus}>
-                        <Option value="">All Sell Status</Option>
-                        <Option value="Active">Active</Option>
-                        <Option value="Inactive">Inactive</Option>
-                    </Select>
-                </div>
-                <div className="col-md-2">
                     <Select defaultValue="" style={{ width: '100%' }} onChange={handleFilterMealStatus}>
                         <Option value="">All Meal Status</Option>
                         <Option value="Active">Active</Option>
                         <Option value="Inactive">Inactive</Option>
                     </Select>
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-3">
+                    <Input
+                        placeholder="Search by Category"
+                        value={filterCategory}
+                        onChange={handleSearchCategoryChange}
+                        onKeyDown={handleSearchCategorySubmit}
+                    />
+                </div>
+                <div className="col-md-3">
                     <Input
                         placeholder="Search by Name"
                         value={searchTerm}
@@ -196,12 +218,29 @@ const MealPage = () => {
                 current={pageIndex}
                 total={totalCount}
                 pageSize={pageSize}
-                onChange={setPageIndex}
+                onChange={setPageIndex} // Cập nhật pageIndex khi người dùng thay đổi trang
                 showSizeChanger={false}
-                showQuickJumper={true}
                 showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+                disabled={loading} // Vô hiệu hóa phân trang khi đang tải dữ liệu
+                showQuickJumper={false}
+                prevIcon={
+                    hasPreviousPage ? (
+                        <LeftOutlined style={{ fontSize: 16, color: '#1890ff' }} /> // Hiển thị màu xanh nếu có trang trước
+                    ) : (
+                        <LeftOutlined style={{ fontSize: 16, color: 'grey' }} /> // Hiển thị màu xám nếu không có trang trước
+                    )
+                }
+                nextIcon={
+                    hasNextPage ? (
+                        <RightOutlined style={{ fontSize: 16, color: '#1890ff' }} /> // Hiển thị màu xanh nếu có trang tiếp theo
+                    ) : (
+                        <RightOutlined style={{ fontSize: 16, color: 'grey' }} /> // Hiển thị màu xám nếu không có trang tiếp theo
+                    )
+                }
             />
+
         </main>
     );
 }
+
 export default MealPage;

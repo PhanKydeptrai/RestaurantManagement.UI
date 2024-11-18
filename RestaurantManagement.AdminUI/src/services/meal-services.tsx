@@ -23,8 +23,8 @@ export const GetAllMeals = async (pageSize: number, pageIndex: number, sreachTer
 export const GetMeal = async (page: number, pageSize: number) => {
     const res = await baseUrl.get<MealDto[]>(`${Meal}?page=${page}&pageSize=${pageSize}`)
         .then((response: AxiosResponse) => {
-            console.log(response.data);
-            return response.data;
+            console.log(response.data.value);
+            return response.data.value;
         }).catch((error) => {
             console.log(error);
             return error;
@@ -35,8 +35,8 @@ export const GetMeal = async (page: number, pageSize: number) => {
 export const GetAllMeal = async (filterCategory: string, filterSellStatus: string, filterMealStatus: string, searchTerm: string, sortColumn: string, sortOrder: string, page: number, pageSize: number) => {
     const res = await baseUrl.get<MealDto[]>(`${Meal}?filterCategory=${filterCategory}&filterSellStatus=${filterSellStatus}&filterMealStatus=${filterMealStatus}&searchTerm=${searchTerm}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&page=${page}&pageSize=${pageSize}`)
         .then((response: AxiosResponse) => {
-            console.log(response.data);
-            return response.data;
+            console.log(response.data.value);
+            return response.data.value;
         }).catch((error) => {
             console.log(error);
             return error;
@@ -55,7 +55,7 @@ export const GetDetailMeal = async (mealId: string) => {
         });
     return res;
 }
-export const filterSellStatus = async (filterSellStatus: string, page: number, pageSize: number) => {
+export const FilterSellStatus = async (filterSellStatus: string, page: number, pageSize: number) => {
     const res = await baseUrl.get<MealDto[]>(`${Meal}?filterSellStatus=${filterSellStatus}&page=${page}&pageSize=${pageSize}`)
         .then((response: AxiosResponse) => {
             console.log(response.data);
@@ -66,7 +66,18 @@ export const filterSellStatus = async (filterSellStatus: string, page: number, p
         });
     return res;
 }
-export const filterMealStatus = async (filterMealStatus: string, page: number, pageSize: number) => {
+export const FilterCategory = async (filterCategory: string, page: number, pageSize: number) => {
+    const res = await baseUrl.get<MealDto[]>(`${Meal}?filterCategory=${filterCategory}&page=${page}&pageSize=${pageSize}`)
+        .then((response: AxiosResponse) => {
+            console.log(response.data);
+            return response.data;
+        }).catch((error) => {
+            console.log(error);
+            return error;
+        });
+    return res;
+}
+export const FilterMealStatus = async (filterMealStatus: string, page: number, pageSize: number) => {
     const res = await baseUrl.get<MealDto[]>(`${Meal}?filterMealStatus=${filterMealStatus}&page=${page}&pageSize=${pageSize}`)
         .then((response: AxiosResponse) => {
             console.log(response.data);

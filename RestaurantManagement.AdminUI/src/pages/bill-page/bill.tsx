@@ -3,22 +3,29 @@ import { BillDto } from "../../models/billDto";
 import { ExportBill, GetAllBill } from "../../services/bill-services";
 import { Button, Pagination, Space, Table } from "antd";
 import { Link, useParams } from "react-router-dom";
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 const BillPage = () => {
     const [bills, setBills] = useState<BillDto[]>([]);
+
     const [pageIndex, setPageIndex] = useState(1);
-    const [pageSize] = useState(8);
+    const [pageSize, setPageSize] = useState(8);
     const [totalCount, setTotalCount] = useState<number>(0);
+    const [hasNextPage, setHasNextPage] = useState(false);
+    const [hasPreviousPage, setHasPreviousPage] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [filterUserId, setFilterUserId] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [sortColumn, setSortColumn] = useState('');
+    const [sortOrder, setSortOrder] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                const result = await GetAllBill('', '', '', '', pageIndex, pageSize);
-                setBills(result.value.items);
-                setTotalCount(result.totalCount);
-            } catch (error) {
-                console.error("Error fetching bills:", error);
-            }
+            const results = await GetAllBill(filterUserId, searchTerm, sortColumn, sortOrder, pageIndex, pageSize);
+            setBills(results.items);
+            setHasNextPage(results.hasNextPage);
+            setHasPreviousPage(results.hasPreviousPage);
+            setTotalCount(results.totalCount);
         };
         fetchData();
     }, [pageIndex, pageSize]);
@@ -81,10 +88,24 @@ const BillPage = () => {
                 current={pageIndex}
                 total={totalCount}
                 pageSize={pageSize}
-                onChange={(page: number) => setPageIndex(page)}
+                onChange={(page) => setPageIndex(page)} // Cập nhật pageIndex khi người dùng thay đổi trang
                 showSizeChanger={false}
                 showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
-                style={{ marginTop: 20 }}
+                disabled={loading} // Vô hiệu hóa phân trang khi đang tải dữ liệu
+                prevIcon={
+                    hasPreviousPage ? (
+                        <LeftOutlined style={{ fontSize: 16, color: '#1890ff' }} /> // Hiển thị màu xanh nếu có trang trước
+                    ) : (
+                        <LeftOutlined style={{ fontSize: 16, color: 'grey' }} /> // Hiển thị màu xám nếu không có trang trước
+                    )
+                }
+                nextIcon={
+                    hasNextPage ? (
+                        <RightOutlined style={{ fontSize: 16, color: '#1890ff' }} /> // Hiển thị màu xanh nếu có trang tiếp theo
+                    ) : (
+                        <RightOutlined style={{ fontSize: 16, color: 'grey' }} /> // Hiển thị màu xám nếu không có trang tiếp theo
+                    )
+                }
             />
         </>
     );

@@ -90,18 +90,6 @@ export const GetCategoryInfo = async () => {
     return res;
 }
 
-export const SreachForStatus = async (sreachTerm: string) => {
-    const res = await baseUrl.get<CategoryDto[]>(`${Category}?searchTerm=${sreachTerm}`)
-        .then((response: AxiosResponse) => {
-            console.log(response.data.value.items);
-            return response.data.value.items;
-        }).catch((error) => {
-            console.log(error);
-            return error;
-        });
-    return res;
-}
-
 export const GetDetailCategory = async (id: string) => {
     const res = await baseUrl.get<CategoryDto>(`${Category}/${id}`)
         .then((response: AxiosResponse) => {

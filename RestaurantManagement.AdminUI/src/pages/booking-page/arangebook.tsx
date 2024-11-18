@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Form, Select } from "antd";
+import { Breadcrumb, Col, Form, Row, Select, Button, Input, message } from "antd";
 import { GetTableInfo } from "../../services/table-services";
 
 export interface tableInfo {
@@ -35,10 +35,9 @@ const ArrangeBookPage = () => {
         setTableTypeName(selectedTable ? selectedTable.tableName : '');
     };
 
-    const handleSubmit = async (event: React.FormEvent) => {
-        event.preventDefault();
+    const handleSubmit = async (values: any) => {
         const data = {
-            tableId: tableId,
+            tableId: values.tableId,
             tableTypeName: tableTypeName
         };
         console.log('Data to be sent:', data);
@@ -68,36 +67,59 @@ const ArrangeBookPage = () => {
                 }
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-
+            message.success('Xếp bàn thành công');
             console.log('Success:', await response.json());
         } catch (error) {
+            message.error('Xếp bàn thất bại. Vui lòng thử lại sau');
             console.error('Error:', error);
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <Form onFinish={handleSubmit}>
+            <Row gutter={16} style={{ marginBottom: 24 }}>
+                <Col span={24}>
+                    <Breadcrumb>
+                        <Breadcrumb.Item>
+                            <Link to="/">Dashboard</Link>
+                        </Breadcrumb.Item>
+                        <Breadcrumb.Item>
+                            <Link to="/bookings">Booking</Link>
+                        </Breadcrumb.Item>
+                        <Breadcrumb.Item>Arrange</Breadcrumb.Item>
+                    </Breadcrumb>
+                </Col>
+            </Row>
 
-            <div className="row mt-3">
-                <div className="col-md-9 m-lg-3">
-                    <label className="labels">Booking Id</label>
-                    <input type="text" className="form-control" value={BookingId} readOnly />
-                </div>
+            <Row gutter={16} className="mt-3">
+                <Col xs={24} sm={12} md={9}>
+                    <Form.Item label="Booking Id" name="BookingId" initialValue={BookingId}>
+                        <Input value={BookingId} readOnly />
+                    </Form.Item>
+                </Col>
 
-                <Form.Item>
-                    <label>Select Table</label>
-                    <Select value={tableId} onChange={handleSelectChange}>
-                        <Select.Option value="">Select Table</Select.Option>
-                        {tableInfo.map((table) => (
-                            <Select.Option key={table.tableId} value={table.tableId}>
-                                {table.tableName}
-                            </Select.Option>
-                        ))}
-                    </Select>
-                </Form.Item>
-                <button type="submit">Submit</button>
-            </div>
-        </form>
+                <Col xs={24} sm={12} md={9}>
+                    <Form.Item label="Select Table" name="tableId" initialValue={tableId} rules={[{ required: true, message: 'Please select a table' }]}>
+                        <Select value={tableId} onChange={handleSelectChange}>
+                            <Select.Option value="">Select Table</Select.Option>
+                            {tableInfo.map((table) => (
+                                <Select.Option key={table.tableId} value={table.tableId}>
+                                    {table.tableName}
+                                </Select.Option>
+                            ))}
+                        </Select>
+                    </Form.Item>
+                </Col>
+            </Row>
+
+            <Row gutter={16}>
+                <Col xs={24} className="text-right">
+                    <Button type="primary" htmlType="submit">
+                        Submit
+                    </Button>
+                </Col>
+            </Row>
+        </Form>
     );
 };
 

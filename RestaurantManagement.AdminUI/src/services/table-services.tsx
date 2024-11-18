@@ -51,7 +51,7 @@ export const GetAllTableOfStatusEmpty = async (filterTableType: string, filterAc
     try {
         const res = await baseUrl.get(`${Table}?filterTableType=${filterTableType}&filterActiveStatus=${filterActiveStatus}&filterStatus=${filterStatus}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&page=${page}&pageSize=${pageSize}`);
         console.log(filterActiveStatus);
-        return res.data;
+        return res.data.value;
     }
     catch (error) {
         console.error("Error fetching table of status empty:", error);

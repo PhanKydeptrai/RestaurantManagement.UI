@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
-import { GetAllBooking } from "../../services/book-services";
+import { FilterBookingStatus, FilterPaymentStatus, GetAllBooking } from "../../services/book-services";
 import { Link } from "react-router-dom";
 import { BookDto } from "../../models/bookDto";
-import { Table, Button, Pagination, Space, notification, Tag } from "antd";
+import { Table, Button, Pagination, Space, notification, Tag, Select } from "antd";
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
+const { Option } = Select;
 const BookingPage = () => {
     const [bookings, setBookings] = useState<BookDto[]>([]);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPreviousPage, setHasPreviousPage] = useState(false);
     const [totalCount, setTotalCount] = useState(0);
+    const [loading, setLoading] = useState(false);
+
 
     const [filterBookingStatus, setFilterBookingStatus] = useState('');
     const [filterPaymentStatus, setFilterPaymentStatus] = useState('');
@@ -49,6 +53,18 @@ const BookingPage = () => {
         setPageIndex(page);
     };
 
+    const handleFilterBookingStatusChange = async (value: string) => {
+        setFilterBookingStatus(value);
+        const results = await FilterBookingStatus(value, pageIndex, pageSize);
+        setBookings(results.items);
+        setTotalCount(results.totalCount);
+    };
+    const handleFilterPaymentStatusChange = async (value: string) => {
+        setFilterPaymentStatus(value);
+        const results = await FilterPaymentStatus(value, pageIndex, pageSize);
+        setBookings(results.items);
+        setTotalCount(results.totalCount);
+    }
     // Columns configuration for the table
     const columns = [
         {
@@ -94,7 +110,7 @@ const BookingPage = () => {
                 <Tag color={status === 'Waiting' ? 'orange' :
                     status === 'Canceled' ? 'red' :
                         status === 'Assign' ? 'blue' :
-                            status === 'Completed' ? 'green' :
+                            status === 'Occupied' ? 'green' :
                                 status === 'Seated' ? 'cyan' : ''}>
                     {status}
                 </Tag>
@@ -117,9 +133,13 @@ const BookingPage = () => {
             key: 'action',
             render: (_: any, record: BookDto) => (
                 <Space size="middle">
-                    <Link to={`/arrangebooking/${record.bookId}`}>
-                        <Button type="primary">Assign</Button>
-                    </Link>
+                    {record.bookingStatus === 'Waiting' ? (
+                        <Link to={`/arrangebooking/${record.bookId}`}>
+                            <Button type="primary">Assign</Button>
+                        </Link>
+                    ) : (
+                        <Button disabled>Assign</Button>
+                    )}
                     <Link to={`bookingdetail/${record.bookId}`}>
                         <Button>Detail</Button>
                     </Link>
@@ -143,6 +163,27 @@ const BookingPage = () => {
                 </div>
             </div>
 
+            <div className="row">
+                <div className="col-md-2">
+                    <Link to={""}></Link>
+                </div>
+                <div className="col-md-2">
+                    <Select value={filterBookingStatus} onChange={handleFilterBookingStatusChange} style={{ width: '100%' }}>
+                        <Option value="">All Book Status</Option>
+                        <Option value="Waiting">Waiting</Option>
+                        <Option value="Seated">Seated</Option>
+                        <Option value="Occupied">Occupied</Option>
+                    </Select>
+                </div>
+                <div className="col-md-2">
+                    <Select value={filterPaymentStatus} onChange={handleFilterPaymentStatusChange} style={{ width: "100%" }}>
+                        <Option value="">All Payment Status</Option>
+                        <Option value="Waiting">Waiting</Option>
+                        <Option value="Paid">Paid</Option>
+                    </Select>
+                </div>
+            </div>
+
             <div className="container">
                 <Table
                     columns={columns}
@@ -151,16 +192,29 @@ const BookingPage = () => {
                     rowKey="bookId"
                     scroll={{ x: 'max-content' }}
                 />
-                <div className="row mt-5">
-                    <Pagination
-                        current={pageIndex}
-                        total={totalCount}
-                        pageSize={pageSize}
-                        onChange={handlePageChange}
-                        showSizeChanger={false}
-                        showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
-                    />
-                </div>
+                <Pagination
+                    current={pageIndex}
+                    total={totalCount}
+                    pageSize={pageSize}
+                    onChange={(page) => setPageIndex(page)} // Cập nhật pageIndex khi người dùng thay đổi trang
+                    showSizeChanger={false}
+                    showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+                    disabled={loading} // Vô hiệu hóa phân trang khi đang tải dữ liệu
+                    prevIcon={
+                        hasPreviousPage ? (
+                            <LeftOutlined style={{ fontSize: 16, color: '#1890ff' }} /> // Hiển thị màu xanh nếu có trang trước
+                        ) : (
+                            <LeftOutlined style={{ fontSize: 16, color: 'grey' }} /> // Hiển thị màu xám nếu không có trang trước
+                        )
+                    }
+                    nextIcon={
+                        hasNextPage ? (
+                            <RightOutlined style={{ fontSize: 16, color: '#1890ff' }} /> // Hiển thị màu xanh nếu có trang tiếp theo
+                        ) : (
+                            <RightOutlined style={{ fontSize: 16, color: 'grey' }} /> // Hiển thị màu xám nếu không có trang tiếp theo
+                        )
+                    }
+                />
             </div>
         </main>
     );

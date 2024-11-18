@@ -41,3 +41,25 @@ export const CreateArangeBooking = async (BookingId: string, arangebook: Arange)
         console.error("Error creating arange booking:", error);
     }
 }
+export const FilterBookingStatus = async (filterBookingStatus: string, pageIndex: number, pageSize: number) => {
+    const res = await baseUrl.get<BookDto[]>(`${Booking}?filterBookingStatus=${filterBookingStatus}&page=${pageIndex}&pageSize=${pageSize}`)
+        .then((response: AxiosResponse) => {
+            console.log(response.data.value);
+            return response.data.value;
+        }).catch((error) => {
+            console.log(error);
+            return error;
+        });
+    return res;
+}
+export const FilterPaymentStatus = async (filterPaymentStatus: string, pageIndex: number, pageSize: number) => {
+    const res = await baseUrl.get<BookDto[]>(`${Booking}?filterPaymentStatus=${filterPaymentStatus}&page=${pageIndex}&pageSize=${pageSize}`)
+        .then((response: AxiosResponse) => {
+            console.log(response.data.value);
+            return response.data.value;
+        }).catch((error) => {
+            console.log(error);
+            return error;
+        });
+    return res;
+}

@@ -2,17 +2,18 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { VoucherDto } from "../../models/voucherDto";
 import { DeleteVoucher, GetAllVouchers } from "../../services/voucher-services";
-import { Button, Input, Table, Pagination, notification } from "antd";
+import { Button, Input, Table, Pagination, notification, Tag, Space } from "antd";
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 const VoucherPage = () => {
     const [vouchers, setVouchers] = useState<VoucherDto[]>([]);
     const [pageIndex, setPageIndex] = useState(1);
-    const [pageSize] = useState(8);
+    const [pageSize, setPageSize] = useState(8);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPreviousPage, setHasPreviousPage] = useState(false);
     const [totalCount, setTotalCount] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
-
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         const fetchData = async () => {
             const result = await GetAllVouchers(pageSize, pageIndex, searchTerm);
@@ -42,16 +43,14 @@ const VoucherPage = () => {
     //#endregion
 
     const handleDelete = async (id: string) => {
+
         try {
             await DeleteVoucher(id);
             const results = await GetAllVouchers(8, pageIndex, searchTerm);
             setVouchers(results.items);
-            setHasNextPage(results.hasNextPage);
-            setHasPreviousPage(results.haspreviousPage);
-            setTotalCount(results.totalCount);
-            notification.success({ message: "Voucher Deleted", description: "Voucher has been successfully deleted." });
+            notification.success({ message: "Xoá voucher thành công", description: "Voucher đã được xoá" });
         } catch (error) {
-            notification.error({ message: "Error", description: "Failed to delete the voucher." });
+            notification.error({ message: "Error", description: "Xoá thất bại. Vui lòng kiểm tra lại" });
         }
     };
 
@@ -91,18 +90,26 @@ const VoucherPage = () => {
             dataIndex: 'status',
             key: 'status',
             render: (status: string) => (
-                <span className={status === 'Active' ? 'text-success' : 'text-danger'}>
+                <Tag color={status === 'Active' ? 'green' : 'red'}>
                     {status}
-                </span>
+                </Tag>
             ),
         },
         {
             title: 'Action',
             key: 'action',
             render: (text: string, record: VoucherDto) => (
-                <Button type="link" danger onClick={() => handleDelete(record.voucherId)}>
-                    Delete
-                </Button>
+                <Space size="middle">
+                    {record.status === 'Active' ? (
+                        <Button type="primary" danger onClick={() => handleDelete(record.voucherId)}>
+                            Delete
+                        </Button>
+                    ) : (
+                        <Button type="primary" danger disabled>
+                            Delete
+                        </Button>
+                    )}
+                </Space>
             ),
         },
     ];
@@ -149,12 +156,26 @@ const VoucherPage = () => {
                 <div className="row mt-4">
                     <Pagination
                         current={pageIndex}
-                        pageSize={pageSize}
                         total={totalCount}
+                        pageSize={pageSize}
+                        onChange={(page) => setPageIndex(page)} // Cập nhật pageIndex khi người dùng thay đổi trang
                         showSizeChanger={false}
-                        onChange={(page) => setPageIndex(page)}
-                        onShowSizeChange={() => { }}
                         showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+                        disabled={loading} // Vô hiệu hóa phân trang khi đang tải dữ liệu
+                        prevIcon={
+                            hasPreviousPage ? (
+                                <LeftOutlined style={{ fontSize: 16, color: '#1890ff' }} /> // Hiển thị màu xanh nếu có trang trước
+                            ) : (
+                                <LeftOutlined style={{ fontSize: 16, color: 'grey' }} /> // Hiển thị màu xám nếu không có trang trước
+                            )
+                        }
+                        nextIcon={
+                            hasNextPage ? (
+                                <RightOutlined style={{ fontSize: 16, color: '#1890ff' }} /> // Hiển thị màu xanh nếu có trang tiếp theo
+                            ) : (
+                                <RightOutlined style={{ fontSize: 16, color: 'grey' }} /> // Hiển thị màu xám nếu không có trang tiếp theo
+                            )
+                        }
                     />
                 </div>
             </main>

@@ -1,21 +1,24 @@
 import { Link } from "react-router-dom";
 import { OrderDto } from "../../models/orderDto";
-import { useEffect, useState } from "react";
-import { GetAllOrders } from "../../services/order-services";
-import { Table, Button, Input, Pagination, Space, notification, Row, Col, Breadcrumb, Tag } from "antd";
+import React, { useEffect, useState } from "react";
+import { GetAllOrders, GetOrderSearchTable, GetPaymentStatus } from "../../services/order-services";
+import { Table, Button, Input, Pagination, Space, notification, Row, Col, Breadcrumb, Tag, Select } from "antd";
 import { render } from "react-dom";
-
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 const OrderPage = () => {
     const [orders, setOrders] = useState<OrderDto[]>([]);
     const [pageIndex, setPageIndex] = useState(1);
     const [pageSize] = useState(8); // Setting page size to 8
+    const [hasNextPage, setHasNextPage] = useState(false);
+    const [hasPreviousPage, setHasPreviousPage] = useState(false);
     const [totalCount, setTotalCount] = useState(0);
+
 
     const [filterUserId, setFilterUserId] = useState("");
     const [filterTableId, setFilterTableId] = useState("");
     const [filterPaymentStatus, setFilterPaymentStatus] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
-
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -32,11 +35,7 @@ const OrderPage = () => {
                 setOrders(results.items);
                 setTotalCount(results.totalCount);
             } catch (error) {
-                if (error instanceof Error) {
-                    notification.error({ message: "Failed to load orders", description: error.message });
-                } else {
-                    notification.error({ message: "Failed to load orders", description: "An unknown error occurred" });
-                }
+                return error;
             }
         };
         fetchData();
@@ -49,6 +48,22 @@ const OrderPage = () => {
         searchTerm,
     ]);
 
+    const handleFilterPaymentStatusChange = async (value: string) => {
+        setFilterPaymentStatus(value);
+        const results = await GetPaymentStatus(value, pageSize, pageIndex);
+        setOrders(results.items);
+        setTotalCount(results.totalCount);
+    };
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFilterTableId(e.target.value);
+    };
+    const handleSearchSubmit = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            const results = await GetOrderSearchTable(pageSize, pageIndex, filterTableId);
+            setOrders(results.items);
+            setTotalCount(results.totalCount);
+        }
+    };
     //#region Table Columns
     const columns = [
         {
@@ -120,14 +135,20 @@ const OrderPage = () => {
                             <Button type="primary" block>Create Order</Button>
                         </Link>
                     </div>
-
+                    <div className="col-md-2">
+                        <Select value={filterPaymentStatus} onChange={handleFilterPaymentStatusChange} style={{ width: '100%' }}>
+                            <Select.Option value="">All</Select.Option>
+                            <Select.Option value="Paid">Paid</Select.Option>
+                            <Select.Option value="Unpaid">Unpaid</Select.Option>
+                        </Select>
+                    </div>
                     {/* Search Section */}
                     <div className="col-md-2">
                         <Input
                             placeholder="Search by Table ID"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            style={{ width: "100%" }}
+                            value={filterTableId}
+                            onChange={handleSearchChange}
+                            onKeyDown={handleSearchSubmit}
                         />
                     </div>
                 </div>
@@ -150,9 +171,24 @@ const OrderPage = () => {
                         current={pageIndex}
                         total={totalCount}
                         pageSize={pageSize}
-                        onChange={handlePageChange}
+                        onChange={(page) => setPageIndex(page)} // Cập nhật pageIndex khi người dùng thay đổi trang
                         showSizeChanger={false}
                         showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+                        disabled={loading} // Vô hiệu hóa phân trang khi đang tải dữ liệu
+                        prevIcon={
+                            hasPreviousPage ? (
+                                <LeftOutlined style={{ fontSize: 16, color: '#1890ff' }} /> // Hiển thị màu xanh nếu có trang trước
+                            ) : (
+                                <LeftOutlined style={{ fontSize: 16, color: 'grey' }} /> // Hiển thị màu xám nếu không có trang trước
+                            )
+                        }
+                        nextIcon={
+                            hasNextPage ? (
+                                <RightOutlined style={{ fontSize: 16, color: '#1890ff' }} /> // Hiển thị màu xanh nếu có trang tiếp theo
+                            ) : (
+                                <RightOutlined style={{ fontSize: 16, color: 'grey' }} /> // Hiển thị màu xám nếu không có trang tiếp theo
+                            )
+                        }
                     />
                 </div>
             </div>
