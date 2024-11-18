@@ -7,15 +7,15 @@ import { Link, useNavigate } from "react-router-dom";
 import Controller from "../../Controller";
 
 const SliderBar = () => {
-
+    const role = localStorage.getItem('role');
     const [collapsed, setCollapsed] = useState(false);
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
 
     const menuItems = [
-        { key: '1', icon: <HomeOutlined />, title: 'Dashboard', link: '/dashboard' },
-        { key: '2', icon: <UserOutlined />, title: 'Employee', link: '/employees' },
+        { key: '1', icon: <HomeOutlined />, title: 'Dashboard', link: '/dashboard', role: ['Boss', 'Manager'] },
+        { key: '2', icon: <UserOutlined />, title: 'Employee', link: '/employees', role: ['Boss'] },
         {
             key: 'sub1', icon: <ContainerOutlined />, title: 'Order',
             children: [

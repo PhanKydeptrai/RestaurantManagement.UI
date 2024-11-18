@@ -6,17 +6,20 @@ export const Account = "account";
 
 // /api/account/employee-login
 export const EmployeeLogin = async (loginString: string, passWord: string) => {
-    
+
     //console.log(`${baseUrl}/${Account}/employee-login`);
-    const res = await baseUrl.post(`${Account}/employee-login`, {loginString, passWord})
+    const res = await baseUrl.post(`${Account}/employee-login`, { loginString, passWord })
         .then((response: AxiosResponse) => {
             console.log(response.data.value.token);
+            console.log(response.data.value.role);
             // Lưu token vào sessionStorage
+
             sessionStorage.setItem('token', response.data.value.token);
-            
+            localStorage.setItem('role', response.data.value.role);
+
         }).catch((error) => {
             console.log(error);
             return error;
         });
-    
+    return res;
 }

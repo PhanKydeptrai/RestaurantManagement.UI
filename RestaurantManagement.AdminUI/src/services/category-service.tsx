@@ -118,6 +118,7 @@ export const CreateCategory = async (formData: FormData) => {
 
     try {
         const res = await baseUrlPost.postForm('/category', formData);
+        console.log(sessionStorage.getItem('token'));
         return res.data;
     }
     catch (error: any) {

@@ -39,155 +39,155 @@ function Controller() {
             <Routes>
                 <Route path="/" element={<Login />} />
                 <Route path="/dashboard" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager']}>
                         <Home />
                     </ProtectedRoute>
                 } />
                 <Route path="/categories" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={['Boss', 'Waiter', 'Manager']}>
                         <CategoryPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/categories/createcategory" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={['Boss']}>
                         <CreateCategoryPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/categories/updatecategory/:categoryId" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={['Boss']}>
                         <UpdateCategoryPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/categories/detailcategory/:categoryId" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={['Boss']}>
                         <DetailCategoryPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/employees" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={['Boss', "Manager"]}>
                         <EmployeePage />
                     </ProtectedRoute>
                 } />
                 <Route path="/createemployee" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager']}>
                         <CreateEmployee />
                     </ProtectedRoute>
                 } />
                 <Route path="employees/detailemployee/:userId" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={[]}>
                         <DetailEmployeePage />
                     </ProtectedRoute>
                 } />
                 <Route path="/customers" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={[]}>
                         <CustomerPage />
                     </ProtectedRoute>
                 } />
 
                 <Route path="/meals" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={[]}>
                         <MealPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/createmeal" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={[]}>
                         <CreateMealPage />
                     </ProtectedRoute>
                 } />
                 <Route path="meals/updatemeal/:mealId" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={[]}>
                         <UpdateMealPage />
                     </ProtectedRoute>
                 } />
                 <Route path="meals/detailmeal/:mealId" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={[]}>
                         <DetailMealPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/tables" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={[]}>
                         <TableTypePage />
                     </ProtectedRoute>
                 } />
                 <Route path="/account" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={[]}>
                         <AccountPage />
                     </ProtectedRoute>
                 } />
 
                 <Route path="/createtabletype" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={[]}>
                         <CreateTableTypePage />
                     </ProtectedRoute>
                 } />
                 <Route path="/createtable" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={[]}>
                         <CreateTablePage />
                     </ProtectedRoute>
                 } />
                 <Route path="/vouchers" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={[]}>
                         <VoucherPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/createvoucher" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={[]}>
                         <CreateVoucherPage />
 
                     </ProtectedRoute>
                 } />
                 <Route path="/bookings" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={[]}>
                         <BookingPage />
                     </ProtectedRoute>
                 } />
                 <Route path="bookings/bookingdetail/:bookId" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={[]}>
                         <DetailBookingPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/arrangebooking/:BookingId" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={[]}>
                         <ArrangeBookPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/tableorder/:tableId" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={[]}>
                         <OrderDetailPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/orders" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={['Boss']}>
                         <OrderPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/order/create" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={[]}>
                         <CreateOrderPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/orders/:tableId" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={['Boss']}>
                         <OrderDetailPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/tables/TableStatusEmpty" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={[]}>
                         <AssignCustomerPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/bills" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={[]}>
                         <BillPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/bill/detailbill/:billId" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={[]}>
                         <BillDetailPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/account/changePassword" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute requiredRoles={[]}>
                         <ChangePasswordPage />
                     </ProtectedRoute>
                 } />
