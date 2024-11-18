@@ -14,15 +14,18 @@ const BillPage = () => {
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPreviousPage, setHasPreviousPage] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [filterUserId, setFilterUserId] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [sortColumn, setSortColumn] = useState('');
+    const [sortOrder, setSortOrder] = useState('');
+
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                const result = await GetAllBill('', '', '', '', pageIndex, pageSize);
-                setBills(result.value.items);
-                setTotalCount(result.totalCount);
-            } catch (error) {
-                console.error("Error fetching bills:", error);
-            }
+            const results = await GetAllBill(filterUserId, searchTerm, sortColumn, sortOrder, pageIndex, pageSize);
+            setBills(results.items);
+            setHasNextPage(results.hasNextPage);
+            setHasPreviousPage(results.hasPreviousPage);
+            setTotalCount(results.totalCount);
         };
         fetchData();
     }, [pageIndex, pageSize]);

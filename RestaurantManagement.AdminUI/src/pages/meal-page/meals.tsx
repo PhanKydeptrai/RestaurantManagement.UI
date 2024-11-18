@@ -23,7 +23,7 @@ const MealPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             const result = await GetAllMeal(filterCategory, filterSellStatus, filterMealStatus, searchTerm, '', '', pageIndex, pageSize);
-            setMeals(result.value.items);
+            setMeals(result.items);
             setHasNextPage(result.hasNextPage);
             setHasPreviousPage(result.haspreviousPage);
             setTotalCount(result.totalCount);
@@ -31,30 +31,7 @@ const MealPage = () => {
         fetchData();
     }, [pageIndex, pageSize]);
 
-    //#region Pagination
-    const handlePreviousPage = () => {
-        if (hasPreviousPage) {
-            setPageIndex(pageIndex - 1);
-        }
-    };
-
-    const handleNextPage = () => {
-        if (hasNextPage) {
-            setPageIndex(pageIndex + 1);
-        }
-    };
-    //#endregion
-
     //#region Filter
-    const handleFilterSellStatus = async (value: string) => {
-        const results = await FilterSellStatus(value, pageIndex, pageSize);
-        setMeals(results.value.items);
-        setFilterSellStatus(value);
-        setPageIndex(1);
-        setHasNextPage(results.hasNextPage);
-        setHasPreviousPage(results.haspreviousPage);
-        setTotalCount(results.totalCount);
-    };
 
     const handleFilterMealStatus = async (value: string) => {
         const results = await FilterMealStatus(value, pageIndex, pageSize);
@@ -241,10 +218,11 @@ const MealPage = () => {
                 current={pageIndex}
                 total={totalCount}
                 pageSize={pageSize}
-                onChange={(page) => setPageIndex(page)} // Cập nhật pageIndex khi người dùng thay đổi trang
+                onChange={setPageIndex} // Cập nhật pageIndex khi người dùng thay đổi trang
                 showSizeChanger={false}
                 showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
                 disabled={loading} // Vô hiệu hóa phân trang khi đang tải dữ liệu
+                showQuickJumper={false}
                 prevIcon={
                     hasPreviousPage ? (
                         <LeftOutlined style={{ fontSize: 16, color: '#1890ff' }} /> // Hiển thị màu xanh nếu có trang trước

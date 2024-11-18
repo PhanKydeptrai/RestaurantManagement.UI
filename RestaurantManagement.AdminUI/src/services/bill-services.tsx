@@ -6,16 +6,16 @@ import baseUrlDelete from "../apis/basedelete";
 export const Bill = "bill";
 
 export const GetAllBill = async (filterUserId: string, searchTerm: string, sortColumn: string, sortOrder: string, page: number, pageSize: number) => {
-    try {
-        const response: AxiosResponse = await baseUrl.get(`${Bill}?filterUserId=${filterUserId}&searchTerm=${searchTerm}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&page=${page}&pageSize=${pageSize}`);
-        console.log(response.data);
-
-        // Ensure response.data.value is always an array
-        return response.data;
-    } catch (error) {
-        console.error("Error fetching bills:", error);
-        return []; // Return an empty array on error to avoid mapping issues
-    }
+    const res = await baseUrl.get(`${Bill}?filterUserId=${filterUserId}&searchTerm=${searchTerm}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&page=${page}&pageSize=${pageSize}`)
+        .then((response: AxiosResponse) => {
+            console.log(response.data.value);
+            return response.data.value;
+        }
+        ).catch((error) => {
+            console.log(error);
+            return error;
+        });
+    return res;
 }
 export const GetBillDetail = async (billId: string) => {
     try {

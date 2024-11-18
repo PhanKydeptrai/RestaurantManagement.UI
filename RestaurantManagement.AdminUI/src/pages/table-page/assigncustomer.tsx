@@ -27,7 +27,6 @@ const AssignCustomerPage = () => {
             setHasNextPage(response.hasNextPage);
             setHasPreviousPage(response.hasPreviousPage);
             setTotalCount(response.totalCount);
-            console.log(response.items);
         };
         fetchData();
     }, [pageIndex, pageSize, filterTableType, filterActiveStatus, filterStatus, sortColumn, sortOrder]);
@@ -223,10 +222,11 @@ const AssignCustomerPage = () => {
                 current={pageIndex}
                 total={totalCount}
                 pageSize={pageSize}
-                onChange={(page) => setPageIndex(page)} // Cập nhật pageIndex khi người dùng thay đổi trang
+                onChange={setPageIndex} // Cập nhật pageIndex khi người dùng thay đổi trang
                 showSizeChanger={false}
                 showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
                 disabled={loading} // Vô hiệu hóa phân trang khi đang tải dữ liệu
+                showQuickJumper={false}
                 prevIcon={
                     hasPreviousPage ? (
                         <LeftOutlined style={{ fontSize: 16, color: '#1890ff' }} /> // Hiển thị màu xanh nếu có trang trước
