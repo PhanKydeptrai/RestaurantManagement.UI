@@ -198,7 +198,6 @@ const EmployeePage = () => {
                         <Option value="Receptionist">Receptionist</Option>
                         <Option value="Waiter">Waiter</Option>
                         <Option value="Cashier">Cashier</Option>
-                        <Option value="Chef">Chef</Option>
                     </Select>
                 </div>
                 <div className="col-md-2">

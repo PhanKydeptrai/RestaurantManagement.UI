@@ -74,120 +74,120 @@ function Controller() {
                     </ProtectedRoute>
                 } />
                 <Route path="employees/detailemployee/:userId" element={
-                    <ProtectedRoute requiredRoles={[]}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager']}>
                         <DetailEmployeePage />
                     </ProtectedRoute>
                 } />
                 <Route path="/customers" element={
-                    <ProtectedRoute requiredRoles={[]}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Receptionist']}>
                         <CustomerPage />
                     </ProtectedRoute>
                 } />
 
                 <Route path="/meals" element={
-                    <ProtectedRoute requiredRoles={[]}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Waiter']}>
                         <MealPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/createmeal" element={
-                    <ProtectedRoute requiredRoles={[]}>
+                    <ProtectedRoute requiredRoles={['Boss']}>
                         <CreateMealPage />
                     </ProtectedRoute>
                 } />
                 <Route path="meals/updatemeal/:mealId" element={
-                    <ProtectedRoute requiredRoles={[]}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager']}>
                         <UpdateMealPage />
                     </ProtectedRoute>
                 } />
                 <Route path="meals/detailmeal/:mealId" element={
-                    <ProtectedRoute requiredRoles={[]}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Waiter']}>
                         <DetailMealPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/tables" element={
-                    <ProtectedRoute requiredRoles={[]}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Receptionist']}>
                         <TableTypePage />
                     </ProtectedRoute>
                 } />
                 <Route path="/account" element={
-                    <ProtectedRoute requiredRoles={[]}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Receptionist', 'Waiter', 'Cashier']}>
                         <AccountPage />
                     </ProtectedRoute>
                 } />
 
                 <Route path="/createtabletype" element={
-                    <ProtectedRoute requiredRoles={[]}>
+                    <ProtectedRoute requiredRoles={['Boss']}>
                         <CreateTableTypePage />
                     </ProtectedRoute>
                 } />
                 <Route path="/createtable" element={
-                    <ProtectedRoute requiredRoles={[]}>
+                    <ProtectedRoute requiredRoles={['Boss']}>
                         <CreateTablePage />
                     </ProtectedRoute>
                 } />
                 <Route path="/vouchers" element={
-                    <ProtectedRoute requiredRoles={[]}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Receptionist', 'Waiter', 'Cashier']}>
                         <VoucherPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/createvoucher" element={
-                    <ProtectedRoute requiredRoles={[]}>
+                    <ProtectedRoute requiredRoles={['Boss']}>
                         <CreateVoucherPage />
 
                     </ProtectedRoute>
                 } />
                 <Route path="/bookings" element={
-                    <ProtectedRoute requiredRoles={[]}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Receptionist']}>
                         <BookingPage />
                     </ProtectedRoute>
                 } />
                 <Route path="bookings/bookingdetail/:bookId" element={
-                    <ProtectedRoute requiredRoles={[]}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Receptionist']}>
                         <DetailBookingPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/arrangebooking/:BookingId" element={
-                    <ProtectedRoute requiredRoles={[]}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Receptionist']}>
                         <ArrangeBookPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/tableorder/:tableId" element={
-                    <ProtectedRoute requiredRoles={[]}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Waiter', 'Cashier']}>
                         <OrderDetailPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/orders" element={
-                    <ProtectedRoute requiredRoles={['Boss']}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Waiter', 'Cashier']}>
                         <OrderPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/order/create" element={
-                    <ProtectedRoute requiredRoles={[]}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Waiter']}>
                         <CreateOrderPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/orders/:tableId" element={
-                    <ProtectedRoute requiredRoles={['Boss']}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Waiter', 'Cashier']}>
                         <OrderDetailPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/tables/TableStatusEmpty" element={
-                    <ProtectedRoute requiredRoles={[]}>
+                    <ProtectedRoute requiredRoles={['Receptionist', 'Boss', 'Manager']}>
                         <AssignCustomerPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/bills" element={
-                    <ProtectedRoute requiredRoles={[]}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Cashier']}>
                         <BillPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/bill/detailbill/:billId" element={
-                    <ProtectedRoute requiredRoles={[]}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Cashier']}>
                         <BillDetailPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/account/changePassword" element={
-                    <ProtectedRoute requiredRoles={[]}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Waiter', 'Receptionist', 'Cashier']}>
                         <ChangePasswordPage />
                     </ProtectedRoute>
                 } />

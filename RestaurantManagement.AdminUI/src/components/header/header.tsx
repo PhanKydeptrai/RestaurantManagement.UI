@@ -20,7 +20,7 @@ const Header = () => {
                     <button className="btn btn-primary d-md-none d-block float-end" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-expanded="false" aria-controls="sidebarMenu">
                         <FontAwesomeIcon icon={faBars} size="lg" />
                     </button>
-                    <a className="navbar-brand" href="#">Name of Restaurant</a>
+                    <a className="navbar-brand" href="#">Nhum Nhum Restaurant</a>
                     <div className="collapse navbar-collapse" id="navbarNav"></div>
                     {/* <a href="">
                         <span><FontAwesomeIcon icon={faBell} size="lg" /></span>
