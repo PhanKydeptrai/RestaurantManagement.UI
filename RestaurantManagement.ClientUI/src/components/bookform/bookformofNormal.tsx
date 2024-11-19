@@ -1,4 +1,4 @@
-import { DatePicker, Form, FormProps, Input, InputNumber, TimePicker } from "antd";
+import { DatePicker, Form, FormProps, Input, InputNumber, message, TimePicker } from "antd";
 import { useState } from "react";
 import { CreateBooking } from "../../services/book-services";
 import dayjs, { Dayjs } from 'dayjs';
@@ -47,7 +47,8 @@ const BookFormOfNormal = () => {
         console.log("Data be sent: ", data);
         try {
             const res = CreateBooking(data);
-            console.log("this is res: ", res);
+            message.success('Booking successfully');
+
         } catch (error) {
             console.log("this is error: ", error);
 

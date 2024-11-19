@@ -8,7 +8,7 @@ const CreateTableTypePage = () => {
     const [status, setStatus] = useState('');
     const [tablePrice, setTablePrice] = useState('');
     const [description, setDescription] = useState('');
-    const [tableCapacity, setTableCapacity] = useState('');
+    const [tableCapacity, setTableCapacity] = useState(0);
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const navigate = useNavigate();
     const [errors, setErrors] = useState<{ tableTypeName?: string, status?: string, tablePrice?: string, tableCapacity?: string }>();
@@ -65,9 +65,8 @@ const CreateTableTypePage = () => {
         }
         if (!tableCapacity) {
             newErrors.tableCapacity = 'Vui lòng nhập số lượng!';
-        }
-        if (isNaN(Number(tableCapacity))) {
-            newErrors.tableCapacity = 'Vui lòng nhập số!';
+        } else if (isNaN(Number(tableCapacity))) {
+            newErrors.tableCapacity = 'Vui lòng nhập một số hợp lệ!';
         }
 
         setErrors(newErrors);
@@ -85,10 +84,13 @@ const CreateTableTypePage = () => {
         formData.append('status', status);
         formData.append('tablePrice', tablePrice);
         formData.append('description', description);
-        formData.append('tableCapacity', tableCapacity);
+        formData.append('tableCapacity', tableCapacity.toString());
+
+        console.log('Table Capacity:', tableCapacity); // Kiểm tra xem giá trị tableCapacity có chính xác không
         if (fileInputRef.current && fileInputRef.current.files) {
             formData.append('imageUrl', fileInputRef.current.files[0]);
         }
+        console.log(tableCapacity); // Kiểm tra xem giá trị tableCapacity có chính xác không
 
         const response = await CreateTableType(formData);
         if (response) {
@@ -160,7 +162,7 @@ const CreateTableTypePage = () => {
                                     id="tableCapacity"
                                     placeholder="Số lượng"
                                     value={tableCapacity}
-                                    onChange={(e) => setTableCapacity(e.target.value)}
+                                    onChange={(e) => setTableCapacity(parseInt(e.target.value))}
                                 />
                                 {errors?.tableCapacity && <div className="text-danger">{errors.tableCapacity}</div>}
                             </div>

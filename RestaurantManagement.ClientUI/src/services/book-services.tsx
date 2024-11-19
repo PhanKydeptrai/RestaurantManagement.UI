@@ -20,8 +20,6 @@ export const GetAllBooking = async (filter: string, searchTerm: string, sortColu
 export const CreateBooking = async (booking: BookingDto) => {
     const res = await baseUrl.post<BookingDto>(`${Booking}`, booking)
         .then((response: AxiosResponse) => {
-            console.log(booking.bookingDate);
-            console.log(booking.bookingTime);
             console.log(response.data);
             return response.data;
         }).catch((error) => {
