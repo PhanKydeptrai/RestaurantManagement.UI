@@ -34,8 +34,8 @@ const SliderBar = () => {
     const navigate = useNavigate();
 
     return (
-        <Layout>
-            <Sider trigger={null} collapsible collapsed={collapsed}>
+        <Layout style={{ minHeight: '100vh', height: 'auto' }}> {/* Full page height */}
+            <Sider trigger={null} collapsible collapsed={collapsed} style={{ height: '100vh' }}> {/* Sider full height */}
                 <div className="demo-logo-vertical" />
                 <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
                     {menuItems.map(item => (
@@ -76,7 +76,7 @@ const SliderBar = () => {
                     style={{
                         margin: '24px 16px',
                         padding: 24,
-                        minHeight: 280,
+                        minHeight: 'calc(100vh - 64px)', // Content full height minus header
                         background: colorBgContainer,
                         borderRadius: borderRadiusLG,
                     }}
@@ -84,7 +84,8 @@ const SliderBar = () => {
                     <Controller />
                 </Content>
                 <Footer className="footer" style={{
-                    textAlign: 'center', position: 'fixed',
+                    textAlign: 'center',
+                    position: 'fixed',
                     left: '0',
                     bottom: '0',
                     width: '100%',
