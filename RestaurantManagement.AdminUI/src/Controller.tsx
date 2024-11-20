@@ -36,6 +36,8 @@ import TableTypesPage from "./pages/tabletype-page/tabletypes";
 import CreateTableTypePage from "./pages/tabletype-page/createtabletype";
 import UpdateTableTypePage from "./pages/tabletype-page/updatetabletype";
 import StatisticsPage from "./pages/statisic-page/statistics";
+import HistoryOrderPage from "./pages/log-page/historyorder";
+import HistoryBookingPage from "./pages/log-page/historybooking";
 
 function Controller() {
     return (
@@ -210,7 +212,16 @@ function Controller() {
                         <StatisticsPage />
                     </ProtectedRoute>
                 } />
-
+                <Route path="/log/historyorder" element={
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager']}>
+                        <HistoryOrderPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/log/historybooking" element={
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager']}>
+                        <HistoryBookingPage />
+                    </ProtectedRoute>
+                } />
             </Routes>
         </>
     )
