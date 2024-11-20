@@ -39,6 +39,7 @@ import StatisticsPage from "./pages/statisic-page/statistics";
 import HistoryOrderPage from "./pages/log-page/historyorder";
 import HistoryBookingPage from "./pages/log-page/historybooking";
 import HistoryCategoryPage from "./pages/log-page/historycategory";
+import HistoryMealPage from "./pages/log-page/historymeal";
 
 function Controller() {
     return (
@@ -228,7 +229,11 @@ function Controller() {
                         <HistoryCategoryPage />
                     </ProtectedRoute>
                 } />
-
+                <Route path="/log/historymeal" element={
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager']}>
+                        <HistoryMealPage />
+                    </ProtectedRoute>
+                } />
             </Routes>
         </>
     )

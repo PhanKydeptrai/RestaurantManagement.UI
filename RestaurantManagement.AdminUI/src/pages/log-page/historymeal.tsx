@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { HistoryOrderDto } from "../../models/historyDto";
-import { GetHistoryCategory } from "../../services/history-services";
+import { GetHistoryMeal } from "../../services/history-services";
 import { Breadcrumb, Col, Pagination, Row, Table } from "antd";
 import { Link } from "react-router-dom";
 
-const HistoryCategoryPage = () => {
-    const [HistoryCategory, setHistoryCategory] = useState<HistoryOrderDto[]>([]);
+const HistoryMealPage = () => {
+    const [historyMeals, setHistoryMeals] = useState<HistoryOrderDto[]>([]);
     const [pageIndex, setPageIndex] = useState(1);
     const [pageSize, setPageSize] = useState(8);
     const [hasNextPage, setHasNextPage] = useState(false);
@@ -18,8 +18,8 @@ const HistoryCategoryPage = () => {
     const [loading, setLoading] = useState(false);
     useEffect(() => {
         const fetchData = async () => {
-            const result = await GetHistoryCategory(filterUserId, searchTerm, sortColumn, sortOrder, pageIndex, pageSize);
-            setHistoryCategory(result.items);
+            const result = await GetHistoryMeal(filterUserId, searchTerm, sortColumn, sortOrder, pageIndex, pageSize);
+            setHistoryMeals(result.items);
             setHasNextPage(result.hasNextPage);
             setHasPreviousPage(result.haspreviousPage);
             setTotalCount(result.totalCount);
@@ -58,15 +58,17 @@ const HistoryCategoryPage = () => {
                             <Link to="/"><td>Dashboard</td></Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <Link to="/log"><td>Log </td></Link>
+                            <Link to="/log">Log</Link>
                         </Breadcrumb.Item>
-                        <Breadcrumb.Item>History Cateory</Breadcrumb.Item>
+                        <Breadcrumb.Item>
+                            <td>History Meal</td>
+                        </Breadcrumb.Item>
                     </Breadcrumb>
                 </Col>
             </Row>
             <Table
                 columns={Columns}
-                dataSource={HistoryCategory}
+                dataSource={historyMeals}
                 rowKey="userLogId"
                 pagination={false}
             />
@@ -83,4 +85,4 @@ const HistoryCategoryPage = () => {
     )
 }
 
-export default HistoryCategoryPage
+export default HistoryMealPage
