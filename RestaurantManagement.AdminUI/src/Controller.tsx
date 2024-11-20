@@ -34,6 +34,8 @@ import ChangePasswordPage from "./pages/account-page/change-password";
 import TablePage from "./pages/table-page/tables";
 import TableTypesPage from "./pages/tabletype-page/tabletypes";
 import CreateTableTypePage from "./pages/tabletype-page/createtabletype";
+import UpdateTableTypePage from "./pages/tabletype-page/updatetabletype";
+import StatisticsPage from "./pages/statisic-page/statistics";
 
 function Controller() {
     return (
@@ -127,6 +129,11 @@ function Controller() {
                         <CreateTableTypePage />
                     </ProtectedRoute>
                 } />
+                <Route path="/tabletypes/update/:tabletypeId" element={
+                    <ProtectedRoute requiredRoles={['Boss']}>
+                        <UpdateTableTypePage />
+                    </ProtectedRoute>
+                } />
                 <Route path="/createtable" element={
                     <ProtectedRoute requiredRoles={['Boss']}>
                         <CreateTablePage />
@@ -198,7 +205,11 @@ function Controller() {
                         <ChangePasswordPage />
                     </ProtectedRoute>
                 } />
-
+                <Route path="/statistics/:year" element={
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager']}>
+                        <StatisticsPage />
+                    </ProtectedRoute>
+                } />
 
             </Routes>
         </>

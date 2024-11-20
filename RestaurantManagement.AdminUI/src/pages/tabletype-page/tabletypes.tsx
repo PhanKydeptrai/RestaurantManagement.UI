@@ -64,7 +64,9 @@ const TableTypesPage = () => {
             dataIndex: 'action',
             render: (text: string, record: TableTypeDto) => (
                 <Space size="middle">
-                    <Button type="primary">Edit</Button>
+                    <Link to={`/tabletypes/update/${record.tableTypeId}`}>
+                        <Button type="primary">Update</Button>
+                    </Link>
                     <Button type="primary">Delete</Button>
                 </Space>
             )
