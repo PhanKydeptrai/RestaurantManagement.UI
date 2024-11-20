@@ -93,4 +93,14 @@ export const GetHistoryTableType = async (filterUserId: string, searchTerm: stri
         });
     return res;
 }
-
+export const GetHistoryBill = async (filterUserId: string, searchTerm: string, sortColumn: string, sortOrder: string, page: number, pageSize: number) => {
+    const res = await baseUrl.get<HistoryOrderDto[]>(`${History}/bill?filterUserId=${filterUserId}&searchTerm=${searchTerm}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&page=${page}&pageSize=${pageSize}`)
+        .then((response: AxiosResponse) => {
+            console.log(response.data.value);
+            return response.data.value;
+        }).catch((error) => {
+            console.log(error);
+            return error;
+        });
+    return res;
+}
