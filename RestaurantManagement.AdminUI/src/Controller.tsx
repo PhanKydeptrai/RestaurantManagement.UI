@@ -109,6 +109,9 @@ function Controller() {
                         <TableTypePage />
                     </ProtectedRoute>
                 } />
+                <Route path="/tabletypes" element={
+                    <TableTypePage />
+                } />
                 <Route path="/account" element={
                     <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Receptionist', 'Waiter', 'Cashier']}>
                         <AccountPage />
