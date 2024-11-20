@@ -18,6 +18,18 @@ export const GetAllTableTypes = async (pageSize: number, pageIndex: number, srea
         });
     return res;
 }
+export const GetAllTableType = async (searchTerm: string, filterStatus: string, sortColumn: string, sortOrder: string, page: number, pageSize: number) => {
+    const res = await baseUrl.get(`${TableType}?searchTerm=${searchTerm}&filterStatus=${filterStatus}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&page=${page}&pageSize=${pageSize}`)
+        .then((response: AxiosResponse) => {
+            console.log(response.data);
+            return response.data.value;
+        }).catch((error) => {
+            console.log(error);
+            return error;
+        });
+    return res;
+}
+
 export const GetTableTypeInfo = async () => {
     const res = await baseUrl.get(`${TableType}/tabletype-info`)
         .then((response: AxiosResponse) => {

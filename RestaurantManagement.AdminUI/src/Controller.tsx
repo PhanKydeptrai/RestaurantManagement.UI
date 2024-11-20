@@ -17,7 +17,6 @@ import DetailCategoryPage from "./pages/category-page/detailcategory";
 import DetailMealPage from "./pages/meal-page/detailmeal";
 
 
-import CreateTableTypePage from "./pages/table-page/createtabletype";
 import CreateTablePage from "./pages/table-page/createtable";
 import VoucherPage from "./pages/voucher-page/vouchers";
 import CreateVoucherPage from "./pages/voucher-page/createvoucher";
@@ -32,6 +31,9 @@ import AssignCustomerPage from "./pages/table-page/assigncustomer";
 import BillPage from "./pages/bill-page/bill";
 import BillDetailPage from "./pages/bill-page/billdetail";
 import ChangePasswordPage from "./pages/account-page/change-password";
+import TablePage from "./pages/table-page/tables";
+import TableTypesPage from "./pages/tabletype-page/tabletypes";
+import CreateTableTypePage from "./pages/tabletype-page/createtabletype";
 
 function Controller() {
     return (
@@ -106,11 +108,13 @@ function Controller() {
                 } />
                 <Route path="/tables" element={
                     <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Receptionist']}>
-                        <TableTypePage />
+                        <TablePage />
                     </ProtectedRoute>
                 } />
                 <Route path="/tabletypes" element={
-                    <TableTypePage />
+                    <ProtectedRoute requiredRoles={['Boss']}>
+                        <TableTypesPage />
+                    </ProtectedRoute>
                 } />
                 <Route path="/account" element={
                     <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Receptionist', 'Waiter', 'Cashier']}>

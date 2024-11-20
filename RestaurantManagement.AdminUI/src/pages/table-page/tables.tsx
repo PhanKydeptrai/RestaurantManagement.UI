@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { Table, Button, Input, Pagination, Space, message, Tag } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
-const TableTypePage = () => {
+const TablePage = () => {
     const [tables, setTables] = useState<TableDto[]>([]);
     const [pageIndex, setPageIndex] = useState(1);
     const [pageSize] = useState(8);
@@ -165,4 +165,4 @@ const TableTypePage = () => {
     );
 };
 
-export default TableTypePage;
+export default TablePage;
