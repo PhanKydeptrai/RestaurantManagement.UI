@@ -38,6 +38,7 @@ import UpdateTableTypePage from "./pages/tabletype-page/updatetabletype";
 import StatisticsPage from "./pages/statisic-page/statistics";
 import HistoryOrderPage from "./pages/log-page/historyorder";
 import HistoryBookingPage from "./pages/log-page/historybooking";
+import HistoryCategoryPage from "./pages/log-page/historycategory";
 
 function Controller() {
     return (
@@ -222,6 +223,12 @@ function Controller() {
                         <HistoryBookingPage />
                     </ProtectedRoute>
                 } />
+                <Route path="/log/historycategory" element={
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager']}>
+                        <HistoryCategoryPage />
+                    </ProtectedRoute>
+                } />
+
             </Routes>
         </>
     )
