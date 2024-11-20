@@ -43,6 +43,7 @@ import HistoryMealPage from "./pages/log-page/historymeal";
 import HistoryCustomerPage from "./pages/log-page/historycustomer";
 import HistoryEmployeePage from "./pages/log-page/historyemp";
 import HistoryTablePage from "./pages/log-page/historytable";
+import HistoryTableTypePage from "./pages/log-page/historytabletype";
 
 function Controller() {
     return (
@@ -250,6 +251,11 @@ function Controller() {
                 <Route path="/log/historytable" element={
                     <ProtectedRoute requiredRoles={['Boss', 'Manager']}>
                         <HistoryTablePage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/log/historytabletype" element={
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager']}>
+                        <HistoryTableTypePage />
                     </ProtectedRoute>
                 } />
             </Routes>

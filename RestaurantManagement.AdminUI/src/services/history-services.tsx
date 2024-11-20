@@ -83,7 +83,7 @@ export const GetHistoryTable = async (filterUserId: string, searchTerm: string, 
     return res;
 }
 export const GetHistoryTableType = async (filterUserId: string, searchTerm: string, sortColumn: string, sortOrder: string, page: number, pageSize: number) => {
-    const res = await baseUrl.get<HistoryOrderDto[]>(`${History}/tabletype?filterUserId=${filterUserId}&searchTerm=${searchTerm}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&page=${page}&pageSize=${pageSize}`)
+    const res = await baseUrl.get<HistoryOrderDto[]>(`${History}/table-type?filterUserId=${filterUserId}&searchTerm=${searchTerm}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&page=${page}&pageSize=${pageSize}`)
         .then((response: AxiosResponse) => {
             console.log(response.data.value);
             return response.data.value;
