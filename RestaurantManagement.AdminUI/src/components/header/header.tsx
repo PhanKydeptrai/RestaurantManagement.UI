@@ -33,6 +33,7 @@ const Header = () => {
                         <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUser">
                             {/* <li><a className="dropdown-item" href="/AdminLayout/BossLayout/profile.html">Profile</a></li> */}
                             <li><a className="dropdown-item" href="/account">Profile</a></li>
+                            <li><a className="dropdown-item" href="/log">History</a></li>
                             <li><a className="dropdown-item" href="#" onClick={handleLogout}>Logout</a></li>
                         </ul>
                     </div>

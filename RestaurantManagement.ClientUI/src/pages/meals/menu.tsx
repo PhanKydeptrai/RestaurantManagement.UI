@@ -9,7 +9,7 @@ const { Option } = Select;
 const MenuPage = () => {
     const [meals, setMeals] = useState<MealDto[]>([]);
     const [pageIndex, setPageIndex] = useState(1);
-    const [pageSize] = useState(8); // Setting page size to 8
+    const [pageSize] = useState(9); // Setting page size to 8
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPreviousPage, setHasPreviousPage] = useState(false);
     const [totalCount, setTotalCount] = useState(0);
@@ -24,7 +24,7 @@ const MenuPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             const result = await GetAllMeal(filterCategory, filterSellStatus, filterMealStatus, searchTerm, sortColumn, sortOrder, pageIndex, pageSize);
-            setMeals(result.value.items);
+            setMeals(result.items);
             setHasNextPage(result.hasNextPage);
             setHasPreviousPage(result.haspreviousPage);
             setTotalCount(result.totalCount);
@@ -80,37 +80,71 @@ const MenuPage = () => {
     return (
         <main className="container">
 
-            <Row gutter={[16, 16]}>
-                {meals.map((meal) => (
-                    <Col span={8} key={meal.mealId}>
-                        <Card
-                            hoverable
-                            cover={<img alt={meal.mealName} src={meal.imageUrl} />}
-
-                        >
-                            <Card.Meta
-                                title={meal.mealName}
-                                description={
-                                    <>
-                                        <div>Category: {meal.categoryName}</div>
-                                        <div>Price: {meal.price}</div>
-                                    </>
-                                }
+            <div className="row">
+                <div className="col-md-3">
+                    <Row>
+                        <div className="mt-5">
+                            <Select defaultValue="" style={{ width: '100%' }} onChange={handleFilterMealStatus}>
+                                <Option value="">All Meal Status</Option>
+                                <Option value="Active">Active</Option>
+                                <Option value="Inactive">Inactive</Option>
+                            </Select>
+                        </div>
+                        {/* <div className="">
+                            <Input
+                                placeholder="Search by Category"
+                                value={filterCategory}
+                                onChange={handleFilterCategory.value}
+                                onKeyDown={handleSearchSubmit}
                             />
-                        </Card>
-                    </Col>
-                ))}
-            </Row>
+                        </div> */}
+                        <div className="mt-5">
+                            <Input
+                                placeholder="Search by Name"
+                                value={searchTerm}
+                                onChange={handleSearchChange}
+                                onKeyDown={handleSearchSubmit}
+                            />
+                        </div>
+                    </Row>
+                </div>
+                <div className="col-md-9">
+                    <Row gutter={[16, 16]}>
+                        {meals.map((meal) => (
+                            <Col span={8} key={meal.mealId}>
+                                <Card
+                                    hoverable
+                                    cover={<img alt={meal.mealName} src={meal.imageUrl} />}
 
-            <Pagination
-                current={pageIndex}
-                total={totalCount}
-                pageSize={pageSize}
-                onChange={setPageIndex}
-                showSizeChanger={false}
-                showQuickJumper={true}
-                showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
-            />
+                                >
+                                    <Card.Meta
+                                        title={meal.mealName}
+                                        description={
+                                            <>
+                                                <div>Category: {meal.categoryName}</div>
+                                                <div>Price: {meal.price}</div>
+                                            </>
+                                        }
+                                    />
+                                </Card>
+                            </Col>
+                        ))}
+                    </Row>
+                    <Pagination
+                        current={pageIndex}
+                        total={totalCount}
+                        pageSize={pageSize}
+                        onChange={setPageIndex}
+                        showSizeChanger={false}
+                        showQuickJumper={true}
+                        showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+                        style={{ justifyContent: 'center', marginTop: '20px' }}
+                    />
+                </div>
+            </div>
+
+
+            <div className="row mt-5"></div>
         </main>
     );
 }

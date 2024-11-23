@@ -1,6 +1,6 @@
 export interface StatisticsByYearResponse {
     year: number;
-    totalRevenue: number;
+    totalRevenue: string;
     currency: string;
     statisticsByMonthResponses: StatisticsByMonthResponseDto[];
 }

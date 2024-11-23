@@ -45,6 +45,8 @@ import HistoryEmployeePage from "./pages/log-page/historyemp";
 import HistoryTablePage from "./pages/log-page/historytable";
 import HistoryTableTypePage from "./pages/log-page/historytabletype";
 import HistoryBillPage from "./pages/log-page/historybill";
+import ListLogHistoryPage from "./pages/log-page/listlog";
+import StatisticsByYearPage from "./pages/statisic-page/statisticsbyyear";
 
 function Controller() {
     return (
@@ -219,6 +221,11 @@ function Controller() {
                         <StatisticsPage />
                     </ProtectedRoute>
                 } />
+                <Route path="/statistics/year/:year" element={
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager']}>
+                        <StatisticsByYearPage />
+                    </ProtectedRoute>
+                } />
                 <Route path="/log/historyorder" element={
                     <ProtectedRoute requiredRoles={['Boss', 'Manager']}>
                         <HistoryOrderPage />
@@ -264,6 +271,12 @@ function Controller() {
                         <HistoryBillPage />
                     </ProtectedRoute>
                 } />
+                <Route path="/log" element={
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager']}>
+                        <ListLogHistoryPage />
+                    </ProtectedRoute>
+                } />
+
             </Routes>
         </>
     )

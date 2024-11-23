@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { GetStatistic } from "../../services/statistics-services";
-import { StatisticsByDayResponseDto, StatisticsByMonthResponseDto } from "../../models/statisticsDto";
+import { StatisticsByDayResponseDto, StatisticsByMonthResponseDto, StatisticsByYearResponse } from "../../models/statisticsDto";
+import { set } from "@ant-design/plots/es/core/utils";
 
 interface ChartData {
     date: string;
@@ -11,7 +12,7 @@ interface ChartData {
 
 const StatisticsPage = () => {
     const { year } = useParams<{ year: string }>();
-    const [StatisticsByYearResponse, setStatisticsByYearResponse] = useState([]);
+    const [StatisticsByYearResponse, setStatisticsByYearResponse] = useState<StatisticsByYearResponse[]>([]);
     const [statisticsByMonthResponse, setStatisticsByMonthResponse] = useState<StatisticsByMonthResponseDto[]>([]);
     const [statisticsByDayResponse, setStatisticsByDayResponse] = useState<StatisticsByDayResponseDto[]>([]);
 
@@ -22,8 +23,9 @@ const StatisticsPage = () => {
                     const result = await GetStatistic(year);
                     console.log(result); // Inspect the structure of the result
 
+                    setStatisticsByYearResponse(result.value);
                     // Assuming result has the correct structure based on your code
-                    setStatisticsByMonthResponse(result?.statisticsByMonthResponses || []);
+                    setStatisticsByMonthResponse(result.statisticsByMonthResponses || []);
                 } else {
                     console.log("Year is undefined");
                 }
@@ -36,11 +38,11 @@ const StatisticsPage = () => {
 
     return (
         <>
-            <h1>Statistics for the year {year}</h1>
+            <h1>Statistics for the year {year}:  </h1>
             <ResponsiveContainer width="100%" height={400}>
                 <LineChart data={StatisticsByYearResponse}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="date" />
+                    <XAxis dataKey={Date} />
                     <YAxis />
                     <Tooltip />
                     <Legend />
