@@ -3,7 +3,7 @@ import { TableTypeDto } from "../../models/tabletypeDto";
 import { DeleteTableType, GetAllTableType, GetAllTableTypes, RestoreTableType } from "../../services/tabletype-services";
 import { render } from "react-dom";
 import { text } from "@fortawesome/fontawesome-svg-core";
-import { Button, message, notification, Pagination, Space, Table } from "antd";
+import { Button, message, notification, Pagination, Space, Table, Tag } from "antd";
 import { Link } from "react-router-dom";
 
 const TableTypesPage = () => {
@@ -103,7 +103,12 @@ const TableTypesPage = () => {
         {
             title: 'Status',
             dataIndex: 'status',
-            key: 'status'
+            key: 'status',
+            render: (status: string) => (
+                <Tag color={status === 'Active' ? 'green' : status === 'InActive' ? 'red' : ''}>
+                    {status}
+                </Tag>
+            ),
         },
         {
             title: 'Action',
