@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { TableTypeDto } from "../../models/tabletypeDto";
-import { GetAllTableType, GetAllTableTypes } from "../../services/tabletype-services";
+import { DeleteTableType, GetAllTableType, GetAllTableTypes } from "../../services/tabletype-services";
 import { render } from "react-dom";
 import { text } from "@fortawesome/fontawesome-svg-core";
-import { Button, Pagination, Space, Table } from "antd";
+import { Button, message, notification, Pagination, Space, Table } from "antd";
 import { Link } from "react-router-dom";
 
 const TableTypesPage = () => {
@@ -17,8 +17,6 @@ const TableTypesPage = () => {
     const [filterStatus, setFilterStatus] = useState('');
     const [sortColumn, setSortColumn] = useState('');
     const [sortOrder, setSortOrder] = useState('');
-
-
     useEffect(() => {
         const fetchData = async () => {
             const results = await GetAllTableType(searchTerm, filterStatus, sortColumn, sortOrder, pageIndex, pageSize);
@@ -29,6 +27,30 @@ const TableTypesPage = () => {
         };
         fetchData();
     }, [pageIndex, pageSize, searchTerm, filterStatus, sortColumn, sortOrder]);
+
+    const handleDelete = async (id: string) => {
+        try {
+            const result = await DeleteTableType(id);
+            if (result && result.isSuccess) {
+                const results = await GetAllTableType(searchTerm, filterStatus, sortColumn, sortOrder, pageIndex, pageSize);
+                setTableTypes(results.items);
+                notification.success({
+                    message: 'Xoá loại bàn thành công',
+                    description: 'Loại bàn đã được xoá'
+                });
+            } else {
+                notification.error({
+                    message: 'Xoá loại bàn thất bại',
+                    description: result.error[0]?.message || 'Xoá loại ban không thành công'
+                });
+            }
+        } catch (error) {
+            notification.error({
+                message: 'Xoá thất bại',
+                description: 'Xoá loại bàn không thành công'
+            });
+        }
+    }
 
     const columns = [
         {
@@ -67,7 +89,7 @@ const TableTypesPage = () => {
                     <Link to={`/tabletypes/update/${record.tableTypeId}`}>
                         <Button type="primary">Update</Button>
                     </Link>
-                    <Button type="primary">Delete</Button>
+                    <Button danger type="primary" onClick={() => handleDelete(record.tableTypeId)}>Delete</Button>
                 </Space>
             )
         }

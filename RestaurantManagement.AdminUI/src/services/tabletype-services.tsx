@@ -48,6 +48,7 @@ export const CreateTableType = async (formData: FormData) => {
 }
 export const DeleteTableType = async (tableTypeId: string) => {
     const res = await baseUrlDelete.delete(`${TableType}/${tableTypeId}`)
+    console.log(res.data);
     return res.data;
 }
 export const UpdateTableType = async (tableTypeId: string, formData: FormData) => {
