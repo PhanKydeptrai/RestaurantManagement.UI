@@ -51,6 +51,12 @@ export const DeleteTableType = async (tableTypeId: string) => {
     console.log(res.data);
     return res.data;
 }
+
+export const RestoreTableType = async (tableTypeId: string) => {
+    const res = await baseUrlDelete.put(`${TableType}/restore/${tableTypeId}`)
+    console.log(res.data);
+    return res.data;
+}
 export const UpdateTableType = async (tableTypeId: string, formData: FormData) => {
     try {
         const res = await baseUrlPost.putForm(`${TableType}/${tableTypeId}`, formData);

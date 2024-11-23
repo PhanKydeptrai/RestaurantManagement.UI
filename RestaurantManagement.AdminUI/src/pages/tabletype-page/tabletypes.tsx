@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { TableTypeDto } from "../../models/tabletypeDto";
-import { DeleteTableType, GetAllTableType, GetAllTableTypes } from "../../services/tabletype-services";
+import { DeleteTableType, GetAllTableType, GetAllTableTypes, RestoreTableType } from "../../services/tabletype-services";
 import { render } from "react-dom";
 import { text } from "@fortawesome/fontawesome-svg-core";
 import { Button, message, notification, Pagination, Space, Table } from "antd";
@@ -52,6 +52,30 @@ const TableTypesPage = () => {
         }
     }
 
+    const handleRestore = async (id: string) => {
+        try {
+            const result = await RestoreTableType(id);
+            if (result && result.isSuccess) {
+                const results = await GetAllTableType(searchTerm, filterStatus, sortColumn, sortOrder, pageIndex, pageSize);
+                setTableTypes(results.items);
+                notification.success({
+                    message: 'Khôi phục loại bàn thành công',
+                    description: 'Loại bàn đã được khôi phục'
+                });
+            } else {
+                notification.error({
+                    message: 'Khôi phục loại bàn thất bại',
+                    description: result.error[0]?.message || 'Khôi phục loại bàn không thành công'
+                });
+            }
+        } catch (error) {
+            notification.error({
+                message: 'Khôi phục thất bại',
+                description: 'Khôi phục loại bàn không thành công'
+            });
+        }
+    }
+
     const columns = [
         {
             title: 'TableType',
@@ -89,7 +113,11 @@ const TableTypesPage = () => {
                     <Link to={`/tabletypes/update/${record.tableTypeId}`}>
                         <Button type="primary">Update</Button>
                     </Link>
-                    <Button danger type="primary" onClick={() => handleDelete(record.tableTypeId)}>Delete</Button>
+                    {record.status === 'Active' ? (
+                        <Button type="primary" danger onClick={() => handleDelete(record.tableTypeId)}>Delete</Button>
+                    ) : (
+                        <Button style={{ backgroundColor: '#ffec3d', borderColor: '#ffec3d', color: 'white' }} onClick={() => handleRestore(record.tableTypeId)}>Restore</Button>
+                    )}
                 </Space>
             )
         }
