@@ -68,3 +68,13 @@ export const UpdateTableType = async (tableTypeId: string, formData: FormData) =
     }
 
 }
+export const GetDetailTableType = async (id: string) => {
+    try {
+        const res = await baseUrl.get<TableTypeDto>(`${TableType}/${id}`)
+        console.log(res.data);
+        return res.data;
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+}

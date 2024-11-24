@@ -221,11 +221,11 @@ function Controller() {
                         <StatisticsPage />
                     </ProtectedRoute>
                 } />
-                <Route path="/statistics/year/:year" element={
+                {/* <Route path="/statistics/year/:year" element={
                     <ProtectedRoute requiredRoles={['Boss', 'Manager']}>
                         <StatisticsByYearPage />
                     </ProtectedRoute>
-                } />
+                } /> */}
                 <Route path="/log/historyorder" element={
                     <ProtectedRoute requiredRoles={['Boss', 'Manager']}>
                         <HistoryOrderPage />

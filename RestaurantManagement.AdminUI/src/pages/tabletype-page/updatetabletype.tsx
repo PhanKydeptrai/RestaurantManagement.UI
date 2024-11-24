@@ -6,98 +6,113 @@ import { Breadcrumb, Col, Row } from "antd";
 const UpdateTableTypePage = () => {
     const { tableTypeId } = useParams<{ tableTypeId: string }>();
     const [tableTypeName, setTableTypeName] = useState<string>('');
-    const [tablecapacity, setTableCapacity] = useState<number>(0);
-    const [tablestatus, setTableStatus] = useState<string>('');
+    const [tableCapacity, setTableCapacity] = useState<number>(0);
+    const [tableStatus, setTableStatus] = useState<string>('');
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const [tablePrice, setTablePrice] = useState<number>(0);
-    const [desscription, setDesscription] = useState<string>('');
-    const [errors, setErrors] = useState<{ tableTypeName?: string, tablecapacity?: string, tablestatus?: string, tablePrice?: string, desscription?: string }>({});
+    const [description, setDescription] = useState<string>('');
+    const [errors, setErrors] = useState<{ tableTypeName?: string, tableCapacity?: string, tableStatus?: string, tablePrice?: string, description?: string }>({});
     const navigate = useNavigate();
+
+    // Fetch table type data when the component is mounted or when tableTypeId changes
     useEffect(() => {
-        const fetchdata = async () => {
+        const fetchData = async () => {
             try {
-                const response = await fetch(`https://localhost:7057/api/tabletype/${tableTypeId}`);
+                const response = await fetch(`https://localhost:7057/api/tabletype/${tableTypeId}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': '30B34DCD-1CC0-4AAF-B622-7982847F221F'
+                    }
+                });
+
                 const data = await response.json();
-                console.log(data);
+                // Ensure the data returned matches the state names and structure
                 setTableTypeName(data.value.tableTypeName);
-                setTableCapacity(data.value.capacity);
-                setTableStatus(data.value.status);
+                setTableCapacity(data.value.tableCapacity);
+                setTableStatus(data.value.tableStatus);
                 setImageUrl(data.value.imageUrl);
                 setTablePrice(data.value.tablePrice);
-                setDesscription(data.value.desscription);
-
+                setDescription(data.value.description);
             } catch (error) {
                 console.error('Error fetching table type data:', error);
             }
-        }; fetchdata();
+        };
+        fetchData();
     }, [tableTypeId]);
 
+    // Handle file input change (image upload)
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setImageUrl(reader.result as string);
+                setImageUrl(reader.result as string); // Set the image URL to preview it
             };
             reader.readAsDataURL(file);
         }
     };
 
+    // Validate the form fields
     const validateForm = () => {
-        const newErrors: { tableTypeName?: string, tablecapacity?: string, tablestatus?: string, tablePrice?: string, desscription?: string } = {}
+        const newErrors: { tableTypeName?: string, tableCapacity?: string, tableStatus?: string, tablePrice?: string, description?: string } = {};
+
         if (!tableTypeName) {
-            newErrors.tableTypeName = 'Vui lòng nhập tên loại bàn';
+            newErrors.tableTypeName = 'Please enter the table type name';
         }
-        if (!tablecapacity) {
-            newErrors.tablecapacity = 'Vui lòng nhập số lượng bàn';
+        if (!tableCapacity) {
+            newErrors.tableCapacity = 'Please enter the table capacity';
         }
-        if (!tablestatus) {
-            newErrors.tablestatus = 'Vui lòng nhập trạng thái bàn';
+        if (!tableStatus) {
+            newErrors.tableStatus = 'Please enter the table status';
         }
         if (!tablePrice) {
-            newErrors.tablePrice = 'Vui lòng nhập giá bàn';
+            newErrors.tablePrice = 'Please enter the table price';
         }
-        if (!desscription) {
-            newErrors.desscription = 'Vui lòng nhập mô tả';
+        if (!description) {
+            newErrors.description = 'Please enter the description';
         }
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
+    // Handle form submission
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        console.log("Form submitted");  // Kiểm tra xem form có được gửi hay không
-        // if (!validateForm()) {
-        //     return;
-        // }
+
+        if (!validateForm()) {
+            return;
+        }
+
         const formData = new FormData();
         formData.append('tableTypeName', tableTypeName);
-        formData.append('tablecapacity', tablecapacity.toString());
-        formData.append('tablestatus', tablestatus);
+        formData.append('tableCapacity', tableCapacity.toString());
+        formData.append('tableStatus', tableStatus);
         formData.append('tablePrice', tablePrice.toString());
-        formData.append('desscription', desscription);
+        formData.append('description', description);
+
         if (fileInputRef.current && fileInputRef.current.files) {
-            formData.append('image', fileInputRef.current.files[0]);
+            formData.append('image', fileInputRef.current.files[0]); // Assuming image is part of the form
         }
 
         try {
             if (tableTypeId) {
                 const response = await UpdateTableType(tableTypeId, formData);
-                console.log("Response from API:", response);  // Kiểm tra phản hồi từ API
-                if (response.isSuccess) {
+                console.log("Response from API:", response);  // Check the response from the API
+                if (response.success) {  // Assuming `success` field is returned in the response
                     console.log("Successfully updated");
                     setTimeout(() => {
-                        navigate('/tabletypes');
+                        navigate('/tabletypes'); // Redirect after successful update
                     }, 2000);
                 } else {
-                    console.log("Update failed", response);  // Thêm log nếu có lỗi
+                    console.log("Update failed:", response);  // Log failure
                 }
             } else {
                 console.log("Table Type Id is not found");
             }
         } catch (error: any) {
-            console.log("Failed update: ", error.response?.data);  // Log nếu có lỗi
+            console.log("Failed update:", error);  // Log if there's an error
         }
     };
 
@@ -120,7 +135,7 @@ const UpdateTableTypePage = () => {
 
                 <Row gutter={16} key={tableTypeId}>
                     <Col span={24} md={12}>
-                        {/* Column for Image Upload */}
+                        {/* Image Upload */}
                         <div className="mb-3">
                             {imageUrl && (
                                 <div className="col-md-12">
@@ -144,7 +159,7 @@ const UpdateTableTypePage = () => {
                     </Col>
 
                     <Col span={24} md={12}>
-                        {/* Column for Input Fields */}
+                        {/* Input Fields */}
                         <div className="form-group mb-3">
                             <label htmlFor="tableTypeName">Table Type Name</label>
                             <input
@@ -159,16 +174,16 @@ const UpdateTableTypePage = () => {
                         </div>
 
                         <div className="form-group mb-3">
-                            <label htmlFor="tablecapacity">Table Capacity</label>
+                            <label htmlFor="tableCapacity">Table Capacity</label>
                             <input
                                 type="number"
                                 className="form-control"
-                                id="tablecapacity"
+                                id="tableCapacity"
                                 placeholder="Enter table capacity"
-                                value={tablecapacity}
+                                value={tableCapacity}
                                 onChange={(e) => setTableCapacity(parseInt(e.target.value))}
                             />
-                            {errors.tablecapacity && <p style={{ color: 'red' }}>{errors.tablecapacity}</p>}
+                            {errors.tableCapacity && <p style={{ color: 'red' }}>{errors.tableCapacity}</p>}
                         </div>
 
                         <div className="form-group mb-3">
@@ -185,17 +200,18 @@ const UpdateTableTypePage = () => {
                         </div>
 
                         <div className="form-group mb-3">
-                            <label htmlFor="desscription">Description</label>
+                            <label htmlFor="description">Description</label>
                             <textarea
                                 className="form-control"
-                                id="desscription"
+                                id="description"
                                 placeholder="Enter description"
-                                value={desscription}
-                                onChange={(e) => setDesscription(e.target.value)}
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
                             />
-                            {errors.desscription && <p style={{ color: 'red' }}>{errors.desscription}</p>}
+                            {errors.description && <p style={{ color: 'red' }}>{errors.description}</p>}
                         </div>
 
+                        {/* Submit Button */}
                         <button type="submit" className="btn btn-primary">Update</button>
                     </Col>
                 </Row>
@@ -205,3 +221,4 @@ const UpdateTableTypePage = () => {
 };
 
 export default UpdateTableTypePage;
+
