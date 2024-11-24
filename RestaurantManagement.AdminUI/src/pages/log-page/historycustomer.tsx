@@ -51,21 +51,7 @@ const HistoryCustomerPage = () => {
 
     return (
         <>
-            <Row gutter={16} style={{ marginBottom: 24 }}>
-                <Col>
-                    <Breadcrumb>
-                        <Breadcrumb.Item>
-                            <Link to="/"><td>Dashboard</td></Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Item>
-                            <Link to="/log">Log</Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Item>
-                            <td>History Customer</td>
-                        </Breadcrumb.Item>
-                    </Breadcrumb>
-                </Col>
-            </Row>
+
             <Table
                 columns={Columns}
                 dataSource={historyCustomer}

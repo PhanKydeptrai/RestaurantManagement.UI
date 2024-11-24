@@ -51,19 +51,7 @@ const HistoryCategoryPage = () => {
 
     return (
         <>
-            <Row gutter={16} style={{ marginBottom: 24 }}>
-                <Col>
-                    <Breadcrumb>
-                        <Breadcrumb.Item>
-                            <Link to="/"><td>Dashboard</td></Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Item>
-                            <Link to="/log"><td>Log </td></Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Item>History Cateory</Breadcrumb.Item>
-                    </Breadcrumb>
-                </Col>
-            </Row>
+
             <Table
                 columns={Columns}
                 dataSource={HistoryCategory}
