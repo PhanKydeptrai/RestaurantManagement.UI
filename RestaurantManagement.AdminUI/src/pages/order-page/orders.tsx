@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { OrderDto } from "../../models/orderDto";
 import React, { useEffect, useState } from "react";
 import { GetAllOrders, GetOrderSearchTable, GetPaymentStatus } from "../../services/order-services";
-import { Table, Button, Input, Pagination, Space, notification, Row, Col, Breadcrumb, Tag, Select } from "antd";
+import { Table, Button, Input, Pagination, Space, notification, Row, Col, Breadcrumb, Tag, Select, TableColumnsType } from "antd";
 import { render } from "react-dom";
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 const OrderPage = () => {
@@ -65,7 +65,7 @@ const OrderPage = () => {
         }
     };
     //#region Table Columns
-    const columns = [
+    const columns: TableColumnsType<OrderDto> = [
         {
             title: "Order ID",
             dataIndex: "orderId",
@@ -95,6 +95,7 @@ const OrderPage = () => {
         {
             title: "Action",
             key: "action",
+            fixed: "right",
             render: (text: string, record: OrderDto) => (
                 <Space size="middle">
                     {record.paymentStatus !== 'Paid' && (
@@ -157,9 +158,11 @@ const OrderPage = () => {
                 <div className="row mt-3">
                     <div className="col-12">
                         <Table
+                            bordered
                             columns={columns}
                             dataSource={orders}
                             pagination={false}
+                            scroll={{ x: 'max-content' }}
                             rowKey="orderId"
                         />
                     </div>

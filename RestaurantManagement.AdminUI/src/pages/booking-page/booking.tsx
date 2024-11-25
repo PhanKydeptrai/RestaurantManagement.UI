@@ -75,7 +75,6 @@ const BookingPage = () => {
             dataIndex: 'email',
             key: 'email',
             render: (email: string) => email,  // Display email
-            fixed: 'left',
         },
         {
             title: 'Phone',
