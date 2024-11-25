@@ -3,7 +3,7 @@ import { CategoryDto } from "../../models/categoryDto";
 import React, { useEffect, useState } from "react";
 import { DeleteCategory, GetAllCategory, GetCategoryFilter, GetCategorySearch, RestoreCategory, SortCategory } from "../../services/category-service";
 import { Breadcrumb, Button, Col, Input, notification, Pagination, Row, Select, Space, Table, TableColumnsType, Tag } from "antd";
-import { DeleteOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
@@ -159,7 +159,7 @@ const CategoryPage = () => {
         {
             title: 'Action', key: 'action', fixed: 'right', render: (text: string, record: CategoryDto) => (
                 <Space size="middle">
-                    <Link to={`/categories/updatecategory/${record.categoryId}`}><Button type="primary">Update</Button></Link>
+                    <Link to={`/categories/updatecategory/${record.categoryId}`}><Button type="primary" icon={<EditOutlined />}>Update</Button></Link>
                     <Link to={`/categories/detailcategory/${record.categoryId}`}><Button type="primary">Detail</Button></Link>
                     {record.categoryStatus === 'Active' ? (
                         <Button type="primary" danger icon={<DeleteOutlined />} onClick={() => handleDelete(record.categoryId)}>Delete</Button>
