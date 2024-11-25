@@ -108,6 +108,8 @@ const CreateOrderPage = () => {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
+          'x-api-key': '30B34DCD-1CC0-4AAF-B622-7982847F221F'
+
         },
         body: JSON.stringify({ mealId, quantity }),
       });

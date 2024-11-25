@@ -48,13 +48,13 @@ const AssignCustomerPage = () => {
 
             if (response && response.isSuccess) {
                 notification.success({
-                    message: 'Assign table successfully',
-                    description: 'Table assigned successfully!. You can check the table in the table list.',
+                    message: 'Xếp bàn thành công',
+                    description: 'Bàn đã được xếp thành công!. Bạn có thể kiểm tra bàn trong danh sách bàn.',
                 });
             } else {
                 notification.error({
-                    message: 'Asign table Failed',
-                    description: response.errors[0].message || 'There was an error while assigning table.',
+                    message: 'Xếp bàn thất bại',
+                    description: response.errors[0].message || 'Có lỗi xảy ra khi xếp bàn.',
                 });
             }
         } catch (error) {
@@ -74,13 +74,13 @@ const AssignCustomerPage = () => {
             // Kiểm tra nếu response có thông báo lỗi
             if (response && response.isSuccess) {
                 notification.success({
-                    message: 'Unassign table successfully',
-                    description: 'Table unassigned successfully!. You can check the table in the table list.',
+                    message: 'Hủy bàn thành công',
+                    description: 'Bàn đã được hủy thành công!. Bạn có thể kiểm tra bàn trong danh sách bàn.',
                 });
             } else {
                 notification.error({
-                    message: 'Unassign table Failed',
-                    description: response.errors[0].message || 'There was an error while unassigning table.',
+                    message: 'Hủy bàn thất bại',
+                    description: response.errors[0].message || 'Có lỗi xảy ra khi hủy bàn.',
                 });
             }
         } catch (error) {
@@ -96,13 +96,13 @@ const AssignCustomerPage = () => {
             setTable(response.value.items);
             if (response && response.isSuccess) {
                 notification.success({
-                    message: 'Assign table successfully',
-                    description: 'Table assigned successfully!. You can check the table in the table list.',
+                    message: 'Xếp bàn thành công',
+                    description: 'Bàn đã được xếp thành công!. Bạn có thể kiểm tra bàn trong danh sách bàn.',
                 });
             } else {
                 notification.error({
-                    message: 'Asign table Failed',
-                    description: response.errors[0].message || 'There was an error while assigning table.',
+                    message: 'Xếp bàn thất bại',
+                    description: response.errors[0].message || 'Có lỗi xảy ra khi xếp bàn.',
                 });
             }
         }
