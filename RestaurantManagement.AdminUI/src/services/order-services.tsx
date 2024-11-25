@@ -58,9 +58,9 @@ export const CreateOrder = async (order: any, tableId: string) => {
     }
 }
 
-export const UpdateOrder = async (tableId: string) => {
+export const UpdateOrder = async (orderDetailId: string, quantity: number) => {
     try {
-        const response: AxiosResponse = await baseUrlDelete.put(`${Order}/${tableId}`);
+        const response: AxiosResponse = await baseUrlDelete.put(`${Order}/${orderDetailId}`, { quantity });
         console.log(response.data);
         return response.data;
     }
