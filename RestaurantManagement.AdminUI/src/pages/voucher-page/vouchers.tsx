@@ -61,14 +61,24 @@ const VoucherPage = () => {
             key: 'voucherName',
         },
         {
+            title: 'Voucher Code',
+            dataIndex: 'voucherCode',
+            key: 'voucherCode',
+        },
+        {
             title: 'Max Discount',
-            dataIndex: 'maxDiscount',
-            key: 'maxDiscount',
+            dataIndex: 'maximumDiscountAmount',
+            key: 'maxDiscoumaximumDiscountAmountntAmount',
+        },
+        {
+            title: 'Minimum Order Amount',
+            dataIndex: 'minimumOrderAmount',
+            key: 'minimumOrderAmount',
         },
         {
             title: 'Voucher Condition',
-            dataIndex: 'voucherCondition',
-            key: 'voucherCondition',
+            dataIndex: 'voucherConditions',
+            key: 'voucherConditions',
         },
         {
             title: 'Start Date',
