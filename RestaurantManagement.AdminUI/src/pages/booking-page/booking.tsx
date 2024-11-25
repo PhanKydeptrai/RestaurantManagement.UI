@@ -82,7 +82,6 @@ const BookingPage = () => {
             dataIndex: 'phone',
             key: 'phone',
             render: (phone: string) => phone,  // Display phone number
-            fixed: 'left',
         },
         {
             title: 'Booking Date',
@@ -138,6 +137,7 @@ const BookingPage = () => {
         {
             title: 'Action',
             key: 'action',
+            fixed: 'right',
             render: (_: any, record: BookDto) => (
                 <Space size="middle">
                     {record.bookingStatus === 'Waiting' ? (
