@@ -2,13 +2,14 @@ import { useRef, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { CreateTableType } from "../../services/tabletype-services";
 import { Link, useNavigate } from "react-router-dom";
+import { Button, Image } from "antd";
 
 const CreateTableTypePage = () => {
     const [tableTypeName, setTableTypeName] = useState('');
     const [status, setStatus] = useState('');
     const [tablePrice, setTablePrice] = useState('');
     const [description, setDescription] = useState('');
-    const [tableCapacity, setTableCapacity] = useState('');
+    const [tableCapacity, setTableCapacity] = useState(0);
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const navigate = useNavigate();
     const [errors, setErrors] = useState<{ tableTypeName?: string, status?: string, tablePrice?: string, tableCapacity?: string }>();
@@ -65,9 +66,8 @@ const CreateTableTypePage = () => {
         }
         if (!tableCapacity) {
             newErrors.tableCapacity = 'Vui lòng nhập số lượng!';
-        }
-        if (isNaN(Number(tableCapacity))) {
-            newErrors.tableCapacity = 'Vui lòng nhập số!';
+        } else if (isNaN(Number(tableCapacity))) {
+            newErrors.tableCapacity = 'Vui lòng nhập một số hợp lệ!';
         }
 
         setErrors(newErrors);
@@ -85,16 +85,18 @@ const CreateTableTypePage = () => {
         formData.append('status', status);
         formData.append('tablePrice', tablePrice);
         formData.append('description', description);
-        formData.append('tableCapacity', tableCapacity);
+        formData.append('tableCapacity', tableCapacity.toString());
         if (fileInputRef.current && fileInputRef.current.files) {
-            formData.append('imageUrl', fileInputRef.current.files[0]);
+            formData.append('image', fileInputRef.current.files[0]);
         }
+        console.log(tableCapacity); // Kiểm tra xem giá trị tableCapacity có chính xác không
+
 
         const response = await CreateTableType(formData);
         if (response) {
             notifySucess();
             setTimeout(() => {
-                navigate('/tables');
+                navigate('/tabletypes');
             }, 2000);
         } else {
             notifyError();
@@ -160,7 +162,7 @@ const CreateTableTypePage = () => {
                                     id="tableCapacity"
                                     placeholder="Số lượng"
                                     value={tableCapacity}
-                                    onChange={(e) => setTableCapacity(e.target.value)}
+                                    onChange={(e) => setTableCapacity(parseInt(e.target.value))}
                                 />
                                 {errors?.tableCapacity && <div className="text-danger">{errors.tableCapacity}</div>}
                             </div>
@@ -179,24 +181,14 @@ const CreateTableTypePage = () => {
 
                         {/* Image upload (right side) */}
                         <div className="col-md-6 col-12 d-flex justify-content-center align-items-center mb-3">
-                            <div className="text-center">
-                                <label htmlFor="imageUrl">Hình ảnh</label>
-                                <input
-                                    type="file"
-                                    className="form-control"
-                                    id="imageUrl"
-                                    ref={fileInputRef}
-                                    style={{ display: 'none' }}
-                                    onChange={handleFileChange}
+                            <div className="d-flex flex-column align-items-center text-center p-3 py-5">
+                                <Image
+                                    width={200}
+                                    src={imageUrl || 'https://via.placeholder.com/350'}
+                                    alt="Category"
                                 />
-                                <div onClick={handleFileSelect} className="img-thumbnail" style={{ cursor: 'pointer' }}>
-                                    <img
-                                        src={imageUrl ?? 'https://via.placeholder.com/150'}
-                                        alt="Selected"
-                                        className="img-fluid"
-                                        style={{ width: '150px', height: '150px' }}
-                                    />
-                                </div>
+                                <Button className="mt-3" onClick={handleFileSelect}>Chọn ảnh</Button>
+                                <input type="file" ref={fileInputRef} style={{ display: "none" }} accept="image/*" onChange={handleFileChange} />
                             </div>
                         </div>
                     </div>

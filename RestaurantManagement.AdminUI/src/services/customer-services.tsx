@@ -1,6 +1,7 @@
 import { CustomerDto } from "../models/customerDto";
 import { AxiosResponse } from "axios";
 import baseUrl from "../apis/base";
+import baseUrlDelete from "../apis/basedelete";
 
 export const Customer = "customer";
 
@@ -59,4 +60,14 @@ export const GetCusStatus = async (pageSize: number, pageIndex: number, filterSt
             return error;
         });
     return res;
+}
+export const DeleteCustomer = async (id: string) => {
+    const res = await baseUrlDelete.delete(`${Customer}/${id}`);
+    console.log(res.data);
+    return res.data;
+}
+export const RestoreCustomer = async (id: string) => {
+    const res = await baseUrlDelete.put(`${Customer}/restore/${id}`);
+    console.log(res.data);
+    return res.data;
 }

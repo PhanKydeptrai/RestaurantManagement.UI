@@ -20,7 +20,7 @@ const Header = () => {
                     <button className="btn btn-primary d-md-none d-block float-end" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-expanded="false" aria-controls="sidebarMenu">
                         <FontAwesomeIcon icon={faBars} size="lg" />
                     </button>
-                    <a className="navbar-brand" href="#">Name of Restaurant</a>
+                    <a className="navbar-brand" href="#">Nhum Nhum Restaurant</a>
                     <div className="collapse navbar-collapse" id="navbarNav"></div>
                     {/* <a href="">
                         <span><FontAwesomeIcon icon={faBell} size="lg" /></span>
@@ -33,6 +33,7 @@ const Header = () => {
                         <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUser">
                             {/* <li><a className="dropdown-item" href="/AdminLayout/BossLayout/profile.html">Profile</a></li> */}
                             <li><a className="dropdown-item" href="/account">Profile</a></li>
+                            <li><a className="dropdown-item" href="/log">History</a></li>
                             <li><a className="dropdown-item" href="#" onClick={handleLogout}>Logout</a></li>
                         </ul>
                     </div>

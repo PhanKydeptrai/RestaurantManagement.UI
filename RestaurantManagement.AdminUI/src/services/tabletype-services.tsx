@@ -18,6 +18,18 @@ export const GetAllTableTypes = async (pageSize: number, pageIndex: number, srea
         });
     return res;
 }
+export const GetAllTableType = async (searchTerm: string, filterStatus: string, sortColumn: string, sortOrder: string, page: number, pageSize: number) => {
+    const res = await baseUrl.get(`${TableType}?searchTerm=${searchTerm}&filterStatus=${filterStatus}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&page=${page}&pageSize=${pageSize}`)
+        .then((response: AxiosResponse) => {
+            console.log(response.data);
+            return response.data.value;
+        }).catch((error) => {
+            console.log(error);
+            return error;
+        });
+    return res;
+}
+
 export const GetTableTypeInfo = async () => {
     const res = await baseUrl.get(`${TableType}/tabletype-info`)
         .then((response: AxiosResponse) => {
@@ -36,5 +48,33 @@ export const CreateTableType = async (formData: FormData) => {
 }
 export const DeleteTableType = async (tableTypeId: string) => {
     const res = await baseUrlDelete.delete(`${TableType}/${tableTypeId}`)
+    console.log(res.data);
     return res.data;
+}
+
+export const RestoreTableType = async (tableTypeId: string) => {
+    const res = await baseUrlDelete.put(`${TableType}/restore/${tableTypeId}`)
+    console.log(res.data);
+    return res.data;
+}
+export const UpdateTableType = async (tableTypeId: string, formData: FormData) => {
+    try {
+        const res = await baseUrlPost.putForm(`${TableType}/${tableTypeId}`, formData);
+        console.log(res);
+        return res.data;
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+
+}
+export const GetDetailTableType = async (id: string) => {
+    try {
+        const res = await baseUrl.get<TableTypeDto>(`${TableType}/${id}`)
+        console.log(res.data);
+        return res.data;
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
 }

@@ -211,7 +211,6 @@ const CreateEmployeePage = () => {
                                             <Option value="Receptionist">Receptionist</Option>
                                             <Option value="Waiter">Waiter</Option>
                                             <Option value="Cashier">Cashier</Option>
-                                            <Option value="Chef">Chef</Option>
                                         </Select>
                                         {errors.role && <div className="text-danger">{errors.role}</div>}
                                     </Form.Item>

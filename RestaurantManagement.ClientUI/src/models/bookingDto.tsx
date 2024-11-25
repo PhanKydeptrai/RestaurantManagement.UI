@@ -6,7 +6,7 @@ export interface BookingDto {
     phoneNumber: string;
     bookingDate: string;
     bookingTime: string;
-    numberOfCustomer: number;
+    numberOfCustomers: number;
     note: string;
 }
 

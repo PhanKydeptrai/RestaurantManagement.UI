@@ -57,17 +57,17 @@ const OrderDetailPage = () => {
     };
     //#endregion
 
-    // Hàm xử lý tăng giảm số lượng
-    const handleQuantityChange = (key: string, change: number) => {
+    const handleQuantityChange = (orderDetailId: string, change: number) => {
         setDataSource(prevDataSource => {
-            // Tìm dòng có key cần thay đổi
+            // Tìm dòng có orderDetailId cần thay đổi
             const updatedDataSource = prevDataSource.map(item => {
-                if (item.orderDetailId === key) {
+                if (item.orderDetailId === orderDetailId) {
                     // Chỉ cập nhật quantity của dòng này
-                    return { ...item, quantity: item.quantity + change };
-
+                    const updatedItem = { ...item, quantity: item.quantity + change };
+                    // Sau khi cập nhật quantity, gọi hàm handleUpdate để gửi cập nhật
+                    handleUpdate(orderDetailId, updatedItem.quantity);
+                    return updatedItem;
                 }
-                console.log(updatedDataSource);
                 return item;
             });
 
@@ -75,6 +75,31 @@ const OrderDetailPage = () => {
             return updatedDataSource;
         });
     };
+
+    const handleUpdate = async (orderDetailId: string, quantity: number) => {
+        try {
+            console.log("Updating order: ", orderDetailId, " with new quantity: ", quantity);
+
+            // Giả sử bạn cần gửi cập nhật quantity cùng với orderDetailId đến backend
+            const response = await UpdateOrder(orderDetailId, quantity)
+            if (response && response.isSuccess) {
+                const result = await GetOrderDetail(tableId as string);
+                console.log(result);
+                setTable(result);
+                setDataSource(result?.value?.orderDetails || []); // Set dữ liệu ban đầu
+                notifySucess();
+            } else {
+                notifyError();
+            }
+
+
+        } catch (error) {
+            notifyError();
+            console.error("Error updating order:", error);
+        }
+    };
+
+
 
     // Hàm xóa order
     const handleDelete = async (OrderId: string) => {
@@ -92,21 +117,7 @@ const OrderDetailPage = () => {
         }
     };
 
-    // Hàm cập nhật order
-    const handleUpdate = async (tableId: string) => {
-        try {
-            console.log("Updating order: ", tableId);
-            const response = await UpdateOrder(tableId);
-            if (response?.isSuccess) {
-                notifySucess();
-            } else {
-                notifyError();
-            }
-        } catch (error) {
-            notifyError();
-            console.error("Error updating order:", error);
-        }
-    };
+
     // cash => paymentStatus = "Paid"
     const handleCash = async (tableId: string) => {
         try {
@@ -150,24 +161,23 @@ const OrderDetailPage = () => {
             dataIndex: "quantity",
             key: "quantity",
             render: (quantity: number, record: OrderDetailDto) => (
-                <span style={{ margin: '0 8px' }}>{quantity}</span>
-
-                // <div>
-                //     <Button
-                //         onClick={() => handleQuantityChange(record.key, -1)}
-                //         disabled={quantity <= 1} // Disable decrease if quantity is 1
-                //     >
-                //         -
-                //     </Button>
-                //     <span style={{ margin: '0 8px' }}>{quantity}</span>
-                //     <Button
-                //         onClick={() => handleQuantityChange(record.key, 1)}
-                //     >
-                //         +
-                //     </Button>
-                // </div>
+                <div>
+                    <Button
+                        onClick={() => handleQuantityChange(record.orderDetailId, -1)}
+                        disabled={quantity <= 1} // Disable decrease if quantity is 1
+                    >
+                        -
+                    </Button>
+                    <span style={{ margin: '0 8px' }}>{quantity}</span>
+                    <Button
+                        onClick={() => handleQuantityChange(record.orderDetailId, 1)}
+                    >
+                        +
+                    </Button>
+                </div>
             ),
         },
+
         {
             title: "Unit Price",
             dataIndex: "unitPrice",

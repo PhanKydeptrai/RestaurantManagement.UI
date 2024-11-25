@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { TableDto } from "../../models/tableDto";
 import { DeleteTable, GetAllTables, RestoreTable } from "../../services/table-services";
 import { Link } from "react-router-dom";
-import { Table, Button, Input, Pagination, Space, message, Tag } from "antd";
+import { Table, Button, Input, Pagination, Space, message, Tag, notification } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
-const TableTypePage = () => {
+const TablePage = () => {
     const [tables, setTables] = useState<TableDto[]>([]);
     const [pageIndex, setPageIndex] = useState(1);
     const [pageSize] = useState(8);
@@ -42,10 +42,20 @@ const TableTypePage = () => {
 
     const handleDelete = async (id: string) => {
         try {
-            await DeleteTable(id);
-            const results = await GetAllTables(pageSize, pageIndex, searchTerm);
-            setTables(results.items);
-            message.success('Table deleted successfully!');
+            const result = await DeleteTable(id)
+            if (result && result.isSuccess) {
+                const results = await GetAllTables(pageSize, pageIndex, searchTerm);
+                setTables(results.items);
+                notification.success({
+                    message: 'Xoá thành công',
+                    description: 'Bàn đã được xoá',
+                })
+            } else {
+                notification.error({
+                    message: 'Xoá thất bại',
+                    description: 'Xoá bàn thất bại',
+                })
+            }
         } catch (error) {
             message.error('Failed to delete table');
         }
@@ -53,10 +63,21 @@ const TableTypePage = () => {
 
     const handleRestore = async (id: string) => {
         try {
-            await RestoreTable(id);
-            const results = await GetAllTables(pageSize, pageIndex, searchTerm);
-            setTables(results.items);
-            message.success('Table restored successfully!');
+            const result = await RestoreTable(id)
+            if (result && result.isSuccess) {
+                const results = await GetAllTables(pageSize, pageIndex, searchTerm);
+                setTables(results.items);
+                notification.success({
+                    message: 'Khôi phục thành công',
+                    description: 'Bàn đã được khôi phục',
+                })
+            } else {
+                notification.error({
+                    message: 'Khôi phục thất bại',
+                    description: 'Khôi phục bàn thất bại',
+                })
+            }
+
         } catch (error) {
             message.error('Failed to restore table');
         }
@@ -165,4 +186,4 @@ const TableTypePage = () => {
     );
 };
 
-export default TableTypePage;
+export default TablePage;

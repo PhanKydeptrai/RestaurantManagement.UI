@@ -26,7 +26,8 @@ const AccountPage = () => {
                 const response = await axios.get('https://localhost:7057/api/account/account-emp-info', {
                     headers: {
                         'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'x-api-key': '30B34DCD-1CC0-4AAF-B622-7982847F221F'
                     }
                 });
 

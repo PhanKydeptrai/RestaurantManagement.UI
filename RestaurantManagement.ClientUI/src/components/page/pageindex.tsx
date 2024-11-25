@@ -96,12 +96,13 @@ const LandingPage: React.FC = () => {
                     {/* Full-width Landing Page Image */}
                     <div style={{ width: '100%', overflow: 'hidden' }}>
                         <Image
-                            src="https://via.placeholder.com/1500x800"
+                            src="https://picgroup.vn/wp-content/uploads/2020/04/H%C3%8CNH-5.jpg"
                             alt="Landing Page Image"
                             preview={false}
                             style={{ width: '100%', height: 'auto' }}
                         />
                     </div>
+                    <div className="row mt-5"></div>
                 </Content>
 
                 <Footer

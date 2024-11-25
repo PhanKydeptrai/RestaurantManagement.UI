@@ -1,4 +1,4 @@
-import { DatePicker, Form, FormProps, Input, InputNumber, TimePicker } from "antd";
+import { DatePicker, Form, FormProps, Input, InputNumber, message, TimePicker } from "antd";
 import { useState } from "react";
 import { CreateBooking } from "../../services/book-services";
 import dayjs, { Dayjs } from 'dayjs';
@@ -14,13 +14,6 @@ const BookFormOfNormal = () => {
     const [numberOfCustomer, setNumberOfCustomer] = useState(0);
     const [note, setNote] = useState('');
 
-
-    const [componentVariant, setComponentVariant] = useState<FormProps['variant']>('filled');
-
-    const onFormVariantChange = ({ variant }: { variant: FormProps['variant'] }) => {
-        setComponentVariant(variant);
-    };
-
     const handleTimeChange = (e: any) => {
         setBookingTime(e.target.value);
     };
@@ -30,7 +23,7 @@ const BookFormOfNormal = () => {
         console.log('Thời gian đã lưu:', fullTime);
         // Có thể lưu giá trị này vào nơi bạn cần, ví dụ: gửi lên server hoặc lưu vào state khác
     };
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         console.log('submit');
 
@@ -41,13 +34,15 @@ const BookFormOfNormal = () => {
             phoneNumber: phoneNumber,
             bookingDate: bookingDate,
             bookingTime: `${bookingTime}:00`,
-            numberOfCustomer: numberOfCustomer,
+            numberOfCustomers: numberOfCustomer,
             note: note
         }
         console.log("Data be sent: ", data);
         try {
             const res = CreateBooking(data);
-            console.log("this is res: ", res);
+            console.log("this is response: ", res);
+            message.success('Booking successfully');
+
         } catch (error) {
             console.log("this is error: ", error);
 

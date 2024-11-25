@@ -1,10 +1,11 @@
-import { AlertOutlined, BarcodeOutlined, ContainerOutlined, HomeOutlined, MenuFoldOutlined, MenuUnfoldOutlined, MoneyCollectOutlined, ShopOutlined, ShoppingOutlined, TableOutlined, TagOutlined, UsergroupAddOutlined, UserOutlined } from "@ant-design/icons";
+import { AlertOutlined, BarcodeOutlined, ContainerOutlined, HomeOutlined, InsertRowAboveOutlined, InsertRowLeftOutlined, MenuFoldOutlined, MenuUnfoldOutlined, MoneyCollectOutlined, ShopOutlined, ShoppingOutlined, TableOutlined, TagOutlined, UsergroupAddOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Layout, Menu, theme } from "antd";
 import { Content, Footer, Header } from "antd/es/layout/layout";
 import Sider from "antd/es/layout/Sider";
-import { useState } from "react";
+import { Children, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Controller from "../../Controller";
+import { Title } from "react-bootstrap/lib/Modal";
 
 const SliderBar = () => {
     const role = localStorage.getItem('role');
@@ -26,16 +27,22 @@ const SliderBar = () => {
         { key: '5', icon: <TagOutlined />, title: 'Category', link: '/categories' },
         { key: '6', icon: <UsergroupAddOutlined />, title: 'Customers', link: '/customers' },
         { key: '7', icon: <AlertOutlined />, title: 'Meals', link: '/meals' },
-        { key: '8', icon: <TableOutlined />, title: 'Table', link: '/tables' },
-        { key: '9', icon: <BarcodeOutlined />, title: 'Voucher', link: '/vouchers' },
-        { key: '10', icon: <MoneyCollectOutlined />, title: 'Bills', link: '/bills' },
+        {
+            key: 'sub2', icon: <InsertRowAboveOutlined />, title: 'Table',
+            children: [
+                { key: '8', icon: <TableOutlined />, title: 'Table', link: '/tables' },
+                { key: '9', icon: <InsertRowLeftOutlined />, title: 'Table Type', link: '/tabletypes' },
+            ]
+        },
+        { key: '10', icon: <BarcodeOutlined />, title: 'Voucher', link: '/vouchers' },
+        { key: '11', icon: <MoneyCollectOutlined />, title: 'Bills', link: '/bills' },
     ];
 
     const navigate = useNavigate();
 
     return (
-        <Layout>
-            <Sider trigger={null} collapsible collapsed={collapsed}>
+        <Layout style={{ minHeight: '100vh', height: 'auto' }}> {/* Full page height */}
+            <Sider trigger={null} collapsible collapsed={collapsed} style={{ height: '100vh' }}> {/* Sider full height */}
                 <div className="demo-logo-vertical" />
                 <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
                     {menuItems.map(item => (
@@ -76,7 +83,7 @@ const SliderBar = () => {
                     style={{
                         margin: '24px 16px',
                         padding: 24,
-                        minHeight: 280,
+                        minHeight: 'calc(100vh - 64px)', // Content full height minus header
                         background: colorBgContainer,
                         borderRadius: borderRadiusLG,
                     }}
@@ -84,7 +91,8 @@ const SliderBar = () => {
                     <Controller />
                 </Content>
                 <Footer className="footer" style={{
-                    textAlign: 'center', position: 'fixed',
+                    textAlign: 'center',
+                    position: 'fixed',
                     left: '0',
                     bottom: '0',
                     width: '100%',
