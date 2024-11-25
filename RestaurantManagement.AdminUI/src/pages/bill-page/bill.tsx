@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { BillDto } from "../../models/billDto";
 import { ExportBill, GetAllBill } from "../../services/bill-services";
-import { Button, Pagination, Space, Table } from "antd";
+import { Button, Pagination, Space, Table, TableColumnsType } from "antd";
 import { Link, useParams } from "react-router-dom";
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { DeleteOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 const BillPage = () => {
     const [bills, setBills] = useState<BillDto[]>([]);
@@ -40,7 +40,7 @@ const BillPage = () => {
         }
     };
 
-    const columns = [
+    const columns: TableColumnsType<BillDto> = [
         { title: 'Bill ID', dataIndex: 'billId', key: 'billId' },
         { title: 'Table ID', dataIndex: 'tableId', key: 'tableId' },
         { title: 'Total Price', dataIndex: 'totalPrice', key: 'totalPrice' },
@@ -50,11 +50,12 @@ const BillPage = () => {
         { title: 'Email', dataIndex: 'email', key: 'email' },
         { title: 'Phone Number', dataIndex: 'phoneNumber', key: 'phoneNumber' },
         {
-            title: 'Order Details',
-            key: 'orderDetails',
+            title: 'Action',
+            key: 'actions',
+            fixed: 'right',
             render: (text: string, record: BillDto) => (
                 <Space>
-                    <Button type="primary">
+                    <Button type="primary" icon={<DeleteOutlined />}>
                         <Link style={{ textDecoration: 'none' }} to={`/bill/detailbill/${record.billId}`}>View</Link>
                     </Button>
                     <Button type="primary" onClick={() => handleExportBill(record.billId)}>
@@ -77,9 +78,11 @@ const BillPage = () => {
                     </nav>
                 </div>
             </div>
-            <Table
+            <Table<BillDto>
+                bordered
                 columns={columns}
                 dataSource={bills}
+                scroll={{ x: 'max-content' }}
                 pagination={false}
                 rowKey="billId"
             />

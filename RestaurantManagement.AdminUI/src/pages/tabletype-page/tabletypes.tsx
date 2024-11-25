@@ -3,7 +3,8 @@ import { TableTypeDto } from "../../models/tabletypeDto";
 import { DeleteTableType, GetAllTableType, GetAllTableTypes, RestoreTableType } from "../../services/tabletype-services";
 import { render } from "react-dom";
 import { text } from "@fortawesome/fontawesome-svg-core";
-import { Button, message, notification, Pagination, Space, Table, Tag } from "antd";
+import { Button, message, notification, Pagination, Space, Table, TableColumnsType, Tag } from "antd";
+import { DeleteOutlined, EditOutlined, FormOutlined, RedoOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
 const TableTypesPage = () => {
@@ -76,7 +77,7 @@ const TableTypesPage = () => {
         }
     }
 
-    const columns = [
+    const columns: TableColumnsType<TableTypeDto> = [
         {
             title: 'TableType',
             dataIndex: 'tableTypeName',
@@ -113,15 +114,16 @@ const TableTypesPage = () => {
         {
             title: 'Action',
             dataIndex: 'action',
+            fixed: 'right',
             render: (text: string, record: TableTypeDto) => (
                 <Space size="middle">
                     <Link to={`/tabletypes/update/${record.tableTypeId}`}>
-                        <Button type="primary">Update</Button>
+                        <Button type="primary" icon={<EditOutlined />}>Update</Button>
                     </Link>
                     {record.status === 'Active' ? (
-                        <Button type="primary" danger onClick={() => handleDelete(record.tableTypeId)}>Delete</Button>
+                        <Button type="primary" icon={<DeleteOutlined />} danger onClick={() => handleDelete(record.tableTypeId)}>Delete</Button>
                     ) : (
-                        <Button style={{ backgroundColor: '#ffec3d', borderColor: '#ffec3d', color: 'white' }} onClick={() => handleRestore(record.tableTypeId)}>Restore</Button>
+                        <Button icon={<RedoOutlined />} style={{ backgroundColor: '#ffec3d', borderColor: '#ffec3d', color: 'white' }} onClick={() => handleRestore(record.tableTypeId)}>Restore</Button>
                     )}
                 </Space>
             )
@@ -143,12 +145,14 @@ const TableTypesPage = () => {
             <div className="row mb-3">
                 <Space>
                     <Link to="/createtabletype">
-                        <Button type="primary">Create TableType</Button>
+                        <Button type="primary" icon={<FormOutlined />}>Create TableType</Button>
                     </Link>
                 </Space>
             </div>
-            <Table
+            <Table<TableTypeDto>
+                bordered
                 columns={columns}
+                scroll={{ x: 'max-content' }}
                 dataSource={tableTypes}
                 rowKey="tableTypeId"
                 pagination={false}

@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { MealDto } from "../../models/mealDto";
 import { DeleteMeal, FilterCategory, FilterMealStatus, FilterSellStatus, GetAllMeal, GetAllMeals, RestoresMeal } from "../../services/meal-services";
 import { Link } from "react-router-dom";
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { Button, Input, Select, Space, Table, Pagination, Row, Col, Breadcrumb, Tag, notification } from "antd";
+import { ContainerOutlined, DeleteOutlined, EditOutlined, FormOutlined, LeftOutlined, RedoOutlined, RightOutlined } from '@ant-design/icons';
+import { Button, Input, Select, Space, Table, Pagination, Row, Col, Breadcrumb, Tag, notification, TableColumnsType } from "antd";
 const { Option } = Select;
 
 const MealPage = () => {
@@ -134,7 +134,7 @@ const MealPage = () => {
     };
     //#endregion
 
-    const columns = [
+    const columns: TableColumnsType<MealDto> = [
         { title: 'Meal Name', dataIndex: 'mealName', key: 'mealName' },
         { title: 'Category', dataIndex: 'categoryName', key: 'categoryName' },
         { title: 'Price', dataIndex: 'price', key: 'price' },
@@ -151,14 +151,14 @@ const MealPage = () => {
             ),
         },
         {
-            title: 'Actions', key: 'actions', render: (text: string, record: MealDto) => (
+            title: 'Actions', key: 'actions', fixed: 'right', render: (text: string, record: MealDto) => (
                 <Space size="middle">
-                    <Link to={`updatemeal/${record.mealId}`}><Button type="primary">Update</Button></Link>
-                    <Link to={`detailmeal/${record.mealId}`}><Button type="primary">Detail</Button></Link>
+                    <Link to={`updatemeal/${record.mealId}`}><Button type="primary" icon={<EditOutlined />}>Update</Button></Link>
+                    <Link to={`detailmeal/${record.mealId}`}><Button type="primary" icon={<ContainerOutlined />}>Detail</Button></Link>
                     {record.mealStatus === 'Active' ? (
-                        <Button type="primary" danger onClick={() => handleDelete(record.mealId)}>Delete</Button>
+                        <Button type="primary" danger icon={<DeleteOutlined />} onClick={() => handleDelete(record.mealId)}>Delete</Button>
                     ) : (
-                        <Button style={{ backgroundColor: '#ffec3d', borderColor: '#ffec3d', color: 'white' }} onClick={() => handleRestore(record.mealId)}>Restore</Button>
+                        <Button icon={<RedoOutlined />} style={{ backgroundColor: '#ffec3d', borderColor: '#ffec3d', color: 'white' }} onClick={() => handleRestore(record.mealId)}>Restore</Button>
                     )}
                 </Space>
             )
@@ -180,7 +180,9 @@ const MealPage = () => {
 
             <div className="row mb-4">
                 <div className="col-md-2">
-                    <Link to="/createmeal"><Button type="primary" block>Create</Button></Link>
+                    <Link to="/createmeal">
+                        <Button type="primary" icon={<FormOutlined />} block>Create</Button>
+                    </Link>
                 </div>
                 <div className="col-md-2">
                     <Select defaultValue="" style={{ width: '100%' }} onChange={handleFilterMealStatus}>
@@ -208,8 +210,10 @@ const MealPage = () => {
             </div>
 
             <Table
+                bordered
                 columns={columns}
                 dataSource={meals}
+                scroll={{ x: 'max-content' }}
                 rowKey="mealId"
                 pagination={false}
             />

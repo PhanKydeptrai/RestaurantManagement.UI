@@ -3,16 +3,17 @@ import { FilterBookingStatus, FilterPaymentStatus, GetAllBooking } from "../../s
 import { Link } from "react-router-dom";
 import { BookDto } from "../../models/bookDto";
 import { Table, Button, Pagination, Space, notification, Tag, Select } from "antd";
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { CheckOutlined, ContainerOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { ColumnsType } from "antd/es/table";  // Import ColumnsType for TypeScript
 
 const { Option } = Select;
+
 const BookingPage = () => {
     const [bookings, setBookings] = useState<BookDto[]>([]);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPreviousPage, setHasPreviousPage] = useState(false);
     const [totalCount, setTotalCount] = useState(0);
     const [loading, setLoading] = useState(false);
-
 
     const [filterBookingStatus, setFilterBookingStatus] = useState('');
     const [filterPaymentStatus, setFilterPaymentStatus] = useState('');
@@ -59,23 +60,27 @@ const BookingPage = () => {
         setBookings(results.items);
         setTotalCount(results.totalCount);
     };
+
     const handleFilterPaymentStatusChange = async (value: string) => {
         setFilterPaymentStatus(value);
         const results = await FilterPaymentStatus(value, pageIndex, pageSize);
         setBookings(results.items);
         setTotalCount(results.totalCount);
     }
-    // Columns configuration for the table
-    const columns = [
+
+    // Columns configuration for the table using ColumnsType
+    const columns: ColumnsType<BookDto> = [
         {
             title: 'Email',
             dataIndex: 'email',
             key: 'email',
+            render: (email: string) => email,  // Display email
         },
         {
             title: 'Phone',
             dataIndex: 'phone',
             key: 'phone',
+            render: (phone: string) => phone,  // Display phone number
         },
         {
             title: 'Booking Date',
@@ -131,17 +136,18 @@ const BookingPage = () => {
         {
             title: 'Action',
             key: 'action',
+            fixed: 'right',
             render: (_: any, record: BookDto) => (
                 <Space size="middle">
                     {record.bookingStatus === 'Waiting' ? (
                         <Link to={`/arrangebooking/${record.bookId}`}>
-                            <Button type="primary">Assign</Button>
+                            <Button icon={<CheckOutlined />} type="primary">Assign</Button>
                         </Link>
                     ) : (
-                        <Button disabled>Assign</Button>
+                        <Button icon={<CheckOutlined />} disabled>Assign</Button>
                     )}
                     <Link to={`bookingdetail/${record.bookId}`}>
-                        <Button>Detail</Button>
+                        <Button icon={<ContainerOutlined />} type="primary">Detail</Button>
                     </Link>
                 </Space>
             ),
@@ -185,7 +191,8 @@ const BookingPage = () => {
             </div>
 
             <div className="container">
-                <Table
+                <Table<BookDto>
+                    bordered
                     columns={columns}
                     dataSource={bookings}
                     pagination={false}  // Disable internal pagination

@@ -2,9 +2,9 @@ import { Link } from "react-router-dom";
 import { OrderDto } from "../../models/orderDto";
 import React, { useEffect, useState } from "react";
 import { GetAllOrders, GetOrderSearchTable, GetPaymentStatus } from "../../services/order-services";
-import { Table, Button, Input, Pagination, Space, notification, Row, Col, Breadcrumb, Tag, Select } from "antd";
+import { Table, Button, Input, Pagination, Space, notification, Row, Col, Breadcrumb, Tag, Select, TableColumnsType } from "antd";
 import { render } from "react-dom";
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { EyeOutlined, FormOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 const OrderPage = () => {
     const [orders, setOrders] = useState<OrderDto[]>([]);
     const [pageIndex, setPageIndex] = useState(1);
@@ -65,7 +65,7 @@ const OrderPage = () => {
         }
     };
     //#region Table Columns
-    const columns = [
+    const columns: TableColumnsType<OrderDto> = [
         {
             title: "Order ID",
             dataIndex: "orderId",
@@ -95,11 +95,12 @@ const OrderPage = () => {
         {
             title: "Action",
             key: "action",
+            fixed: "right",
             render: (text: string, record: OrderDto) => (
                 <Space size="middle">
                     {record.paymentStatus !== 'Paid' && (
                         <Link to={`/orders/${record.tableId}`}>
-                            <Button type="primary">View</Button>
+                            <Button icon={<EyeOutlined />} type="primary">View</Button>
                         </Link>
                     )}
                 </Space>
@@ -132,7 +133,7 @@ const OrderPage = () => {
                 <div className="row">
                     <div className="col-md-2 mb-3">
                         <Link to="/order/create">
-                            <Button type="primary" block>Create Order</Button>
+                            <Button type="primary" icon={<FormOutlined />} block>Create Order</Button>
                         </Link>
                     </div>
                     <div className="col-md-2">
@@ -157,9 +158,11 @@ const OrderPage = () => {
                 <div className="row mt-3">
                     <div className="col-12">
                         <Table
+                            bordered
                             columns={columns}
                             dataSource={orders}
                             pagination={false}
+                            scroll={{ x: 'max-content' }}
                             rowKey="orderId"
                         />
                     </div>

@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { VoucherDto } from "../../models/voucherDto";
 import { DeleteVoucher, GetAllVouchers } from "../../services/voucher-services";
-import { Button, Input, Table, Pagination, notification, Tag, Space } from "antd";
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { Button, Input, Table, Pagination, notification, Tag, Space, TableColumnsType } from "antd";
+import { DeleteOutlined, FormOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 const VoucherPage = () => {
     const [vouchers, setVouchers] = useState<VoucherDto[]>([]);
@@ -54,21 +54,31 @@ const VoucherPage = () => {
         }
     };
 
-    const columns = [
+    const columns: TableColumnsType<VoucherDto> = [
         {
             title: 'Voucher Name',
             dataIndex: 'voucherName',
             key: 'voucherName',
         },
         {
+            title: 'Voucher Code',
+            dataIndex: 'voucherCode',
+            key: 'voucherCode',
+        },
+        {
             title: 'Max Discount',
-            dataIndex: 'maxDiscount',
-            key: 'maxDiscount',
+            dataIndex: 'maximumDiscountAmount',
+            key: 'maxDiscoumaximumDiscountAmountntAmount',
+        },
+        {
+            title: 'Minimum Order Amount',
+            dataIndex: 'minimumOrderAmount',
+            key: 'minimumOrderAmount',
         },
         {
             title: 'Voucher Condition',
-            dataIndex: 'voucherCondition',
-            key: 'voucherCondition',
+            dataIndex: 'voucherConditions',
+            key: 'voucherConditions',
         },
         {
             title: 'Start Date',
@@ -98,14 +108,15 @@ const VoucherPage = () => {
         {
             title: 'Action',
             key: 'action',
+            fixed: 'right',
             render: (text: string, record: VoucherDto) => (
                 <Space size="middle">
                     {record.status === 'Active' ? (
-                        <Button type="primary" danger onClick={() => handleDelete(record.voucherId)}>
+                        <Button type="primary" danger icon={<DeleteOutlined />} onClick={() => handleDelete(record.voucherId)}>
                             Delete
                         </Button>
                     ) : (
-                        <Button type="primary" danger disabled>
+                        <Button type="primary" danger icon={<DeleteOutlined />} disabled>
                             Delete
                         </Button>
                     )}
@@ -131,7 +142,7 @@ const VoucherPage = () => {
                 <div className="row mb-3">
                     <div className="col-md-2">
                         <Link to="/createvoucher">
-                            <Button type="primary">Create Voucher</Button>
+                            <Button type="primary" icon={<FormOutlined />}>Create Voucher</Button>
                         </Link>
                     </div>
                     <div className="col-md-6"></div>
@@ -146,7 +157,9 @@ const VoucherPage = () => {
                     </div>
                 </div>
 
-                <Table
+                <Table<VoucherDto>
+                    bordered
+                    scroll={{ x: 'max-content' }}
                     columns={columns}
                     dataSource={vouchers}
                     rowKey="voucherId"

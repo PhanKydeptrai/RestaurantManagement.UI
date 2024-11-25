@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import { DeleteOutlined, RedoOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { Table, Select, Input, Button, Pagination, Tag, Space, notification } from "antd";
+import { Table, Select, Input, Button, Pagination, Tag, Space, notification, TableColumnsType } from "antd";
 import { CustomerDto } from "../../models/customerDto";
 import { DeleteCustomer, GetAllCustomer, GetCusGender, GetCusStatus, GetFilterTypeCus, GetSreachCus, RestoreCustomer } from "../../services/customer-services";
 
@@ -121,7 +122,7 @@ const CustomerPage = () => {
         }
     }
     // Columns for Ant Design Table
-    const columns = [
+    const columns: TableColumnsType<CustomerDto> = [
         {
             title: 'Họ',
             dataIndex: 'lastName',
@@ -165,12 +166,13 @@ const CustomerPage = () => {
         {
             title: 'Actions',
             key: 'actions',
+            fixed: 'right',
             render: (text: string, record: CustomerDto) => (
                 <Space size="middle">
                     {record.customerStatus === 'Active' ? (
-                        <Button type="primary" danger onClick={() => handleDelete(record.userId)}>Delete</Button>
+                        <Button type="primary" danger icon={<DeleteOutlined />} onClick={() => handleDelete(record.userId)}>Delete</Button>
                     ) : (
-                        <Button style={{ backgroundColor: '#ffec3d', borderColor: '#ffec3d', color: 'white' }} onClick={() => handleRestore(record.userId)}>Restore</Button>
+                        <Button icon={<RedoOutlined />} style={{ backgroundColor: '#ffec3d', borderColor: '#ffec3d', color: 'white' }} onClick={() => handleRestore(record.userId)}>Restore</Button>
                     )}
                 </Space>
 
@@ -227,9 +229,11 @@ const CustomerPage = () => {
                 </div>
             </div>
 
-            <Table
+            <Table<CustomerDto>
+                bordered
                 columns={columns}
                 dataSource={customers}
+                scroll={{ x: 'max-content' }}
                 rowKey="userId"
                 pagination={false}  // Disable the default pagination of Ant Design Table
             />

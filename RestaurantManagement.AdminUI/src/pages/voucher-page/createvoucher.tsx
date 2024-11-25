@@ -6,11 +6,15 @@ import { CreateVoucher } from "../../services/voucher-services";
 const CreateVoucherPage = () => {
 
     const [voucherName, setVoucherName] = useState('');
-    const [maxDiscount, setMaxDiscount] = useState(0);
+    const [voucherCode, setVoucherCode] = useState('');
+    const [percentageDiscount, setPercentageDiscount] = useState(0);
+    const [maximumDiscountAmount, setMaximumDiscountAmount] = useState(0);
+    const [minimumOrderAmount, setMinimumOrderAmount] = useState(0);
     const [voucherCondition, setVoucherCondition] = useState(0);
     const [startDate, setStartDate] = useState('');
     const [expiredDate, setExpiredDate] = useState('');
     const [description, setDescription] = useState('');
+
     const [errors, setErrors] = useState<{ voucherName?: string, maxDiscount?: string, voucherCondition?: string, startDate?: string, expiredDate?: string, description?: string }>();
     const navigate = useNavigate();
 
@@ -46,18 +50,18 @@ const CreateVoucherPage = () => {
         if (voucherName === '') {
             newErrors.voucherName = 'Tên voucher không được để trống';
         }
-        if (Number(maxDiscount) <= 0) {
+        if (Number(maximumDiscountAmount) <= 0) {
             newErrors.maxDiscount = 'Giảm giá tối đa phải là số lớn hơn 0';
         }
-        if (isNaN(maxDiscount)) {
+        if (isNaN(maximumDiscountAmount)) {
             newErrors.maxDiscount = 'Giảm giá tối đa phải là số';
         }
-        if (Number(voucherCondition) <= 0) {
-            newErrors.voucherCondition = 'Điều kiện voucher phải là số lớn hơn 0';
-        }
-        if (isNaN(voucherCondition)) {
-            newErrors.voucherCondition = 'Điều kiện voucher phải là số';
-        }
+        // if (Number(voucherCondition) <= 0) {
+        //     newErrors.voucherCondition = 'Điều kiện voucher phải là số lớn hơn 0';
+        // }
+        // if (isNaN(voucherCondition)) {
+        //     newErrors.voucherCondition = 'Điều kiện voucher phải là số';
+        // }
         if (!startDate) {
             newErrors.startDate = 'Ngày bắt đầu không được để trống';
         }
@@ -82,8 +86,11 @@ const CreateVoucherPage = () => {
         }
         const data = {
             voucherName: voucherName,
-            maxDiscount: maxDiscount,
-            voucherCondition: voucherCondition,
+            voucherCode: voucherCode,
+            percentageDiscount: percentageDiscount,
+            maximumDiscountAmount: maximumDiscountAmount,
+            minimumOrderAmount: minimumOrderAmount,
+            voucherConditions: voucherCondition,
             startDate: startDate,
             expiredDate: expiredDate,
             description: description,
@@ -100,7 +107,8 @@ const CreateVoucherPage = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`,
+                    'x-api-key': '30B34DCD-1CC0-4AAF-B622-7982847F221F'
                 },
                 body: JSON.stringify(data),
             });
@@ -143,14 +151,26 @@ const CreateVoucherPage = () => {
                         {errors?.voucherName && <div className="text-danger">{errors.voucherName}</div>}
                     </div>
                     <div className="mb-3">
+                        <label htmlFor="voucherCode" className="form-label">Mã voucher</label>
+                        <input type="text" className="form-control" id="voucherCode" onChange={(e) => setVoucherCode(e.target.value)} />
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="percentageDiscount" className="form-label">Giảm giá %</label>
+                        <input type="number" className="form-control" id="percentageDiscount" onChange={(e) => setPercentageDiscount(parseInt(e.target.value))} />
+                    </div>
+                    <div className="mb-3">
                         <label htmlFor="maxDiscount" className="form-label">Giảm giá tối đa</label>
-                        <input type="number" className="form-control" id="maxDiscount" onChange={(e) => setMaxDiscount(parseInt(e.target.value))} />
+                        <input type="number" className="form-control" id="maxDiscount" onChange={(e) => setMaximumDiscountAmount(parseInt(e.target.value))} />
                         {errors?.maxDiscount && <div className="text-danger">{errors.maxDiscount}</div>}
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="minOrderAmount" className="form-label">Số tiền tối thiểu</label>
+                        <input type="number" className="form-control" id="minOrderAmount" onChange={(e) => setMinimumOrderAmount(parseInt(e.target.value))} />
                     </div>
                     <div className="mb-3">
                         <label htmlFor="voucherCondition" className="form-label">Điều kiện voucher</label>
                         <input type="number" className="form-control" id="voucherCondition" onChange={(e) => setVoucherCondition(parseInt(e.target.value))} />
-                        {errors?.voucherCondition && <div className="text-danger">{errors.voucherCondition}</div>}
+                        {/* {errors?.voucherCondition && <div className="text-danger">{errors.voucherCondition}</div>} */}
                     </div>
                     <div className="mb-3">
                         <label htmlFor="startDate" className="form-label">Ngày bắt đầu</label>

@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { TableDto } from "../../models/tableDto";
 import { DeleteTable, GetAllTables, RestoreTable } from "../../services/table-services";
 import { Link } from "react-router-dom";
-import { Table, Button, Input, Pagination, Space, message, Tag, notification } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { Table, Button, Input, Pagination, Space, message, Tag, notification, TableColumnsType } from "antd";
+import { DeleteOutlined, FormOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
 
 const TablePage = () => {
     const [tables, setTables] = useState<TableDto[]>([]);
@@ -83,7 +83,7 @@ const TablePage = () => {
         }
     };
 
-    const columns = [
+    const columns: TableColumnsType<TableDto> = [
         {
             title: 'Table Id',
             dataIndex: 'tableId',
@@ -119,12 +119,13 @@ const TablePage = () => {
         {
             title: 'Actions',
             key: 'actions',
+            fixed: 'right',
             render: (text: any, record: TableDto) => (
                 <Space size="middle">
                     {record.tableStatus === 'Active' ? (
-                        <Button type="primary" danger onClick={() => handleDelete(record.tableId)}>Delete</Button>
+                        <Button type="primary" danger icon={<DeleteOutlined />} onClick={() => handleDelete(record.tableId)}>Delete</Button>
                     ) : (
-                        <Button style={{ backgroundColor: '#ffec3d', borderColor: '#ffec3d', color: 'white' }} onClick={() => handleRestore(record.tableId)}>Restore</Button>
+                        <Button icon={<RedoOutlined />} style={{ backgroundColor: '#ffec3d', borderColor: '#ffec3d', color: 'white' }} onClick={() => handleRestore(record.tableId)}>Restore</Button>
                     )}
                 </Space>
             ),
@@ -147,10 +148,7 @@ const TablePage = () => {
             <div className="row mb-3">
                 <Space size="middle">
                     <Link to="/createtable">
-                        <Button type="primary">Create Table</Button>
-                    </Link>
-                    <Link to="/createtabletype">
-                        <Button type="primary">Create TableType</Button>
+                        <Button type="primary" icon={<FormOutlined />}>Create Table</Button>
                     </Link>
                     <Link to="/tables/TableStatusEmpty">
                         <Button type="primary">Assign Table</Button>
@@ -166,9 +164,11 @@ const TablePage = () => {
                 </Space>
             </div>
 
-            <Table
+            <Table<TableDto>
+                bordered
                 columns={columns}
                 dataSource={tables}
+                scroll={{ x: 'max-content' }}
                 rowKey="tableId"
                 pagination={false}
             />

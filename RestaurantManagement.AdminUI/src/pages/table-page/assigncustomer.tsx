@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { TableDto } from "../../models/tableDto";
 import { AssignTableforbook, AssignTableforCustomer, GetAllTableOfStatusEmpty, UnAssignTableforbook, UnAssignTableforCustomer } from "../../services/table-services";
 import { Link } from "react-router-dom";
-import { Button, Select, Table, Space, Pagination, message, Tag, notification } from "antd";
-import { SyncOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { Button, Select, Table, Space, Pagination, message, Tag, notification, TableColumnsType } from "antd";
+import { SyncOutlined, LeftOutlined, RightOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import form from "antd/es/form";
 
 const AssignCustomerPage = () => {
@@ -128,7 +128,7 @@ const AssignCustomerPage = () => {
     //     }
     // }
 
-    const columns = [
+    const columns: TableColumnsType<TableDto> = [
         {
             title: 'Table Id',
             dataIndex: 'tableId',
@@ -164,18 +164,19 @@ const AssignCustomerPage = () => {
         {
             title: 'Actions',
             key: 'actions',
+            fixed: 'right',
             render: (text: any, record: TableDto) => (
                 <Space size="middle">
                     {record.activeStatus === 'Empty' ? (
                         <>
-                            <Button type="primary" onClick={() => handleAssign(record.tableId)}>Assign</Button>
+                            <Button icon={<CheckOutlined />} type="primary" onClick={() => handleAssign(record.tableId)}>Assign</Button>
                         </>
                     ) : record.activeStatus === 'Booked' ? (
                         <>
-                            <Button type="primary" onClick={() => handleAssignBook(record.tableId)}>Assign</Button>
+                            <Button icon={<CheckOutlined />} type="primary" onClick={() => handleAssignBook(record.tableId)}>Assign</Button>
                         </>
                     ) : (
-                        <Button type="default" onClick={() => handleUnAssign(record.tableId)}>UnAssign</Button>
+                        <Button icon={<CloseOutlined />} type="primary" danger onClick={() => handleUnAssign(record.tableId)}>UnAssign</Button>
                     )}
                 </Space>
             ),
@@ -211,9 +212,11 @@ const AssignCustomerPage = () => {
                 </Space>
             </div>
 
-            <Table
+            <Table<TableDto>
+                bordered
                 columns={columns}
                 dataSource={tables}
+                scroll={{ x: 'max-content' }}
                 rowKey="tableId"
                 pagination={false} // Disable default pagination of Table component
             />
