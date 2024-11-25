@@ -3,7 +3,7 @@ import { FilterBookingStatus, FilterPaymentStatus, GetAllBooking } from "../../s
 import { Link } from "react-router-dom";
 import { BookDto } from "../../models/bookDto";
 import { Table, Button, Pagination, Space, notification, Tag, Select } from "antd";
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { ContainerOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { ColumnsType } from "antd/es/table";  // Import ColumnsType for TypeScript
 
 const { Option } = Select;
@@ -147,7 +147,7 @@ const BookingPage = () => {
                         <Button disabled>Assign</Button>
                     )}
                     <Link to={`bookingdetail/${record.bookId}`}>
-                        <Button>Detail</Button>
+                        <Button icon={<ContainerOutlined />} type="primary">Detail</Button>
                     </Link>
                 </Space>
             ),

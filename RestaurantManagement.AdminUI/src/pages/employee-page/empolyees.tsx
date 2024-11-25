@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Table, Button, Select, Input, Space, Pagination, Row, Col, Breadcrumb, Tag, notification, TableColumnsType } from 'antd';
 import { EmployeeDto } from "../../models/employeeDto";
 import { DeleteEmployee, GetAllEmployee, GetEmpGender, GetEmpRole, GetEmpStatus, GetEmpSearch, RestoreEmployee } from "../../services/employee-service";
-import { DeleteOutlined, FormOutlined, LeftOutlined, RedoOutlined, RightOutlined } from '@ant-design/icons';
+import { ContainerOutlined, DeleteOutlined, FormOutlined, LeftOutlined, RedoOutlined, RightOutlined } from '@ant-design/icons';
 const { Option } = Select;
 const EmployeePage = () => {
     const [employees, setEmployees] = useState<EmployeeDto[]>([]);
@@ -155,7 +155,7 @@ const EmployeePage = () => {
             fixed: 'right',
             render: (text: string, record: EmployeeDto) => (
                 <Space size="middle">
-                    <Link to={`detailemployee/${record.userId}`}><Button type="primary">Detail</Button></Link>
+                    <Link to={`detailemployee/${record.userId}`}><Button type="primary" icon={<ContainerOutlined />}>Detail</Button></Link>
                     {record.employeeStatus === 'Active' ? (
                         <Button type="primary" danger icon={<DeleteOutlined />} onClick={() => handleDelete(record.userId)}>Delete</Button>
                     ) : (

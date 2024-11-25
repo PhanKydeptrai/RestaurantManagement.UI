@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { GetAllOrders, GetOrderSearchTable, GetPaymentStatus } from "../../services/order-services";
 import { Table, Button, Input, Pagination, Space, notification, Row, Col, Breadcrumb, Tag, Select, TableColumnsType } from "antd";
 import { render } from "react-dom";
-import { FormOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { EyeOutlined, FormOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 const OrderPage = () => {
     const [orders, setOrders] = useState<OrderDto[]>([]);
     const [pageIndex, setPageIndex] = useState(1);
@@ -100,7 +100,7 @@ const OrderPage = () => {
                 <Space size="middle">
                     {record.paymentStatus !== 'Paid' && (
                         <Link to={`/orders/${record.tableId}`}>
-                            <Button type="primary">View</Button>
+                            <Button icon={<EyeOutlined />} type="primary">View</Button>
                         </Link>
                     )}
                 </Space>

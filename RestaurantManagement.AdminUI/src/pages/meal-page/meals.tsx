@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { MealDto } from "../../models/mealDto";
 import { DeleteMeal, FilterCategory, FilterMealStatus, FilterSellStatus, GetAllMeal, GetAllMeals, RestoresMeal } from "../../services/meal-services";
 import { Link } from "react-router-dom";
-import { DeleteOutlined, EditOutlined, FormOutlined, LeftOutlined, RedoOutlined, RightOutlined } from '@ant-design/icons';
+import { ContainerOutlined, DeleteOutlined, EditOutlined, FormOutlined, LeftOutlined, RedoOutlined, RightOutlined } from '@ant-design/icons';
 import { Button, Input, Select, Space, Table, Pagination, Row, Col, Breadcrumb, Tag, notification, TableColumnsType } from "antd";
 const { Option } = Select;
 
@@ -154,7 +154,7 @@ const MealPage = () => {
             title: 'Actions', key: 'actions', fixed: 'right', render: (text: string, record: MealDto) => (
                 <Space size="middle">
                     <Link to={`updatemeal/${record.mealId}`}><Button type="primary" icon={<EditOutlined />}>Update</Button></Link>
-                    <Link to={`detailmeal/${record.mealId}`}><Button type="primary">Detail</Button></Link>
+                    <Link to={`detailmeal/${record.mealId}`}><Button type="primary" icon={<ContainerOutlined />}>Detail</Button></Link>
                     {record.mealStatus === 'Active' ? (
                         <Button type="primary" danger icon={<DeleteOutlined />} onClick={() => handleDelete(record.mealId)}>Delete</Button>
                     ) : (
