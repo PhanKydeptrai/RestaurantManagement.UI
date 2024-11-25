@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { CategoryDto } from "../../models/categoryDto";
 import React, { useEffect, useState } from "react";
 import { DeleteCategory, GetAllCategory, GetCategoryFilter, GetCategorySearch, RestoreCategory, SortCategory } from "../../services/category-service";
-import { Breadcrumb, Button, Col, Input, notification, Pagination, Row, Select, Space, Table, Tag } from "antd";
+import { Breadcrumb, Button, Col, Input, notification, Pagination, Row, Select, Space, Table, TableColumnsType, Tag } from "antd";
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
@@ -140,7 +140,7 @@ const CategoryPage = () => {
     };
     //#endregion
 
-    const columns = [
+    const columns: TableColumnsType<CategoryDto> = [
         { title: 'Tên loại món', dataIndex: 'categoryName', key: 'categoryName' },
         {
             title: 'Trạng thái', dataIndex: 'categoryStatus', key: 'categoryStatus',
@@ -157,7 +157,7 @@ const CategoryPage = () => {
             ),
         },
         {
-            title: 'Action', key: 'action', render: (text: string, record: CategoryDto) => (
+            title: 'Action', key: 'action', fixed: 'right', render: (text: string, record: CategoryDto) => (
                 <Space size="middle">
                     <Link to={`/categories/updatecategory/${record.categoryId}`}><Button type="primary">Update</Button></Link>
                     <Link to={`/categories/detailcategory/${record.categoryId}`}><Button type="primary">Detail</Button></Link>
@@ -221,9 +221,11 @@ const CategoryPage = () => {
                         </div>
                     </div>
                     <div className="mt-5"></div>
-                    <Table
+                    <Table<CategoryDto>
+                        bordered
                         columns={columns}
                         dataSource={categories}
+                        scroll={{ x: 'max-content' }}
                         pagination={false}
                         rowKey="categoryId"
                     />
