@@ -4,15 +4,16 @@ import { Link } from "react-router-dom";
 import { BookDto } from "../../models/bookDto";
 import { Table, Button, Pagination, Space, notification, Tag, Select } from "antd";
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { ColumnsType } from "antd/es/table";  // Import ColumnsType for TypeScript
 
 const { Option } = Select;
+
 const BookingPage = () => {
     const [bookings, setBookings] = useState<BookDto[]>([]);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPreviousPage, setHasPreviousPage] = useState(false);
     const [totalCount, setTotalCount] = useState(0);
     const [loading, setLoading] = useState(false);
-
 
     const [filterBookingStatus, setFilterBookingStatus] = useState('');
     const [filterPaymentStatus, setFilterPaymentStatus] = useState('');
@@ -59,23 +60,29 @@ const BookingPage = () => {
         setBookings(results.items);
         setTotalCount(results.totalCount);
     };
+
     const handleFilterPaymentStatusChange = async (value: string) => {
         setFilterPaymentStatus(value);
         const results = await FilterPaymentStatus(value, pageIndex, pageSize);
         setBookings(results.items);
         setTotalCount(results.totalCount);
     }
-    // Columns configuration for the table
-    const columns = [
+
+    // Columns configuration for the table using ColumnsType
+    const columns: ColumnsType<BookDto> = [
         {
             title: 'Email',
             dataIndex: 'email',
             key: 'email',
+            render: (email: string) => email,  // Display email
+            fixed: 'left',
         },
         {
             title: 'Phone',
             dataIndex: 'phone',
             key: 'phone',
+            render: (phone: string) => phone,  // Display phone number
+            fixed: 'left',
         },
         {
             title: 'Booking Date',
@@ -185,7 +192,8 @@ const BookingPage = () => {
             </div>
 
             <div className="container">
-                <Table
+                <Table<BookDto>
+                    bordered
                     columns={columns}
                     dataSource={bookings}
                     pagination={false}  // Disable internal pagination

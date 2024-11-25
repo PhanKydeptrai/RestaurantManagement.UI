@@ -6,6 +6,8 @@ const instance = axios.create({
     headers: {
         'Content-Type': 'application/json',
         //'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+        'x-api-key': '30B34DCD-1CC0-4AAF-B622-7982847F221F'
+
     },
 });
 
