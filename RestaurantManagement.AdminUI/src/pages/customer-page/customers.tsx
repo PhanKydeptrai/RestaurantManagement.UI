@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Table, Select, Input, Button, Pagination, Tag, Space, notification } from "antd";
+import { Table, Select, Input, Button, Pagination, Tag, Space, notification, TableColumnsType } from "antd";
 import { CustomerDto } from "../../models/customerDto";
 import { DeleteCustomer, GetAllCustomer, GetCusGender, GetCusStatus, GetFilterTypeCus, GetSreachCus, RestoreCustomer } from "../../services/customer-services";
 
@@ -121,7 +121,7 @@ const CustomerPage = () => {
         }
     }
     // Columns for Ant Design Table
-    const columns = [
+    const columns: TableColumnsType<CustomerDto> = [
         {
             title: 'Họ',
             dataIndex: 'lastName',
@@ -165,6 +165,7 @@ const CustomerPage = () => {
         {
             title: 'Actions',
             key: 'actions',
+            fixed: 'right',
             render: (text: string, record: CustomerDto) => (
                 <Space size="middle">
                     {record.customerStatus === 'Active' ? (
@@ -227,9 +228,11 @@ const CustomerPage = () => {
                 </div>
             </div>
 
-            <Table
+            <Table<CustomerDto>
+                bordered
                 columns={columns}
                 dataSource={customers}
+                scroll={{ x: 'max-content' }}
                 rowKey="userId"
                 pagination={false}  // Disable the default pagination of Ant Design Table
             />

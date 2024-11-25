@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Table, Button, Select, Input, Space, Pagination, Row, Col, Breadcrumb, Tag, notification } from 'antd';
+import { Table, Button, Select, Input, Space, Pagination, Row, Col, Breadcrumb, Tag, notification, TableColumnsType } from 'antd';
 import { EmployeeDto } from "../../models/employeeDto";
 import { DeleteEmployee, GetAllEmployee, GetEmpGender, GetEmpRole, GetEmpStatus, GetEmpSearch, RestoreEmployee } from "../../services/employee-service";
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
@@ -131,7 +131,7 @@ const EmployeePage = () => {
         }
     };
 
-    const columns = [
+    const columns: TableColumnsType<EmployeeDto> = [
         { title: 'Họ', dataIndex: 'lastName', key: 'lastName' },
         { title: 'Tên', dataIndex: 'firstName', key: 'firstName' },
         { title: 'Email', dataIndex: 'email', key: 'email' },
@@ -152,6 +152,7 @@ const EmployeePage = () => {
         {
             title: 'Action',
             key: 'action',
+            fixed: 'right',
             render: (text: string, record: EmployeeDto) => (
                 <Space size="middle">
                     <Link to={`detailemployee/${record.userId}`}><Button type="primary">Detail</Button></Link>
@@ -223,8 +224,10 @@ const EmployeePage = () => {
             </div>
             <div className="mt-5"></div>
 
-            <Table
+            <Table<EmployeeDto>
+                bordered
                 columns={columns}
+                scroll={{ x: 'max-content' }}
                 dataSource={employees}
                 pagination={false}
                 rowKey="userId"
