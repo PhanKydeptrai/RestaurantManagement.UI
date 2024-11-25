@@ -3,7 +3,7 @@ import { TableDto } from "../../models/tableDto";
 import { DeleteTable, GetAllTables, RestoreTable } from "../../services/table-services";
 import { Link } from "react-router-dom";
 import { Table, Button, Input, Pagination, Space, message, Tag, notification, TableColumnsType } from "antd";
-import { DeleteOutlined, SearchOutlined } from "@ant-design/icons";
+import { DeleteOutlined, FormOutlined, SearchOutlined } from "@ant-design/icons";
 
 const TablePage = () => {
     const [tables, setTables] = useState<TableDto[]>([]);
@@ -148,10 +148,7 @@ const TablePage = () => {
             <div className="row mb-3">
                 <Space size="middle">
                     <Link to="/createtable">
-                        <Button type="primary">Create Table</Button>
-                    </Link>
-                    <Link to="/createtabletype">
-                        <Button type="primary">Create TableType</Button>
+                        <Button type="primary" icon={<FormOutlined />}>Create Table</Button>
                     </Link>
                     <Link to="/tables/TableStatusEmpty">
                         <Button type="primary">Assign Table</Button>

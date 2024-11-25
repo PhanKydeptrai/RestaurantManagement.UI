@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Table, Button, Select, Input, Space, Pagination, Row, Col, Breadcrumb, Tag, notification, TableColumnsType } from 'antd';
 import { EmployeeDto } from "../../models/employeeDto";
 import { DeleteEmployee, GetAllEmployee, GetEmpGender, GetEmpRole, GetEmpStatus, GetEmpSearch, RestoreEmployee } from "../../services/employee-service";
-import { DeleteOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { DeleteOutlined, FormOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 const { Option } = Select;
 const EmployeePage = () => {
     const [employees, setEmployees] = useState<EmployeeDto[]>([]);
@@ -181,7 +181,7 @@ const EmployeePage = () => {
             <div className="row">
                 <div className="col-md-2">
                     <Link to="/createemployee">
-                        <Button type="primary" block>Create</Button>
+                        <Button type="primary" icon={<FormOutlined />} block>Create</Button>
                     </Link>
                 </div>
                 <div className="col-md-2">

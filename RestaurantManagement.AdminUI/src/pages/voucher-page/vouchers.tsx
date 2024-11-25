@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { VoucherDto } from "../../models/voucherDto";
 import { DeleteVoucher, GetAllVouchers } from "../../services/voucher-services";
 import { Button, Input, Table, Pagination, notification, Tag, Space, TableColumnsType } from "antd";
-import { DeleteOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { DeleteOutlined, FormOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 const VoucherPage = () => {
     const [vouchers, setVouchers] = useState<VoucherDto[]>([]);
@@ -142,7 +142,7 @@ const VoucherPage = () => {
                 <div className="row mb-3">
                     <div className="col-md-2">
                         <Link to="/createvoucher">
-                            <Button type="primary">Create Voucher</Button>
+                            <Button type="primary" icon={<FormOutlined />}>Create Voucher</Button>
                         </Link>
                     </div>
                     <div className="col-md-6"></div>

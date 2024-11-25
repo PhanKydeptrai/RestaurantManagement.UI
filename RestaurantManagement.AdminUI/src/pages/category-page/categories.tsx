@@ -3,7 +3,7 @@ import { CategoryDto } from "../../models/categoryDto";
 import React, { useEffect, useState } from "react";
 import { DeleteCategory, GetAllCategory, GetCategoryFilter, GetCategorySearch, RestoreCategory, SortCategory } from "../../services/category-service";
 import { Breadcrumb, Button, Col, Input, notification, Pagination, Row, Select, Space, Table, TableColumnsType, Tag } from "antd";
-import { DeleteOutlined, EditOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, FormOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
@@ -188,7 +188,7 @@ const CategoryPage = () => {
                     <div className="row">
                         <div className="col-md-2">
                             <Link to="/categories/createcategory">
-                                <Button type="primary" block>Create</Button>
+                                <Button type="primary" icon={<FormOutlined />} block>Create</Button>
                             </Link>
                         </div>
                         <div className="col-md-2">

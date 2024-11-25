@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { MealDto } from "../../models/mealDto";
 import { DeleteMeal, FilterCategory, FilterMealStatus, FilterSellStatus, GetAllMeal, GetAllMeals, RestoresMeal } from "../../services/meal-services";
 import { Link } from "react-router-dom";
-import { DeleteOutlined, EditOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, FormOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { Button, Input, Select, Space, Table, Pagination, Row, Col, Breadcrumb, Tag, notification, TableColumnsType } from "antd";
 const { Option } = Select;
 
@@ -180,7 +180,9 @@ const MealPage = () => {
 
             <div className="row mb-4">
                 <div className="col-md-2">
-                    <Link to="/createmeal"><Button type="primary" block>Create</Button></Link>
+                    <Link to="/createmeal">
+                        <Button type="primary" icon={<FormOutlined />} block>Create</Button>
+                    </Link>
                 </div>
                 <div className="col-md-2">
                     <Select defaultValue="" style={{ width: '100%' }} onChange={handleFilterMealStatus}>

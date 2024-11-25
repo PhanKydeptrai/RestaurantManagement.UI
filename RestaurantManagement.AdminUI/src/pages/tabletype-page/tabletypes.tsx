@@ -4,7 +4,7 @@ import { DeleteTableType, GetAllTableType, GetAllTableTypes, RestoreTableType } 
 import { render } from "react-dom";
 import { text } from "@fortawesome/fontawesome-svg-core";
 import { Button, message, notification, Pagination, Space, Table, TableColumnsType, Tag } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined, FormOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
 const TableTypesPage = () => {
@@ -145,7 +145,7 @@ const TableTypesPage = () => {
             <div className="row mb-3">
                 <Space>
                     <Link to="/createtabletype">
-                        <Button type="primary">Create TableType</Button>
+                        <Button type="primary" icon={<FormOutlined />}>Create TableType</Button>
                     </Link>
                 </Space>
             </div>
