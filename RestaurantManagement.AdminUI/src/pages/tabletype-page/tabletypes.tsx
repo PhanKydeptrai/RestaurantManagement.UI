@@ -4,7 +4,7 @@ import { DeleteTableType, GetAllTableType, GetAllTableTypes, RestoreTableType } 
 import { render } from "react-dom";
 import { text } from "@fortawesome/fontawesome-svg-core";
 import { Button, message, notification, Pagination, Space, Table, TableColumnsType, Tag } from "antd";
-import { DeleteOutlined, FormOutlined } from "@ant-design/icons";
+import { DeleteOutlined, FormOutlined, RedoOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
 const TableTypesPage = () => {
@@ -123,7 +123,7 @@ const TableTypesPage = () => {
                     {record.status === 'Active' ? (
                         <Button type="primary" icon={<DeleteOutlined />} danger onClick={() => handleDelete(record.tableTypeId)}>Delete</Button>
                     ) : (
-                        <Button style={{ backgroundColor: '#ffec3d', borderColor: '#ffec3d', color: 'white' }} onClick={() => handleRestore(record.tableTypeId)}>Restore</Button>
+                        <Button icon={<RedoOutlined />} style={{ backgroundColor: '#ffec3d', borderColor: '#ffec3d', color: 'white' }} onClick={() => handleRestore(record.tableTypeId)}>Restore</Button>
                     )}
                 </Space>
             )

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Table, Button, Select, Input, Space, Pagination, Row, Col, Breadcrumb, Tag, notification, TableColumnsType } from 'antd';
 import { EmployeeDto } from "../../models/employeeDto";
 import { DeleteEmployee, GetAllEmployee, GetEmpGender, GetEmpRole, GetEmpStatus, GetEmpSearch, RestoreEmployee } from "../../services/employee-service";
-import { DeleteOutlined, FormOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { DeleteOutlined, FormOutlined, LeftOutlined, RedoOutlined, RightOutlined } from '@ant-design/icons';
 const { Option } = Select;
 const EmployeePage = () => {
     const [employees, setEmployees] = useState<EmployeeDto[]>([]);
@@ -159,7 +159,7 @@ const EmployeePage = () => {
                     {record.employeeStatus === 'Active' ? (
                         <Button type="primary" danger icon={<DeleteOutlined />} onClick={() => handleDelete(record.userId)}>Delete</Button>
                     ) : (
-                        <Button style={{ backgroundColor: '#ffec3d', borderColor: '#ffec3d', color: 'white' }} onClick={() => handleRestore(record.userId)}>Restore</Button>
+                        <Button icon={<RedoOutlined />} style={{ backgroundColor: '#ffec3d', borderColor: '#ffec3d', color: 'white' }} onClick={() => handleRestore(record.userId)}>Restore</Button>
                     )}
                 </Space>
             ),

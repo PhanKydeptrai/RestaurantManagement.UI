@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { MealDto } from "../../models/mealDto";
 import { DeleteMeal, FilterCategory, FilterMealStatus, FilterSellStatus, GetAllMeal, GetAllMeals, RestoresMeal } from "../../services/meal-services";
 import { Link } from "react-router-dom";
-import { DeleteOutlined, EditOutlined, FormOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, FormOutlined, LeftOutlined, RedoOutlined, RightOutlined } from '@ant-design/icons';
 import { Button, Input, Select, Space, Table, Pagination, Row, Col, Breadcrumb, Tag, notification, TableColumnsType } from "antd";
 const { Option } = Select;
 
@@ -158,7 +158,7 @@ const MealPage = () => {
                     {record.mealStatus === 'Active' ? (
                         <Button type="primary" danger icon={<DeleteOutlined />} onClick={() => handleDelete(record.mealId)}>Delete</Button>
                     ) : (
-                        <Button style={{ backgroundColor: '#ffec3d', borderColor: '#ffec3d', color: 'white' }} onClick={() => handleRestore(record.mealId)}>Restore</Button>
+                        <Button icon={<RedoOutlined />} style={{ backgroundColor: '#ffec3d', borderColor: '#ffec3d', color: 'white' }} onClick={() => handleRestore(record.mealId)}>Restore</Button>
                     )}
                 </Space>
             )
