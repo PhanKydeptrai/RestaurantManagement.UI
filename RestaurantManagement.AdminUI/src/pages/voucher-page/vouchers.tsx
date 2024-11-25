@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { VoucherDto } from "../../models/voucherDto";
 import { DeleteVoucher, GetAllVouchers } from "../../services/voucher-services";
 import { Button, Input, Table, Pagination, notification, Tag, Space, TableColumnsType } from "antd";
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { DeleteOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 const VoucherPage = () => {
     const [vouchers, setVouchers] = useState<VoucherDto[]>([]);
@@ -112,11 +112,11 @@ const VoucherPage = () => {
             render: (text: string, record: VoucherDto) => (
                 <Space size="middle">
                     {record.status === 'Active' ? (
-                        <Button type="primary" danger onClick={() => handleDelete(record.voucherId)}>
+                        <Button type="primary" danger icon={<DeleteOutlined />} onClick={() => handleDelete(record.voucherId)}>
                             Delete
                         </Button>
                     ) : (
-                        <Button type="primary" danger disabled>
+                        <Button type="primary" danger icon={<DeleteOutlined />} disabled>
                             Delete
                         </Button>
                     )}

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { DeleteOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { Table, Select, Input, Button, Pagination, Tag, Space, notification, TableColumnsType } from "antd";
 import { CustomerDto } from "../../models/customerDto";
@@ -169,7 +170,7 @@ const CustomerPage = () => {
             render: (text: string, record: CustomerDto) => (
                 <Space size="middle">
                     {record.customerStatus === 'Active' ? (
-                        <Button type="primary" danger onClick={() => handleDelete(record.userId)}>Delete</Button>
+                        <Button type="primary" danger icon={<DeleteOutlined />} onClick={() => handleDelete(record.userId)}>Delete</Button>
                     ) : (
                         <Button style={{ backgroundColor: '#ffec3d', borderColor: '#ffec3d', color: 'white' }} onClick={() => handleRestore(record.userId)}>Restore</Button>
                     )}

@@ -3,7 +3,7 @@ import { CategoryDto } from "../../models/categoryDto";
 import React, { useEffect, useState } from "react";
 import { DeleteCategory, GetAllCategory, GetCategoryFilter, GetCategorySearch, RestoreCategory, SortCategory } from "../../services/category-service";
 import { Breadcrumb, Button, Col, Input, notification, Pagination, Row, Select, Space, Table, TableColumnsType, Tag } from "antd";
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { DeleteOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
@@ -162,7 +162,7 @@ const CategoryPage = () => {
                     <Link to={`/categories/updatecategory/${record.categoryId}`}><Button type="primary">Update</Button></Link>
                     <Link to={`/categories/detailcategory/${record.categoryId}`}><Button type="primary">Detail</Button></Link>
                     {record.categoryStatus === 'Active' ? (
-                        <Button type="primary" danger onClick={() => handleDelete(record.categoryId)}>Delete</Button>
+                        <Button type="primary" danger icon={<DeleteOutlined />} onClick={() => handleDelete(record.categoryId)}>Delete</Button>
                     ) : (
                         <Button style={{ backgroundColor: '#ffec3d', borderColor: '#ffec3d', color: 'white' }} onClick={() => handleRestore(record.categoryId)}>Restore</Button>
                     )}

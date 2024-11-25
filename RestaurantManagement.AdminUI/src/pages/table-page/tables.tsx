@@ -3,7 +3,7 @@ import { TableDto } from "../../models/tableDto";
 import { DeleteTable, GetAllTables, RestoreTable } from "../../services/table-services";
 import { Link } from "react-router-dom";
 import { Table, Button, Input, Pagination, Space, message, Tag, notification, TableColumnsType } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { DeleteOutlined, SearchOutlined } from "@ant-design/icons";
 
 const TablePage = () => {
     const [tables, setTables] = useState<TableDto[]>([]);
@@ -123,7 +123,7 @@ const TablePage = () => {
             render: (text: any, record: TableDto) => (
                 <Space size="middle">
                     {record.tableStatus === 'Active' ? (
-                        <Button type="primary" danger onClick={() => handleDelete(record.tableId)}>Delete</Button>
+                        <Button type="primary" danger icon={<DeleteOutlined />} onClick={() => handleDelete(record.tableId)}>Delete</Button>
                     ) : (
                         <Button style={{ backgroundColor: '#ffec3d', borderColor: '#ffec3d', color: 'white' }} onClick={() => handleRestore(record.tableId)}>Restore</Button>
                     )}
