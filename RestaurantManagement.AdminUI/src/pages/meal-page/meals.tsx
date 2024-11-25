@@ -3,7 +3,7 @@ import { MealDto } from "../../models/mealDto";
 import { DeleteMeal, FilterCategory, FilterMealStatus, FilterSellStatus, GetAllMeal, GetAllMeals, RestoresMeal } from "../../services/meal-services";
 import { Link } from "react-router-dom";
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { Button, Input, Select, Space, Table, Pagination, Row, Col, Breadcrumb, Tag, notification } from "antd";
+import { Button, Input, Select, Space, Table, Pagination, Row, Col, Breadcrumb, Tag, notification, TableColumnsType } from "antd";
 const { Option } = Select;
 
 const MealPage = () => {
@@ -134,7 +134,7 @@ const MealPage = () => {
     };
     //#endregion
 
-    const columns = [
+    const columns: TableColumnsType<MealDto> = [
         { title: 'Meal Name', dataIndex: 'mealName', key: 'mealName' },
         { title: 'Category', dataIndex: 'categoryName', key: 'categoryName' },
         { title: 'Price', dataIndex: 'price', key: 'price' },
@@ -151,7 +151,7 @@ const MealPage = () => {
             ),
         },
         {
-            title: 'Actions', key: 'actions', render: (text: string, record: MealDto) => (
+            title: 'Actions', key: 'actions', fixed: 'right', render: (text: string, record: MealDto) => (
                 <Space size="middle">
                     <Link to={`updatemeal/${record.mealId}`}><Button type="primary">Update</Button></Link>
                     <Link to={`detailmeal/${record.mealId}`}><Button type="primary">Detail</Button></Link>
@@ -208,8 +208,10 @@ const MealPage = () => {
             </div>
 
             <Table
+                bordered
                 columns={columns}
                 dataSource={meals}
+                scroll={{ x: 'max-content' }}
                 rowKey="mealId"
                 pagination={false}
             />

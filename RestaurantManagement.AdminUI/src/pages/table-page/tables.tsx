@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { TableDto } from "../../models/tableDto";
 import { DeleteTable, GetAllTables, RestoreTable } from "../../services/table-services";
 import { Link } from "react-router-dom";
-import { Table, Button, Input, Pagination, Space, message, Tag, notification } from "antd";
+import { Table, Button, Input, Pagination, Space, message, Tag, notification, TableColumnsType } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
 const TablePage = () => {
@@ -83,7 +83,7 @@ const TablePage = () => {
         }
     };
 
-    const columns = [
+    const columns: TableColumnsType<TableDto> = [
         {
             title: 'Table Id',
             dataIndex: 'tableId',
@@ -119,6 +119,7 @@ const TablePage = () => {
         {
             title: 'Actions',
             key: 'actions',
+            fixed: 'right',
             render: (text: any, record: TableDto) => (
                 <Space size="middle">
                     {record.tableStatus === 'Active' ? (
@@ -166,9 +167,11 @@ const TablePage = () => {
                 </Space>
             </div>
 
-            <Table
+            <Table<TableDto>
+                bordered
                 columns={columns}
                 dataSource={tables}
+                scroll={{ x: 'max-content' }}
                 rowKey="tableId"
                 pagination={false}
             />

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { VoucherDto } from "../../models/voucherDto";
 import { DeleteVoucher, GetAllVouchers } from "../../services/voucher-services";
-import { Button, Input, Table, Pagination, notification, Tag, Space } from "antd";
+import { Button, Input, Table, Pagination, notification, Tag, Space, TableColumnsType } from "antd";
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 const VoucherPage = () => {
@@ -54,7 +54,7 @@ const VoucherPage = () => {
         }
     };
 
-    const columns = [
+    const columns: TableColumnsType<VoucherDto> = [
         {
             title: 'Voucher Name',
             dataIndex: 'voucherName',
@@ -108,6 +108,7 @@ const VoucherPage = () => {
         {
             title: 'Action',
             key: 'action',
+            fixed: 'right',
             render: (text: string, record: VoucherDto) => (
                 <Space size="middle">
                     {record.status === 'Active' ? (
@@ -156,7 +157,9 @@ const VoucherPage = () => {
                     </div>
                 </div>
 
-                <Table
+                <Table<VoucherDto>
+                    bordered
+                    scroll={{ x: 'max-content' }}
                     columns={columns}
                     dataSource={vouchers}
                     rowKey="voucherId"

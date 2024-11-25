@@ -41,7 +41,7 @@ const BillPage = () => {
     };
 
     const columns: TableColumnsType<BillDto> = [
-        { title: 'Bill ID', dataIndex: 'billId', key: 'billId', fixed: 'left' },
+        { title: 'Bill ID', dataIndex: 'billId', key: 'billId' },
         { title: 'Table ID', dataIndex: 'tableId', key: 'tableId' },
         { title: 'Total Price', dataIndex: 'totalPrice', key: 'totalPrice' },
         { title: 'Payment Type', dataIndex: 'paymentType', key: 'paymentType' },

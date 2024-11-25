@@ -3,7 +3,7 @@ import { TableTypeDto } from "../../models/tabletypeDto";
 import { DeleteTableType, GetAllTableType, GetAllTableTypes, RestoreTableType } from "../../services/tabletype-services";
 import { render } from "react-dom";
 import { text } from "@fortawesome/fontawesome-svg-core";
-import { Button, message, notification, Pagination, Space, Table, Tag } from "antd";
+import { Button, message, notification, Pagination, Space, Table, TableColumnsType, Tag } from "antd";
 import { Link } from "react-router-dom";
 
 const TableTypesPage = () => {
@@ -76,7 +76,7 @@ const TableTypesPage = () => {
         }
     }
 
-    const columns = [
+    const columns: TableColumnsType<TableTypeDto> = [
         {
             title: 'TableType',
             dataIndex: 'tableTypeName',
@@ -113,6 +113,7 @@ const TableTypesPage = () => {
         {
             title: 'Action',
             dataIndex: 'action',
+            fixed: 'right',
             render: (text: string, record: TableTypeDto) => (
                 <Space size="middle">
                     <Link to={`/tabletypes/update/${record.tableTypeId}`}>
@@ -147,8 +148,10 @@ const TableTypesPage = () => {
                     </Link>
                 </Space>
             </div>
-            <Table
+            <Table<TableTypeDto>
+                bordered
                 columns={columns}
+                scroll={{ x: 'max-content' }}
                 dataSource={tableTypes}
                 rowKey="tableTypeId"
                 pagination={false}
