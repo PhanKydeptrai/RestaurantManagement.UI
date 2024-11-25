@@ -60,3 +60,11 @@ export const GetCusStatus = async (pageSize: number, pageIndex: number, filterSt
         });
     return res;
 }
+export const DeleteCustomer = async (id: string) => {
+    const res = await baseUrl.delete(`${Customer}/${id}`);
+    return res.data;
+}
+export const RestoreCustomer = async (id: string) => {
+    const res = await baseUrl.put(`${Customer}/restore/${id}`);
+    return res.data;
+}

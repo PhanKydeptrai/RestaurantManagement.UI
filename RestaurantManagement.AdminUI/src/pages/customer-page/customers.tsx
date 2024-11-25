@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Table, Select, Input, Button, Pagination, Tag } from "antd";
+import { Table, Select, Input, Button, Pagination, Tag, Space, notification } from "antd";
 import { CustomerDto } from "../../models/customerDto";
-import { GetAllCustomer, GetCusGender, GetCusStatus, GetFilterTypeCus, GetSreachCus } from "../../services/customer-services";
+import { DeleteCustomer, GetAllCustomer, GetCusGender, GetCusStatus, GetFilterTypeCus, GetSreachCus, RestoreCustomer } from "../../services/customer-services";
 
 const { Option } = Select;
 
@@ -71,6 +71,52 @@ const CustomerPage = () => {
         }
     };
 
+    const handleDelete = async (id: string) => {
+        try {
+            const result = await DeleteCustomer(id)
+            if (result && result.isSuccess) {
+                const results = await GetAllCustomer(filterUserType, filterGender, filterStatus, searchTerm, pageIndex, pageSize, sortColumn, sortOrder);
+                setCustomers(results.items);
+                notification.success({
+                    message: 'Xoá thành công!',
+                    description: 'Khách hàng đã được xoá khỏi hệ thống',
+                })
+            } else {
+                notification.error({
+                    message: 'Xoá thất bại!',
+                    description: 'Có lỗi xảy ra khi xoá khách hàng',
+                })
+            }
+        } catch (error) {
+            notification.error({
+                message: 'Xoá thất bại!',
+                description: 'Có lỗi xảy ra khi xoá khách hàng',
+            })
+        }
+    }
+    const handleRestore = async (id: string) => {
+        try {
+            const result = await RestoreCustomer(id)
+            if (result && result.isSuccess) {
+                const results = await GetAllCustomer(filterUserType, filterGender, filterStatus, searchTerm, pageIndex, pageSize, sortColumn, sortOrder);
+                setCustomers(results.items);
+                notification.success({
+                    message: 'Khôi phục thành công!',
+                    description: 'Khách hàng đã được khôi phục',
+                })
+            } else {
+                notification.error({
+                    message: 'Khôi phục thất bại!',
+                    description: 'Có lỗi xảy ra khi khôi phục khách hàng',
+                })
+            }
+        } catch (error) {
+            notification.error({
+                message: 'Khôi phục thất bại!',
+                description: 'Có lỗi xảy ra khi khôi phục khách hàng',
+            })
+        }
+    }
     // Columns for Ant Design Table
     const columns = [
         {
@@ -113,6 +159,20 @@ const CustomerPage = () => {
             dataIndex: 'customerType',
             key: 'customerType',
         },
+        {
+            title: 'Actions',
+            key: 'actions',
+            render: (text: string, record: CustomerDto) => (
+                <Space size="middle">
+                    {record.customerStatus === 'Active' ? (
+                        <Button type="primary" danger onClick={() => handleDelete(record.userId)}>Delete</Button>
+                    ) : (
+                        <Button style={{ backgroundColor: '#ffec3d', borderColor: '#ffec3d', color: 'white' }} onClick={() => handleRestore(record.userId)}>Restore</Button>
+                    )}
+                </Space>
+
+            )
+        }
     ];
 
     return (
