@@ -74,6 +74,7 @@ const CustomerPage = () => {
     const handleDelete = async (id: string) => {
         try {
             const result = await DeleteCustomer(id)
+            console.log(result);
             if (result && result.isSuccess) {
                 const results = await GetAllCustomer(filterUserType, filterGender, filterStatus, searchTerm, pageIndex, pageSize, sortColumn, sortOrder);
                 setCustomers(results.items);
@@ -97,8 +98,10 @@ const CustomerPage = () => {
     const handleRestore = async (id: string) => {
         try {
             const result = await RestoreCustomer(id)
+            console.log(result);
             if (result && result.isSuccess) {
                 const results = await GetAllCustomer(filterUserType, filterGender, filterStatus, searchTerm, pageIndex, pageSize, sortColumn, sortOrder);
+
                 setCustomers(results.items);
                 notification.success({
                     message: 'Khôi phục thành công!',
@@ -149,7 +152,7 @@ const CustomerPage = () => {
             dataIndex: 'customerStatus',
             key: 'customerStatus',
             render: (status: string) => (
-                <Tag color={status === 'Active' ? 'green' : status === 'InActive' ? 'red' : ''}>
+                <Tag color={status === 'Active' ? 'green' : status === 'Deleted' ? 'red' : ''}>
                     {status}
                 </Tag>
             ),
