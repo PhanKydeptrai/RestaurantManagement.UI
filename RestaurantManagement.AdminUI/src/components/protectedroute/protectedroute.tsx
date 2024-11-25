@@ -1,4 +1,5 @@
 
+import { Button, Result } from 'antd';
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 
@@ -10,9 +11,12 @@ const ProtectedRoute = ({ children, requiredRoles }: { children: JSX.Element, re
     return <Navigate to="/" />;
   }
   if (!token || role && !requiredRoles.includes(role)) {
-    return <div style={{ padding: '20px', color: 'red', textAlign: 'center' }}>
-      <h2>Access Denied</h2>
-      <p>You do not have permission to access this page.</p>
+    return <div>
+      <Result
+        status="403"
+        title="403"
+        subTitle="Xin lỗi, bạn không có quyền truy cập trang này."
+      />
     </div>;
   }
   // Nếu có token, cho phép truy cập vào trang

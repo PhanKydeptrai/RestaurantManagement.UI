@@ -79,7 +79,7 @@ const CustomerPage = () => {
                 setCustomers(results.items);
                 notification.success({
                     message: 'Xoá thành công!',
-                    description: 'Khách hàng đã được xoá khỏi hệ thống',
+                    description: 'Khách hàng đã được xoá khỏi hệ thống. Email thông báo đã được gửi đến khách hàng',
                 })
             } else {
                 notification.error({
@@ -102,7 +102,7 @@ const CustomerPage = () => {
                 setCustomers(results.items);
                 notification.success({
                     message: 'Khôi phục thành công!',
-                    description: 'Khách hàng đã được khôi phục',
+                    description: 'Khách hàng đã được khôi phục. Email thông báo đã được gửi đến khách hàng',
                 })
             } else {
                 notification.error({
