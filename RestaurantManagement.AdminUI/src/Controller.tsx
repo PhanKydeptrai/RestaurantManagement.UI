@@ -49,12 +49,16 @@ import ListLogHistoryPage from "./pages/log-page/listlog";
 import StatisticsByYearPage from "./pages/statisic-page/statisticsbyyear";
 import AddvoucherForBill from "./pages/transacsion-page/addvoucher";
 import TransactionPage from "./pages/transacsion-page/transacsion";
+import TransactionErrorPage from "./pages/transacsion-page/transactionerror";
+import TransactionCompletePage from "./pages/transacsion-page/transactioncomplete";
 
 function Controller() {
     return (
         <>
             <Routes>
                 <Route path="/" element={<Login />} />
+                <Route path="/donetransaction" element={<TransactionCompletePage />} />
+                <Route path="/errortransaction" element={<TransactionErrorPage />} />
                 <Route path="/dashboard" element={
                     <ProtectedRoute requiredRoles={['Boss', 'Manager']}>
                         <Home />
@@ -288,7 +292,6 @@ function Controller() {
                         <ListLogHistoryPage />
                     </ProtectedRoute>
                 } />
-
             </Routes>
         </>
     )

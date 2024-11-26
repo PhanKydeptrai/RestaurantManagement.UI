@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { OrderPayCash, } from "../../services/order-services";
+import { OrderPayCash, OrderPayVNPay, } from "../../services/order-services";
 import { ToastContainer } from "react-toastify";
 import { Button, Input, Table, Typography, Form, Row, Col, Breadcrumb, TableColumnsType, notification } from "antd";
 import { OrderDetailDto } from "../../models/orderDto";
@@ -41,6 +41,16 @@ const OrderDetailPage = () => {
             }
         } catch (error) {
 
+            console.error("Error updating order:", error);
+        }
+    }
+    const handleVNPay = async (tableId: string) => {
+        try {
+            console.log("Updating order: ", tableId);
+            const response = await OrderPayVNPay(tableId);
+            window.open(`https://localhost:7057/api/orders/vn-pay/${tableId}`);
+
+        } catch (error) {
             console.error("Error updating order:", error);
         }
     }
@@ -118,8 +128,8 @@ const OrderDetailPage = () => {
                         bordered
                         scroll={{ x: 'max-content' }}
                     />
-                    <Button type="primary" onClick={() => handleCash(tableId as string)}>Thanh toán  </Button>
-
+                    <Button type="primary" onClick={() => handleCash(tableId as string)}>Thanh toán bằng tiền mặt </Button>
+                    <Button type="primary" onClick={() => handleVNPay(tableId as string)}>Thanh toán bằng VNPay</Button>
                 </div>
             </main>
         </>
