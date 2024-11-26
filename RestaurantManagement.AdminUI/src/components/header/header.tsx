@@ -1,10 +1,41 @@
 import { faBars, faBell } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { EmployeeDto } from "../../models/employeeDto";
 
 
 const Header = () => {
     const navigate = useNavigate();
+    const [account, setAccount] = useState<EmployeeDto | null>();
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const token = sessionStorage.getItem('token');
+                if (!token) {
+                    console.error('No token found');
+                    return;
+                }
+
+                const response = await axios.get('https://localhost:7057/api/account/account-emp-info', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                        'x-api-key': '30B34DCD-1CC0-4AAF-B622-7982847F221F'
+                    }
+                });
+
+                if (response.data?.value) {
+                    setAccount(response.data.value);
+                } else {
+                    console.error('No user data received');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }; fetchData();
+    }, []);
 
     const handleLogout = () => {
         sessionStorage.clear(); // Xóa tất cả dữ liệu trong sessionStorage
@@ -28,7 +59,7 @@ const Header = () => {
                     </a> */}
                     <div className="ms-auto dropdown">
                         <a href="#" className="d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg" alt="avatar" className="rounded-circle" width="40" height="40" />
+                            <img src={account?.userImage || "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"} alt="employee" className="rounded-circle" width="40" height="40" />
                         </a>
                         <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUser">
                             {/* <li><a className="dropdown-item" href="/AdminLayout/BossLayout/profile.html">Profile</a></li> */}

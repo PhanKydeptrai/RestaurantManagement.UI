@@ -47,12 +47,18 @@ import HistoryTableTypePage from "./pages/log-page/historytabletype";
 import HistoryBillPage from "./pages/log-page/historybill";
 import ListLogHistoryPage from "./pages/log-page/listlog";
 import StatisticsByYearPage from "./pages/statisic-page/statisticsbyyear";
+import AddvoucherForBill from "./pages/transacsion-page/addvoucher";
+import TransactionPage from "./pages/transacsion-page/transacsion";
+import TransactionErrorPage from "./pages/transacsion-page/transactionerror";
+import TransactionCompletePage from "./pages/transacsion-page/transactioncomplete";
 
 function Controller() {
     return (
         <>
             <Routes>
                 <Route path="/" element={<Login />} />
+                <Route path="/donetransaction" element={<TransactionCompletePage />} />
+                <Route path="/errortransaction" element={<TransactionErrorPage />} />
                 <Route path="/dashboard" element={
                     <ProtectedRoute requiredRoles={['Boss', 'Manager']}>
                         <Home />
@@ -196,6 +202,16 @@ function Controller() {
                         <OrderDetailPage />
                     </ProtectedRoute>
                 } />
+                <Route path="/addvoucher/:tableId" element={
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Cashier']}>
+                        <AddvoucherForBill />
+                    </ProtectedRoute>
+                } />
+                <Route path="/paymentInfo/:tableId" element={
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Cashier']}>
+                        <TransactionPage />
+                    </ProtectedRoute>
+                } />
                 <Route path="/tables/TableStatusEmpty" element={
                     <ProtectedRoute requiredRoles={['Receptionist', 'Boss', 'Manager']}>
                         <AssignCustomerPage />
@@ -276,7 +292,6 @@ function Controller() {
                         <ListLogHistoryPage />
                     </ProtectedRoute>
                 } />
-
             </Routes>
         </>
     )

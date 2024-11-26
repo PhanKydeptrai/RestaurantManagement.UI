@@ -1,24 +1,65 @@
 import React, { useState } from 'react';
 import { EmployeeLogin } from '../../services/loginservice';
 import { useNavigate } from 'react-router-dom';
-const Login = () => {
+import { message, notification } from 'antd';
 
+const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
     const handleLogin = async (event: React.FormEvent) => {
         event.preventDefault();
+        if (!validateForm()) {
+            return;
+        }
+
         try {
             const token = await EmployeeLogin(email, password);
-            navigate('/dashboard');
+
+            console.log('Token:', token); // Kiểm tra cấu trúc của token trong console
+
+            // Kiểm tra token theo cấu trúc thực tế của API trả về
+            if (token && (token.isSuccess === true || token.response === '200')) {
+                // Đăng nhập thành công, chuyển hướng đến trang Dashboard
+                navigate('/dashboard');
+
+                notification.success({
+                    message: 'Đăng nhập thành công',
+                    description: `Chúc mừng bạn đã đăng nhập thành công với email: ${email}`,
+                });
+            } else {
+                // Nếu không thành công, thông báo lỗi
+                notification.error({
+                    message: 'Đăng nhập thất bại',
+                    description: 'Email hoặc mật khẩu không đúng.',
+                });
+            }
         } catch (error) {
+            // Nếu có lỗi trong quá trình gọi API
             console.error('Login failed:', error);
+            notification.error({
+                message: 'Đăng nhập thất bại',
+                description: 'Có lỗi xảy ra khi đăng nhập. Vui lòng thử lại.',
+            });
         }
     };
 
 
-    return (
+    const validateForm = () => {
+        const newErrors: { [key: string]: string } = {};
+        if (!email) {
+            newErrors.email = 'Vui lòng nhập email hoặc số điện thoại';
+        }
+        if (!password) {
+            newErrors.password = 'Vui lòng nhập mật khẩu';
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
 
+    return (
         <>
             <div className="container">
                 <div className="row">
@@ -26,27 +67,22 @@ const Login = () => {
                     <div className="col-md-6 mt-5">
                         <div className="card">
                             <div className="card-body">
-
                                 <h5 className="card-title text-center">Login</h5>
                                 <form onSubmit={handleLogin}>
                                     <div className="mb-2">
-
                                         <label htmlFor="exampleInputEmail1" className="form-label">
                                             Nhập email hoặc số điện thoại
                                         </label>
                                         <input
                                             type="email"
                                             className="form-control"
-                                            id="exampleInputEmail1"
-                                            aria-describedby="emailHelp"
-                                            // value="email" Tầm bậy
                                             onChange={(e) => setEmail(e.target.value)}
                                             placeholder="Nhập email hoặc số điện thoại"
                                         />
+                                        {errors.email && <div className="text-danger">{errors.email}</div>}
                                     </div>
 
                                     <div className="mb-2">
-
                                         <label htmlFor="exampleInputPassword1" className="form-label">
                                             Nhập mật khẩu
                                         </label>
@@ -54,30 +90,19 @@ const Login = () => {
                                             type="password"
                                             className="form-control"
                                             id="exampleInputPassword1"
-                                            // value="password" Tầm bậy
                                             onChange={(e) => setPassword(e.target.value)}
                                             placeholder="Nhập mật khẩu"
                                             autoComplete="current-password"
                                         />
+                                        {errors.password && <div className="text-danger">{errors.password}</div>}
                                     </div>
-                                    {/* <a href="#" className="card-link text-success">
-                                        Quên mật khẩu?
-                                    </a>
-                                    <a href="#" className="card-link float-end text-success">
-                                        Bạn chưa có tài khoản? Đăng ký tại đây
-                                    </a> */}
+
                                     <div className="text-center pt-3">
-                                        <button type="submit" className="btn btn-success" >
+                                        <button type="submit" className="btn btn-success">
                                             Đăng nhập
                                         </button>
                                     </div>
                                 </form>
-                                {/* <div className="border-top m-3"></div>
-                                <div className="text-center mt-2">
-                                    <button className="btn btn-primary">
-                                        <i className="bi bi-google"></i> Đăng nhập bằng Google
-                                    </button>
-                                </div> */}
                             </div>
                         </div>
                     </div>
@@ -85,7 +110,7 @@ const Login = () => {
                 </div>
             </div>
         </>
+    );
+};
 
-    )
-}
 export default Login;

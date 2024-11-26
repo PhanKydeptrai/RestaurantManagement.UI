@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { DeleteOrder, GetOrderDetail, OrderPayCash, UpdateOrder } from "../../services/order-services";
 import { toast, ToastContainer } from "react-toastify";
-import { Button, Input, Table, Space, Typography, Form, Row, Col, Breadcrumb } from "antd";
+import { Button, Input, Table, Space, Typography, Form, Row, Col, Breadcrumb, TableColumnsType } from "antd";
 import { DeleteOutlined } from '@ant-design/icons';
 import { OrderDetailDto } from "../../models/orderDto";
 
@@ -137,7 +137,7 @@ const OrderDetailPage = () => {
         }
     }
     // Cấu hình cột cho bảng
-    const columns = [
+    const columns: TableColumnsType<OrderDetailDto> = [
         {
             title: "Order Detail Id",
             dataIndex: "orderDetailId",
@@ -186,6 +186,7 @@ const OrderDetailPage = () => {
         {
             title: "Action",
             key: "action",
+            fixed: "right",
             render: (_: any, record: any) => (
                 <Space size="middle">
                     <Button
@@ -234,14 +235,16 @@ const OrderDetailPage = () => {
                     {/* Order Details Table */}
                     <Title level={2}>Order Detail</Title>
 
-                    <Table
+                    <Table<OrderDetailDto>
+
                         columns={columns}
                         dataSource={dataSource}  // Sử dụng dataSource
                         rowKey="orderDetailId"
                         pagination={false}
                         bordered
+                        scroll={{ x: 'max-content' }}
                     />
-                    <Button type="primary" onClick={() => handleCash(table?.value.tableId)}>Cash</Button>
+                    <Link to={`/addvoucher/${tableId}`}><Button type="primary" >Thanh toán  </Button></Link>
 
                 </div>
                 <ToastContainer />

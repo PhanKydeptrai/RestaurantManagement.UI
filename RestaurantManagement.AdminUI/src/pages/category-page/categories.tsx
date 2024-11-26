@@ -126,7 +126,7 @@ const CategoryPage = () => {
             } else {
                 notification.error({
                     message: 'Khôi phục loại món thất bại',
-                    description: result.error[0]?.message || 'Khôi phục loại món không thành công',
+                    description: 'Khôi phục loại món không thành công',
                 });
             }
         } catch (error) {

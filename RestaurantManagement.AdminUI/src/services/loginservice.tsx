@@ -16,6 +16,7 @@ export const EmployeeLogin = async (loginString: string, passWord: string) => {
 
             sessionStorage.setItem('token', response.data.value.token);
             localStorage.setItem('role', response.data.value.role);
+            return response.data;
 
         }).catch((error) => {
             console.log(error);

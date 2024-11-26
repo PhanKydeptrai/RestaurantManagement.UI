@@ -94,3 +94,14 @@ export const OrderPayCash = async (tableId: string) => {
         return null;
     }
 }
+export const OrderPayVNPay = async (tableId: string) => {
+    try {
+        const response: AxiosResponse = await baseUrlDelete.get(`${Order}/vn-pay/${tableId}`);
+        console.log(response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error paying order:", error);
+        return null;
+    }
+}
