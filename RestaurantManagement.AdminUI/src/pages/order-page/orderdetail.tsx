@@ -244,7 +244,7 @@ const OrderDetailPage = () => {
                         bordered
                         scroll={{ x: 'max-content' }}
                     />
-                    <Link to=''><Button type="primary" >Thanh toán  </Button></Link>
+                    <Link to={`/addvoucher/${tableId}`}><Button type="primary" >Thanh toán  </Button></Link>
 
                 </div>
                 <ToastContainer />

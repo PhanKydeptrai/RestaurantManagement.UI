@@ -9,5 +9,4 @@ export interface VoucherDto {
     status: string;
     customerVouchers: string;
     bill: string;
-
 }

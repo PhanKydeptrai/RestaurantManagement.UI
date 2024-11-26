@@ -47,6 +47,8 @@ import HistoryTableTypePage from "./pages/log-page/historytabletype";
 import HistoryBillPage from "./pages/log-page/historybill";
 import ListLogHistoryPage from "./pages/log-page/listlog";
 import StatisticsByYearPage from "./pages/statisic-page/statisticsbyyear";
+import AddvoucherForBill from "./pages/transacsion-page/addvoucher";
+import TransactionPage from "./pages/transacsion-page/transacsion";
 
 function Controller() {
     return (
@@ -194,6 +196,16 @@ function Controller() {
                 <Route path="/orders/:tableId" element={
                     <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Waiter', 'Cashier']}>
                         <OrderDetailPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/addvoucher/:tableId" element={
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Cashier']}>
+                        <AddvoucherForBill />
+                    </ProtectedRoute>
+                } />
+                <Route path="/paymentInfo/:tableId" element={
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Cashier']}>
+                        <TransactionPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/tables/TableStatusEmpty" element={
