@@ -2,10 +2,9 @@ import { AlertOutlined, BarcodeOutlined, ContainerOutlined, HomeOutlined, Insert
 import { Button, Layout, Menu, theme } from "antd";
 import { Content, Footer, Header } from "antd/es/layout/layout";
 import Sider from "antd/es/layout/Sider";
-import { Children, useState } from "react";
+import { Children, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Controller from "../../Controller";
-import { Title } from "react-bootstrap/lib/Modal";
 
 const SliderBar = () => {
     const role = localStorage.getItem('role');
@@ -13,6 +12,7 @@ const SliderBar = () => {
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
+
 
     const menuItems = [
         { key: '1', icon: <HomeOutlined />, title: 'Dashboard', link: '/dashboard', role: ['Boss', 'Manager'] },
