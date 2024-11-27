@@ -1,7 +1,7 @@
 import { DatePicker, Form, FormProps, Input, InputNumber, message, TimePicker } from "antd";
 import { useState } from "react";
-import { CreateBooking } from "../../services/book-services";
 import dayjs, { Dayjs } from 'dayjs';
+import { CreateBooking } from "../../../services/book-services";
 
 
 const BookFormOfNormal = () => {

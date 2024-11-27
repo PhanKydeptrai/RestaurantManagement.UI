@@ -1,7 +1,8 @@
-import { BookingDto, BookingDto2 } from "../models/bookingDto";
+
 import baseUrl from "../apis/base";
 import { AxiosResponse } from "axios";
 import baseUrlDelete from "../apis/basedelete";
+import { BookingDto, BookingDto2 } from "../models/bookingDto";
 
 export const Booking = "booking";
 

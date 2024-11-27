@@ -1,6 +1,7 @@
-import { MealDto } from '../models/mealDto';
+
 import baseUrl from '../apis/base';
 import { AxiosResponse } from 'axios';
+import { MealDto } from '../models/mealDto';
 
 export const Meal = "meal";
 

@@ -94,8 +94,8 @@ const BookingPage = () => {
         },
         {
             title: 'Number of Customers',
-            dataIndex: 'numberOfCustomer',
-            key: 'numberOfCustomer',
+            dataIndex: 'numberOfCustomers',
+            key: 'numberOfCustomers',
         },
         {
             title: 'Table ID',
