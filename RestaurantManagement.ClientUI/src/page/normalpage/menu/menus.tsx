@@ -63,8 +63,6 @@ const MenuPage = () => {
                 {/* Left Column: Filters */}
                 <Col span={24} md={6}>
                     <Card title="Filter Options" style={{ marginTop: 20 }}>
-
-
                         {/* Category Filter */}
                         <Select
                             defaultValue=""
@@ -91,27 +89,36 @@ const MenuPage = () => {
                 {/* Right Column: Meal Products */}
                 <Col span={24} md={18}>
                     <Row gutter={16}>
-                        {meals.map((meal) => (
-                            <Col span={8} key={meal.mealId}>
-                                <Card
-                                    hoverable
-                                    cover={<img alt={meal.mealName} src={meal.imageUrl} />}
-                                >
-                                    <Card.Meta
-                                        title={meal.mealName}
-                                        description={
-                                            <>
-                                                <div>Category: {meal.categoryName}</div>
-                                                <div>Price: {meal.price}</div>
-                                                {meal.sellStatus === 'Inactive' && (
-                                                    <Tag color="red">Not Available</Tag>
-                                                )}
-                                            </>
-                                        }
-                                    />
+                        {meals.length === 0 ? (
+                            <Col span={24}>
+                                <Card style={{ textAlign: 'center', marginTop: 20 }}>
+                                    <Title level={4}>Món ăn không tồn tại</Title>
+                                    <p>Hãy tìm kiếm món ăn khác. Rất nhiều món ngon đang chờ bạn thưởng thức</p>
                                 </Card>
                             </Col>
-                        ))}
+                        ) : (
+                            meals.map((meal) => (
+                                <Col span={8} key={meal.mealId}>
+                                    <Card
+                                        hoverable
+                                        cover={<img alt={meal.mealName} src={meal.imageUrl} />}
+                                    >
+                                        <Card.Meta
+                                            title={meal.mealName}
+                                            description={
+                                                <>
+                                                    <div>Category: {meal.categoryName}</div>
+                                                    <div>Price: {meal.price}</div>
+                                                    {meal.sellStatus === 'Inactive' && (
+                                                        <Tag color="red">Not Available</Tag>
+                                                    )}
+                                                </>
+                                            }
+                                        />
+                                    </Card>
+                                </Col>
+                            ))
+                        )}
                     </Row>
 
                     <Pagination

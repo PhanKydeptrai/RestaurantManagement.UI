@@ -1,6 +1,7 @@
 import React from 'react';
 import { Layout, Menu, Button } from 'antd';
 import { LoginOutlined, UserAddOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 
 const { Header } = Layout;
 
@@ -16,9 +17,11 @@ const HeaderPage = () => {
                 {/* Menu cho Đăng nhập, Đăng ký */}
                 <Menu theme="dark" mode="horizontal" style={{ flexGrow: 1, justifyContent: 'flex-end' }}>
                     <Menu.Item key="login">
-                        <Button icon={<LoginOutlined />} type="link" style={{ color: 'white' }}>
-                            Đăng nhập
-                        </Button>
+                        <Link to={"/login"}>
+                            <Button icon={<LoginOutlined />} type="link" style={{ color: 'white' }}>
+                                Đăng nhập
+                            </Button>
+                        </Link>
                     </Menu.Item>
                     <Menu.Item key="register">
                         <Button icon={<UserAddOutlined />} type="link" style={{ color: 'white' }}>
