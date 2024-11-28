@@ -67,6 +67,7 @@ const RegisterPage = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!validateForm()) return;
         try {
             const response = await CustomerRegister(firstName, lastName, email, password, phone, gender);
             if (response) {
@@ -173,15 +174,12 @@ const RegisterPage = () => {
 
                     {/* Image Column */}
                     <div className="col-md-6 d-none d-md-block">
-                        <img src="https://skillking.fpt.edu.vn/wp-content/uploads/2020/11/FSK_poster-448x900-01.jpg" alt="Descriptive Alt Text" className="img-fluid h-100 w-100" style={{ objectFit: 'cover' }} />
+                        {/* <img src="https://skillking.fpt.edu.vn/wp-content/uploads/2020/11/FSK_poster-448x900-01.jpg" alt="Descriptive Alt Text" className="img-fluid h-100 w-100" style={{ objectFit: 'cover' }} /> */}
                     </div>
                 </div>
             </div>
             <ToastContainer />
         </>
     );
-
-
-
 }
 export default RegisterPage;

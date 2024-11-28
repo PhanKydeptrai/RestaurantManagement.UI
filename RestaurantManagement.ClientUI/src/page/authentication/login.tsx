@@ -9,8 +9,8 @@ const LoginPage = () => {
     const handleLogin = async (event: React.FormEvent) => {
         event.preventDefault();
         try {
-            const token = await CustomerLogin(email, password);
-            navigate('/LandingPages');
+            await CustomerLogin(email, password);
+            navigate('/');
         } catch (error) {
             console.error('Login failed:', error);
         }

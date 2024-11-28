@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, notification, Row, Col, Breadcrumb } from 'antd';
-import { CustomerChangePassword } from '../../services/account-services';
 import { Link } from 'react-router-dom';
+import { CustomerChangePassword } from '../../services/auth-services';
 
 const ChangePasswordPage = () => {
     const [loading, setLoading] = useState(false); // To handle loading state during password change
@@ -39,19 +39,7 @@ const ChangePasswordPage = () => {
 
     return (
         <>
-            <Row gutter={16} style={{ marginBottom: 24 }}>
-                <Col>
-                    <Breadcrumb>
-                        <Breadcrumb.Item>
-                            <Link to="/">Dashboard</Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Item>
-                            <Link to="/account">Account</Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Item>Change Password</Breadcrumb.Item>
-                    </Breadcrumb>
-                </Col>
-            </Row>
+
             <div className="change-password-page" style={{ maxWidth: '400px', margin: 'auto', padding: '20px' }}>
                 <h2 style={{ textAlign: 'center' }}>Change Password</h2>
                 <Form

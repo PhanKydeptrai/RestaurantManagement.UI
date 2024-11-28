@@ -1,4 +1,4 @@
-import axios, { Axios, AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import baseUrl from "../apis/base";
 
 
@@ -6,7 +6,6 @@ export const Account = "account";
 
 // /api/account/employee-login
 export const CustomerLogin = async (loginString: string, passWord: string) => {
-
     //console.log(`${baseUrl}/${Account}/employee-login`);
     const res = await baseUrl.post(`${Account}/login`, { loginString, passWord })
         .then((response: AxiosResponse) => {
@@ -18,11 +17,10 @@ export const CustomerLogin = async (loginString: string, passWord: string) => {
             console.log(error);
             return error;
         });
-
+    return res;
 }
 // /api/account/register
 export const CustomerRegister = async (firstName: string, lastName: string, email: string, passWord: string, phone: string, gender: string) => {
-
     const res = await baseUrl.post(`${Account}/register`, { firstName, lastName, email, passWord, phone, gender })
         .then((response: AxiosResponse) => {
             console.log(response.data);
