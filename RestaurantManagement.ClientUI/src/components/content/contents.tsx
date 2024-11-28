@@ -11,20 +11,20 @@ const ContentPage = () => {
     return (
         <Layout>
             <HeaderPage />
-            <Content style={{ padding: '0 50px', marginTop: '20px' }}>
+            <Content style={{ padding: '0 50px', marginTop: '20px', backgroundColor: '#00FF9C' }}>
                 <Carousel autoplay>
                     <div>
-                        <h3 style={{ color: '#fff', textAlign: 'center', fontSize: '36px' }}>
+                        <h3 className="m-3" style={{ color: '#fff', textAlign: 'center', fontSize: '36px' }}>
                             Khám phá Ẩm Thực Tuyệt Vời
                         </h3>
                     </div>
                     <div>
-                        <h3 style={{ color: '#fff', textAlign: 'center', fontSize: '36px' }}>
-                            Thực Đơn Đa Dạng, Hương Vị Đặc Sắc
+                        <h3 className="m-3" style={{ color: '#fff', textAlign: 'center', fontSize: '36px' }}>
+                            Thực Đơn Đa Dạng - Hương Vị Đặc Sắc
                         </h3>
                     </div>
                     <div>
-                        <h3 style={{ color: '#fff', textAlign: 'center', fontSize: '36px' }}>
+                        <h3 className="m-3" style={{ color: '#fff', textAlign: 'center', fontSize: '36px' }}>
                             Đến Ngay Để Thưởng Thức!
                         </h3>
                     </div>
@@ -36,7 +36,7 @@ const ContentPage = () => {
                 <ControllerPage />
             </Row>
             {/* contact */}
-            <Content style={{ backgroundColor: '#f0f2f5', padding: '50px 0' }}>
+            <Content style={{ backgroundColor: '#f0f2f5', padding: '50px 0' }} className="mb-5">
                 <Row justify="center">
                     <Col span={12}>
                         <Title level={2}>Liên Hệ</Title>
@@ -45,10 +45,10 @@ const ContentPage = () => {
                         </Paragraph>
                         <div>
                             <Button icon={<PhoneOutlined />} style={{ marginRight: '10px' }}>
-                                (+84) 123 456 789
+                                (+84) 984 00 98 51
                             </Button>
                             <Button icon={<MailOutlined />} style={{ marginRight: '10px' }}>
-                                info@nhahangabc.com
+                                NhumNhumRestaurant@gmail.com
                             </Button>
                         </div>
                     </Col>

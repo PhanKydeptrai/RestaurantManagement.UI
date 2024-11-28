@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { EmployeeLogin } from '../../services/loginservice';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { message, notification } from 'antd';
 
 const Login = () => {
@@ -27,7 +27,7 @@ const Login = () => {
 
                 notification.success({
                     message: 'Đăng nhập thành công',
-                    description: `Chúc mừng bạn đã đăng nhập thành công với email: ${email}`,
+                    description: `Chúc mừng bạn đã đăng nhập thành công với tài khoản: ${email}`,
                 });
             } else {
                 // Nếu không thành công, thông báo lỗi
@@ -74,7 +74,7 @@ const Login = () => {
                                             Nhập email hoặc số điện thoại
                                         </label>
                                         <input
-                                            type="email"
+
                                             className="form-control"
                                             onChange={(e) => setEmail(e.target.value)}
                                             placeholder="Nhập email hoặc số điện thoại"
@@ -96,13 +96,14 @@ const Login = () => {
                                         />
                                         {errors.password && <div className="text-danger">{errors.password}</div>}
                                     </div>
-
+                                    <Link to="/forgotpassword" className="card-link text-secondary">Quên mật khẩu</Link>
                                     <div className="text-center pt-3">
                                         <button type="submit" className="btn btn-success">
                                             Đăng nhập
                                         </button>
                                     </div>
                                 </form>
+
                             </div>
                         </div>
                     </div>

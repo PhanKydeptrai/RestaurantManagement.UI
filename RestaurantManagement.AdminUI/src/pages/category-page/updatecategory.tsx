@@ -125,7 +125,7 @@ const UpdateCategoryPage = () => {
                             <Breadcrumb.Item>
                                 <Link to="/categories">Category</Link>
                             </Breadcrumb.Item>
-                            <Breadcrumb.Item>Create</Breadcrumb.Item>
+                            <Breadcrumb.Item>Update</Breadcrumb.Item>
                         </Breadcrumb>
                     </Col>
                 </Row>

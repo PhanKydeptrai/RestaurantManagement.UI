@@ -37,10 +37,10 @@ const HeaderPage = () => {
                     {!isLoggedIn ? (
                         <>
                             <Button type="link" style={{ color: 'white' }}>
-                                <Link to="/login">Đăng nhập</Link>
+                                <Link to="/login" style={{ textDecoration: 'none' }}>Đăng nhập</Link>
                             </Button>
-                            <Button type="primary">
-                                <Link to="/register">Đăng ký</Link>
+                            <Button type="primary" style={{ color: 'white' }}>
+                                <Link to="/register" style={{ textDecoration: 'none' }}>Đăng ký</Link>
                             </Button>
                         </>
                     ) : (

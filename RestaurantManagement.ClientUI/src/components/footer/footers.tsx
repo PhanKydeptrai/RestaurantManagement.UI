@@ -9,29 +9,23 @@ const FooterPage = () => {
     return (
         <Layout>
             <Footer style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'fixed', bottom: 0, left: 0, width: '100%', backgroundColor: '#001529', color: 'white', padding: '20px 50px' }}>
-                <Row justify="space-between" align="middle" gutter={16}>
-                    {/* Left Section: Copyright */}
-                    <Col>
-                        <Text style={{ color: 'white' }}>© 2024 MyWebsite. All Rights Reserved.</Text>
-                    </Col>
+                <div className="container">
+                    <div className="row">
+                        <Row justify="space-between" align="middle" gutter={16}>
+                            {/* Left Section: Copyright */}
+                            <Col>
+                                <Text style={{ color: 'white' }}>© 2024 MyWebsite. All Rights Reserved.</Text>
+                            </Col>
 
-                    {/* Center Section: Links */}
-                    <Col>
-                        <Space>
-                            <Text style={{ color: 'white' }}>Privacy Policy</Text>
-                            <Text style={{ color: 'white' }}>Terms of Service</Text>
-                        </Space>
-                    </Col>
-
-                    {/* Right Section: Social Media Icons */}
-                    <Col>
-                        <Space>
-                            <FacebookOutlined style={{ color: 'white', fontSize: '20px' }} />
-                            <TwitterOutlined style={{ color: 'white', fontSize: '20px' }} />
-                            <InstagramOutlined style={{ color: 'white', fontSize: '20px' }} />
-                        </Space>
-                    </Col>
-                </Row>
+                            {/* Center Section: Links */}
+                            <Col className="float-end">
+                                <Space>
+                                    <Text style={{ color: 'white' }}>3TK Team</Text>
+                                </Space>
+                            </Col>
+                        </Row>
+                    </div>
+                </div>
             </Footer>
         </Layout>
     );
