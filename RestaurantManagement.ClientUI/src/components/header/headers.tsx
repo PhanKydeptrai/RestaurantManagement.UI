@@ -30,7 +30,7 @@ const HeaderPage = () => {
             <Header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', top: 0, left: 0, width: '100%' }}>
                 {/* Logo nhà */}
                 <div style={{ color: 'white', fontSize: '20px', fontWeight: 'bold' }}>
-                    <Link to="/">My Home</Link>
+                    <Link to="/" style={{ textDecoration: 'none' }}>NHUM NHUM Restaurant</Link>
                 </div>
 
                 <Space>
