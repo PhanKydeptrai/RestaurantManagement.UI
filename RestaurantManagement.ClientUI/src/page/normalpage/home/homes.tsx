@@ -1,6 +1,10 @@
 import { Button, Card, Col, Row, Typography, Image } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { Link } from "react-router-dom";
+import banner from "./../image/banner.png";
+import imagemenu from "./../image/2.png";
+import book from "./../image/book.png";
+import imagecc from "./../image/3.png";
 const { Title, Paragraph } = Typography;
 const HomePage = () => {
     return (
@@ -9,7 +13,7 @@ const HomePage = () => {
             <Content style={{ textAlign: 'center', margin: '20px 0' }}>
                 <Image
                     width="80%"
-                    src="https://thietke6d.com/wp-content/uploads/2021/05/Mau-banner-quang-cao-nha-hang-4.webp"
+                    src={banner}
                     alt="Banner Nhà Hàng"
                 />
             </Content>
@@ -19,7 +23,7 @@ const HomePage = () => {
                     <Col xs={24} md={12} lg={8}>
                         <Card
                             hoverable
-                            cover={<img alt="Món Ăn 1" src="https://via.placeholder.com/300x200" />}
+                            cover={<img alt="Món Ăn 1" src={imagemenu} />}
                         >
                             <Title level={4}>Thực đơn</Title>
                             <Paragraph>
@@ -32,7 +36,7 @@ const HomePage = () => {
                     <Col xs={24} md={12} lg={8}>
                         <Card
                             hoverable
-                            cover={<img alt="Món Ăn 2" src="https://via.placeholder.com/300x200" />}
+                            cover={<img alt="Món Ăn 2" src={book} />}
                         >
                             <Title level={4}>Đặt bàn</Title>
                             <Paragraph>
@@ -44,13 +48,13 @@ const HomePage = () => {
                     <Col xs={24} md={12} lg={8}>
                         <Card
                             hoverable
-                            cover={<img alt="Món Ăn 3" src="https://via.placeholder.com/300x200" />}
+                            cover={<img alt="Món Ăn 3" src={imagecc} />}
                         >
                             <Title level={4}>Công cụ</Title>
                             <Paragraph>
                                 Nơi bạn có thể tìm kiếm các thông tin cần thiết về đơn hàng của bạn, cũng như các chương trình khuyến mãi và ưu đãi đặc biệt đang chờ đón bạn.
                             </Paragraph>
-                            <Button type="primary">Xem Thêm</Button>
+                            <Link to="/voucher"><Button type="primary">Xem Thêm</Button></Link>
                         </Card>
                     </Col>
                 </Row>
