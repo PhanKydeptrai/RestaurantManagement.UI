@@ -1,10 +1,18 @@
-import { Button, Card, Col, Row, Typography } from "antd";
+import { Button, Card, Col, Row, Typography, Image } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { Link } from "react-router-dom";
 const { Title, Paragraph } = Typography;
 const HomePage = () => {
     return (
         <>
+            {/* banner */}
+            <Content style={{ textAlign: 'center', margin: '20px 0' }}>
+                <Image
+                    width="80%"
+                    src="https://thietke6d.com/wp-content/uploads/2021/05/Mau-banner-quang-cao-nha-hang-4.webp"
+                    alt="Banner Nhà Hàng"
+                />
+            </Content>
             {/* content */}
             <Content style={{ padding: '0 50px' }}>
                 <Row gutter={[16, 16]}>

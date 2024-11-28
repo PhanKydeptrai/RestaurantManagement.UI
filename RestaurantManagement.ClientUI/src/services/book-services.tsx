@@ -2,12 +2,12 @@
 import baseUrl from "../apis/base";
 import { AxiosResponse } from "axios";
 import baseUrlDelete from "../apis/basedelete";
-import { BookingDto, BookingDto2 } from "../models/bookingDto";
+import { BookDto, BookingDto, BookingDto2 } from "../models/bookingDto";
 
 export const Booking = "booking";
 
 export const GetAllBooking = async (filter: string, searchTerm: string, sortColumn: string, sortOrder: string, pageSize: number, pageIndex: number) => {
-    const res = await baseUrl.get<BookingDto[]>(`${Booking}?filter=${filter}&searchTerm=${searchTerm}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&page=${pageIndex}&pageSize=${pageSize}`)
+    const res = await baseUrl.get<BookDto[]>(`${Booking}?filter=${filter}&searchTerm=${searchTerm}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&page=${pageIndex}&pageSize=${pageSize}`)
         .then((response: AxiosResponse) => {
             console.log(response.data.value)
             return response.data.value;

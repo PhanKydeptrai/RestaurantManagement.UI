@@ -10,7 +10,7 @@ const LoginPage = () => {
         event.preventDefault();
         try {
             await CustomerLogin(email, password);
-            navigate('/home');
+            navigate('/');
         } catch (error) {
             console.error('Login failed:', error);
         }

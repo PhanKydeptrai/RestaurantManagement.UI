@@ -30,14 +30,7 @@ const ContentPage = () => {
                     </div>
                 </Carousel>
             </Content>
-            {/* banner */}
-            <Content style={{ textAlign: 'center', margin: '20px 0' }}>
-                <Image
-                    width="80%"
-                    src="https://thietke6d.com/wp-content/uploads/2021/05/Mau-banner-quang-cao-nha-hang-4.webp"
-                    alt="Banner Nhà Hàng"
-                />
-            </Content>
+
             {/* them controller */}
             <Row style={{ margin: '20px' }}>
                 <ControllerPage />

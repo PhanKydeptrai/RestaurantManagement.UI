@@ -9,4 +9,7 @@ export interface VoucherDto {
     status: string;
     customerVouchers: string;
     bill: string;
+    voucherCode: string;
+    maximumDiscountAmount: string;
+    minimumOrderAmount: string;
 }
