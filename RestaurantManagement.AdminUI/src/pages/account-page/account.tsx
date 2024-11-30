@@ -8,7 +8,7 @@ import { UpdateAccountEmp } from "../../services/account-services";
 
 const AccountPage = () => {
     const [userDetails, setUserDetails] = useState<EmployeeDto | null>(null);
-    const fileInputRef = useRef<HTMLInputElement | null>(null); // useRef for file input
+    const [fileInputRefs, setfileInputRef] = useState<HTMLInputElement | null>(null); // useRef for file input
     const [firstName, setFirstName] = useState<string>('');
     const [lastName, setLastName] = useState<string>('');
     const [phoneNumber, setPhoneNumber] = useState<string>('');
@@ -44,6 +44,16 @@ const AccountPage = () => {
         fetchUserInfo();
     }, []);
 
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setUserImage(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>, field: keyof EmployeeDto) => {
         if (userDetails) {
             setUserDetails({
@@ -53,18 +63,7 @@ const AccountPage = () => {
         }
     };
 
-    const handleImageChange = (file: any) => {
-        if (file) {
-            // Here, you can handle the file upload logic.
-            console.log('Image file selected:', file);
-            // Example: Update user image URL after upload
-            setUserDetails({
-                ...userDetails!,
-                userImage: URL.createObjectURL(file) // This is just for demonstration, actual upload is required
-            });
-        }
-        return false; // Prevents auto-upload behavior
-    };
+
 
     // Handle form submission
     const handleSubmit = async (values: any) => {
@@ -79,12 +78,10 @@ const AccountPage = () => {
 
 
                 // If there's an updated image, append it as well
-                if (userDetails.userImage && userDetails.userImage !== values.userImage) {
-                    const imageFile = fileInputRef.current?.files?.[0];
-                    if (imageFile) {
-                        formData.append('userImage', imageFile);
-                    }
+                if (fileInputRefs && fileInputRefs.files) {
+                    formData.append('userImage', fileInputRefs.files[0]);
                 }
+                console.log()
                 console.log(formData);
                 // Call the update API
                 const updatedUser = await UpdateAccountEmp(formData, userDetails.userId);
@@ -111,6 +108,7 @@ const AccountPage = () => {
             });
         }
     };
+
 
     // If user details are not loaded
     if (!userDetails) {
@@ -141,26 +139,28 @@ const AccountPage = () => {
                                 <Image
                                     width={150}  // Reduced size for smaller screens
                                     src={
-                                        userDetails?.userImage ||
+                                        userImage || userDetails?.userImage ||
                                         "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"
                                     }
                                     alt="Employee"
                                     style={{ borderRadius: "50%" }}
                                 />
-                                <Upload
-                                    ref={fileInputRef}
-                                    accept="image/*"
-                                    showUploadList={false}
-                                    beforeUpload={handleImageChange}
+                                <Button
+                                    type="primary"
+                                    icon={<UploadOutlined />}
+                                    onClick={() => fileInputRefs?.click()}
                                 >
-                                    <Button
-                                        type="primary"
-                                        icon={<UploadOutlined />}
-                                        style={{ marginTop: '10px' }}
-                                    >
-                                        Change Image
-                                    </Button>
-                                </Upload>
+                                    Upload Image
+                                </Button>
+                                {/* Hidden file input */}
+                                <input
+                                    ref={setfileInputRef}
+                                    type="file"
+                                    style={{ display: 'none' }}  // Hide the input
+                                    onChange={handleFileChange}
+                                />
+
+
                             </div>
                         </div>
                         <div className="col-md-9 border-right">
