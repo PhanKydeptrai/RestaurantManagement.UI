@@ -81,7 +81,6 @@ const AccountPage = () => {
                 if (fileInputRefs && fileInputRefs.files) {
                     formData.append('userImage', fileInputRefs.files[0]);
                 }
-                console.log()
                 console.log(formData);
                 // Call the update API
                 const updatedUser = await UpdateAccountEmp(formData, userDetails.userId);
