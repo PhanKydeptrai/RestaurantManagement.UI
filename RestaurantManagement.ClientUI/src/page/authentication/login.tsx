@@ -73,12 +73,12 @@ const LoginPage = () => {
                                         </button>
                                     </div>
                                 </form>
-                                {/* <div className="border-top m-3"></div>
+                                <div className="border-top m-3"></div>
                                 <div className="text-center mt-2">
                                     <button className="btn btn-primary">
                                         <i className="bi bi-google"></i> Đăng nhập bằng Google
                                     </button>
-                                </div> */}
+                                </div>
                             </div>
                         </div>
                     </div>
