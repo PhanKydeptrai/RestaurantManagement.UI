@@ -78,7 +78,7 @@ export const GetAllCategories = async (pageSize: number, pageIndex: number, sear
         });
     return res;
 }
-
+//https://localhost:7057/api/category/category-info
 export const GetCategoryInfo = async () => {
     const res = await baseUrl.get(`${Category}/category-info`)
         .then((response: AxiosResponse) => {
