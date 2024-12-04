@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { CreateMeal } from "../../services/meal-services";
 import { toast } from "react-toastify";
-import { Breadcrumb, Button, Col, Form, Input, Row, Select, Upload, message, Image } from "antd";
+import { Breadcrumb, Button, Col, Form, Input, Row, Select, Upload, message, Image, notification } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 
 export interface CategoryInfo {
@@ -82,6 +82,7 @@ const CreateMealPage = () => {
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         if (!validateForm()) {
+            notifyError();
             return;
         }
         const formData = new FormData();
@@ -100,12 +101,18 @@ const CreateMealPage = () => {
         console.log(response);
 
         if (response.isSuccess) {
-            notifySuccess();
+            notification.success({
+                message: "Thành công",
+                description: "Thêm món ăn thành công!",
+            });
             setTimeout(() => {
                 navigate('/meals');
             }, 2000);
         } else {
-            notifyError();
+            notification.error({
+                message: "Thêm món thất bại",
+                description: "Thêm món ăn thất bại! Vui lòng kiểm tra lại thông tin!",
+            })
         }
     };
 

@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Form } from "antd";
+import { Form, notification } from "antd";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { CreateCategory } from "../../services/category-service";
@@ -65,6 +65,7 @@ const CreateCategoryPage = () => {
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         if (!validateForm()) {
+            notifyError();
             return;
         }
         const formData = new FormData();
@@ -80,13 +81,19 @@ const CreateCategoryPage = () => {
 
         //Show toast success
         if (response.isSuccess) {
-            notifySucess();
+            notification.success({
+                message: "Thành công",
+                description: "Thêm loại món thành công!"
+            })
             setTimeout(() => {
                 navigate('/categories'); // Điều hướng đến trang danh sách sau khi lưu thành công
             }, 2000);
         }
         else {
-            notifyError();
+            notification.error({
+                message: "Thất bại",
+                description: "Thêm loại món thất bại! Vui lòng kiểm tra lại thông tin!"
+            });
 
         }
 
