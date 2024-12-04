@@ -38,8 +38,8 @@ const ChangeTablePage = () => {
 
         if (!newTableId) {
             notification.error({
-                message: "New Table Id is required",
-                description: "Please enter a new table Id to change."
+                message: "Vui lòng chọn bàn mới",
+                description: "Chọn bàn mới để chuyển đổi"
             });
             return;
         }
@@ -55,13 +55,13 @@ const ChangeTablePage = () => {
                 console.log("Table change successful");
                 navigate("/orders");
                 notification.success({
-                    message: "Change table successfully",
-                    description: `Successfully changed table ${tableId} to ${newTableId}`
+                    message: "Đổi bàn thành công",
+                    description: `Đã thành công dời bàn ${tableId} sang ${newTableId}`
                 });
             } else {
                 notification.error({
-                    message: "Change table failed",
-                    description: `Failed to change table ${tableId} to ${newTableId}`
+                    message: "Đổi bàn thất bại",
+                    description: `Đổi bàn thất bại ${tableId} sang ${newTableId}`
                 });
             }
         } catch (e) {
