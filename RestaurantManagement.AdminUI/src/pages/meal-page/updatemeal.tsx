@@ -82,7 +82,11 @@ const UpdateMealPage = () => {
                 console.log('Meal update Successfully', response);
                 if (response.isSuccess) {
                     console.log('Successfully');
+
                     notifySucess();
+                    setTimeout(() => {
+                        navigate('/meals');
+                    }, 2000);
                 } else {
                     console.log('Failed');
                     notifyError();
