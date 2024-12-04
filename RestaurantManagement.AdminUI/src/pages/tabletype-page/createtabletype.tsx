@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { CreateTableType } from "../../services/tabletype-services";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, Image } from "antd";
+import { Button, Image, notification } from "antd";
 
 const CreateTableTypePage = () => {
     const [tableTypeName, setTableTypeName] = useState('');
@@ -94,12 +94,18 @@ const CreateTableTypePage = () => {
 
         const response = await CreateTableType(formData);
         if (response) {
-            notifySucess();
+            notification.success({
+                message: "Thành công",
+                description: "Thêm loại bàn mới thành công!",
+            })
             setTimeout(() => {
                 navigate('/tabletypes');
             }, 2000);
         } else {
-            notifyError();
+            notification.error({
+                message: "Thất bại",
+                description: "Thêm loại bàn mới thất bại!",
+            })
         }
     };
 
