@@ -124,12 +124,12 @@ const CustomerPage = () => {
     // Columns for Ant Design Table
     const columns: TableColumnsType<CustomerDto> = [
         {
-            title: 'Họ',
+            title: 'Last Name',
             dataIndex: 'lastName',
             key: 'lastName',
         },
         {
-            title: 'Tên',
+            title: 'First Name',
             dataIndex: 'firstName',
             key: 'firstName',
         },
@@ -139,17 +139,17 @@ const CustomerPage = () => {
             key: 'email',
         },
         {
-            title: 'Số điện thoại',
+            title: 'Phone Number',
             dataIndex: 'phoneNumber',
             key: 'phoneNumber',
         },
         {
-            title: 'Giới tính',
+            title: 'Gender',
             dataIndex: 'gender',
             key: 'gender',
         },
         {
-            title: 'Trạng thái',
+            title: 'Status',
             dataIndex: 'customerStatus',
             key: 'customerStatus',
             render: (status: string) => (
@@ -159,7 +159,7 @@ const CustomerPage = () => {
             ),
         },
         {
-            title: 'Loại khách hàng',
+            title: 'Customer Type',
             dataIndex: 'customerType',
             key: 'customerType',
         },

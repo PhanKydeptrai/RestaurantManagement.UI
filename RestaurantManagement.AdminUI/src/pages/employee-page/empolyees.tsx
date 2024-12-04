@@ -135,7 +135,7 @@ const EmployeePage = () => {
         { title: 'Last Name', dataIndex: 'lastName', key: 'lastName' },
         { title: 'Fisrt Name', dataIndex: 'firstName', key: 'firstName' },
         { title: 'Email', dataIndex: 'email', key: 'email' },
-        { title: 'Number Phone', dataIndex: 'phoneNumber', key: 'phoneNumber' },
+        { title: 'Phone Number', dataIndex: 'phoneNumber', key: 'phoneNumber' },
         { title: 'Gender', dataIndex: 'gender', key: 'gender' },
         {
             title: 'Status',
