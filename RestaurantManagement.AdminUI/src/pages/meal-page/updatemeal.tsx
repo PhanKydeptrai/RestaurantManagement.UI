@@ -20,6 +20,7 @@ const UpdateMealPage = () => {
     const [categoryId, setCategoryId] = useState<string>('');
     const [categoryName, setCategoryName] = useState<string>('');
     const [categoryInfo, setCategoryInfo] = useState<CategoryInfo[]>([]);
+    const [isInputFocused, setIsInputFocused] = useState(false);
 
     const navigate = useNavigate();
     const [errors, setErrors] = useState<{ mealName?: string, price?: string, description?: string, categoryId?: string }>();
@@ -33,6 +34,7 @@ const UpdateMealPage = () => {
                 setDescription(response?.value.description);
                 setImageUrl(response?.value.imageUrl);
                 setCategoryId(response?.value.categoryId);
+                setCategoryName(response?.value.categoryName);
 
             } catch (error) {
                 console.error('Error fetching meal data:', error);
@@ -211,23 +213,33 @@ const UpdateMealPage = () => {
 
                                 <div className="mb-3">
                                     <label htmlFor="category" className="form-label">Category</label>
-                                    <select
-                                        className="form-select"
-                                        id="category"
-                                        value={categoryId}
-                                        onChange={(event) => {
-                                            const selectedCategory = categoryInfo.find(category => category.categoryId === event.target.value);
-                                            setCategoryId(event.target.value);
-                                            setCategoryName(selectedCategory ? selectedCategory.categoryName : '');
-                                        }}
-                                    >
-                                        {categoryInfo.map(category => (
-                                            <option key={category.categoryId} value={category.categoryId}>
-                                                {category.categoryName}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    {errors?.categoryId && <div className="text-danger">{errors.categoryId}</div>}
+                                    {isInputFocused ? (
+                                        <select
+                                            className="form-select"
+                                            id="category"
+                                            value={categoryId}
+                                            onChange={(event) => {
+                                                const selectedCategory = categoryInfo.find(category => category.categoryId === event.target.value);
+                                                setCategoryId(event.target.value);
+                                                setCategoryName(selectedCategory ? selectedCategory.categoryName : '');
+                                                setIsInputFocused(false);
+                                            }}
+                                        >
+                                            {categoryInfo.map(category => (
+                                                <option key={category.categoryId} value={category.categoryId}>
+                                                    {category.categoryName}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    ) : (
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            value={categoryName}
+                                            onFocus={() => setIsInputFocused(true)}
+                                            readOnly
+                                        />
+                                    )}
                                 </div>
 
                                 <button type="submit" className="btn btn-primary w-100">Update</button>

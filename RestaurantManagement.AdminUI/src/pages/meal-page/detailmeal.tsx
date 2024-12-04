@@ -70,6 +70,9 @@ const DetailMealPage = () => {
                                 <Form.Item label="Description">
                                     <Input.TextArea value={meal?.value.description} rows={4} />
                                 </Form.Item>
+                                <Form.Item label="Category">
+                                    <Input value={meal?.value.categoryName} />
+                                </Form.Item>
 
                                 <div className="d-flex justify-content-between">
                                     <Button type="primary" onClick={() => window.history.back()}>
