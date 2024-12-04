@@ -117,3 +117,4 @@ export const UpdateMeal = async (formData: FormData, mealId: string) => {
         return error.response.data;
     }
 }
+

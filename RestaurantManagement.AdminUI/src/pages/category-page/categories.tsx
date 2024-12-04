@@ -141,9 +141,9 @@ const CategoryPage = () => {
     //#endregion
 
     const columns: TableColumnsType<CategoryDto> = [
-        { title: 'Tên loại món', dataIndex: 'categoryName', key: 'categoryName' },
+        { title: 'Category Name', dataIndex: 'categoryName', key: 'categoryName' },
         {
-            title: 'Trạng thái', dataIndex: 'categoryStatus', key: 'categoryStatus',
+            title: 'Status', dataIndex: 'categoryStatus', key: 'categoryStatus',
             render: (status: string) => (
                 <Tag color={status === 'Active' ? 'green' : status === 'InActive' ? 'red' : ''}>
                     {status}
@@ -151,7 +151,7 @@ const CategoryPage = () => {
             ),
         },
         {
-            title: 'Hình ảnh', dataIndex: 'imageUrl', key: 'image',
+            title: 'Category Image', dataIndex: 'imageUrl', key: 'image',
             render: (imageUrl: string) => (
                 <img src={imageUrl} alt="Category" style={{ width: 50, height: 50, objectFit: 'cover' }} />
             ),

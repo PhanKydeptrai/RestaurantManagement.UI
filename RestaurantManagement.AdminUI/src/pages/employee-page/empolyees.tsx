@@ -132,13 +132,13 @@ const EmployeePage = () => {
     };
 
     const columns: TableColumnsType<EmployeeDto> = [
-        { title: 'Họ', dataIndex: 'lastName', key: 'lastName' },
-        { title: 'Tên', dataIndex: 'firstName', key: 'firstName' },
+        { title: 'Last Name', dataIndex: 'lastName', key: 'lastName' },
+        { title: 'Fisrt Name', dataIndex: 'firstName', key: 'firstName' },
         { title: 'Email', dataIndex: 'email', key: 'email' },
-        { title: 'Số điện thoại', dataIndex: 'phoneNumber', key: 'phoneNumber' },
-        { title: 'Giới tính', dataIndex: 'gender', key: 'gender' },
+        { title: 'Phone Number', dataIndex: 'phoneNumber', key: 'phoneNumber' },
+        { title: 'Gender', dataIndex: 'gender', key: 'gender' },
         {
-            title: 'Trạng thái',
+            title: 'Status',
             dataIndex: 'employeeStatus',
             key: 'employeeStatus',
             render: (status: string) => (
@@ -148,7 +148,7 @@ const EmployeePage = () => {
                 </Tag>
             ),
         },
-        { title: 'Chức vụ', dataIndex: 'role', key: 'role' },
+        { title: 'Role', dataIndex: 'role', key: 'role' },
         {
             title: 'Action',
             key: 'action',

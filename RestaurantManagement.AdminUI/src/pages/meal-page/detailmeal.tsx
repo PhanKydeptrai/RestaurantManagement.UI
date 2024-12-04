@@ -35,7 +35,7 @@ const DetailMealPage = () => {
                                 <Link to="/"><td>Dashboard</td></Link>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>
-                                <Link to="/meal"><td>Meal</td></Link>
+                                <Link to="/meals"><td>Meal</td></Link>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>Detail</Breadcrumb.Item>
                         </Breadcrumb>
@@ -69,6 +69,9 @@ const DetailMealPage = () => {
 
                                 <Form.Item label="Description">
                                     <Input.TextArea value={meal?.value.description} rows={4} />
+                                </Form.Item>
+                                <Form.Item label="Category">
+                                    <Input value={meal?.value.categoryName} />
                                 </Form.Item>
 
                                 <div className="d-flex justify-content-between">

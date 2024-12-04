@@ -3,7 +3,7 @@ import { BillDto } from "../../models/billDto";
 import { ExportBill, GetAllBill } from "../../services/bill-services";
 import { Button, Pagination, Space, Table, TableColumnsType } from "antd";
 import { Link, useParams } from "react-router-dom";
-import { DeleteOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EyeOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 const BillPage = () => {
     const [bills, setBills] = useState<BillDto[]>([]);
@@ -55,7 +55,7 @@ const BillPage = () => {
             fixed: 'right',
             render: (text: string, record: BillDto) => (
                 <Space>
-                    <Button type="primary" icon={<DeleteOutlined />}>
+                    <Button type="primary" icon={<EyeOutlined />}>
                         <Link style={{ textDecoration: 'none' }} to={`/bill/detailbill/${record.billId}`}>View</Link>
                     </Button>
                     <Button type="primary" onClick={() => handleExportBill(record.billId)}>

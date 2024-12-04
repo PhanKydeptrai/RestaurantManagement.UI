@@ -94,7 +94,7 @@ const TableTypesPage = () => {
             key: 'tablePrice'
         },
         {
-            title: 'Image Url',
+            title: 'Image',
             dataIndex: 'imageUrl',
             key: 'imageUrl',
             render: (imageUrl: string) => (

@@ -60,21 +60,22 @@ export const RestoreTableType = async (tableTypeId: string) => {
 export const UpdateTableType = async (tableTypeId: string, formData: FormData) => {
     try {
         const res = await baseUrlPost.putForm(`${TableType}/${tableTypeId}`, formData);
-        console.log(res);
-        return res.data;
-    } catch (error) {
-        console.log(error);
-        return error;
+        console.log(res.data.value);
+        return res.data.value;
+    } catch (error: any) {
+        console.log(error.response.data);
+        return error.response.data;
     }
 
 }
-export const GetDetailTableType = async (id: string) => {
-    try {
-        const res = await baseUrl.get<TableTypeDto>(`${TableType}/${id}`)
-        console.log(res.data);
-        return res.data;
-    } catch (error) {
-        console.log(error);
-        return error;
-    }
+export const GetDetailTableType = async (tableTypeId: string) => {
+    const res = await baseUrl.get<TableTypeDto>(`${TableType}/${tableTypeId}`)
+        .then((response: AxiosResponse) => {
+            console.log(response.data);
+            return response.data;
+        }).catch((error) => {
+            console.log(error);
+            return error;
+        });
+    return res;
 }

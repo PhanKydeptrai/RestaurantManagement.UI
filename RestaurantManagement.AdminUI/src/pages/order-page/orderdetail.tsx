@@ -210,7 +210,10 @@ const OrderDetailPage = () => {
                             <Breadcrumb.Item>
                                 <Link to="/"><td>Dashboard</td></Link>
                             </Breadcrumb.Item>
-                            <Breadcrumb.Item>Order</Breadcrumb.Item>
+                            <Breadcrumb.Item>
+                                <Link to="/orders"><td>Orders</td></Link>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item>View</Breadcrumb.Item>
                         </Breadcrumb>
                     </Col>
                 </Row>
