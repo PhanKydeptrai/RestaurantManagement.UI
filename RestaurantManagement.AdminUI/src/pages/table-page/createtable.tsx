@@ -104,14 +104,20 @@ const CreateTablePage = () => {
 
             // Handle successful response
             console.log('Success:', await response.json());
-            notifySuccess();
+            notification.success({
+                message: "Thành công",
+                description: "Tạo bàn mới thành công!",
+            });
             setTimeout(() => {
                 navigate('/tables');
             }, 2000);
 
         } catch (error) {
             console.error('Error:', error);
-            notifyError();
+            notification.error({
+                message: "Lỗi",
+                description: "Đã xảy ra lỗi khi tạo bàn mới!",
+            });
         }
     };
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Breadcrumb, Col, Form, Row, Select, Button, Input, message } from "antd";
+import { Breadcrumb, Col, Form, Row, Select, Button, Input, message, notification } from "antd";
 import { GetTableInfo } from "../../services/table-services";
 
 export interface tableInfo {
@@ -67,10 +67,16 @@ const ArrangeBookPage = () => {
                 }
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            message.success('Xếp bàn thành công');
+            notification.success({
+                message: 'Thành công',
+                description: 'Xếp bàn thành công! Bạn có thể xem thông tin xếp bàn trong danh sách xếp bàn.'
+            });
             console.log('Success:', await response.json());
         } catch (error) {
-            message.error('Xếp bàn thất bại. Vui lòng thử lại sau');
+            notification.error({
+                message: 'Thất bại',
+                description: 'Xếp bàn thất bại! Vui lòng kiểm tra lại các thông tin cần thiết.'
+            });
             console.error('Error:', error);
         }
     };

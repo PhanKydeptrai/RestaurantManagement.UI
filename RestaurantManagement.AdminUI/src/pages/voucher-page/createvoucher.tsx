@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { CreateVoucher } from "../../services/voucher-services";
+import { notification } from "antd";
 
 const CreateVoucherPage = () => {
 
@@ -82,6 +83,7 @@ const CreateVoucherPage = () => {
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         if (!validationForm()) {
+            notifyError();
             return;
         }
         const data = {
@@ -118,7 +120,10 @@ const CreateVoucherPage = () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             console.log('Success:', await response.json());
-            notifySucess();
+            notification.success({
+                message: 'Thành công',
+                description: 'Thêm voucher thành công!'
+            })
             setTimeout(() => {
                 navigate('/vouchers');
             }, 2000);
@@ -126,7 +131,10 @@ const CreateVoucherPage = () => {
 
         } catch (error) {
             console.error('Error:', error);
-            notifyError();
+            notification.error({
+                message: 'Thất bại',
+                description: 'Thêm voucher thất bại! Vui lòng kiểm tra lại các thông tin cần thiết.'
+            });
         }
     }
 
