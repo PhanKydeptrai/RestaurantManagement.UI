@@ -51,6 +51,7 @@ import AddvoucherForBill from "./pages/transacsion-page/addvoucher";
 import TransactionPage from "./pages/transacsion-page/transacsion";
 import TransactionErrorPage from "./pages/transacsion-page/transactionerror";
 import TransactionCompletePage from "./pages/transacsion-page/transactioncomplete";
+import ChangeTablePage from "./pages/order-page/changetable";
 
 function Controller() {
     return (
@@ -128,6 +129,11 @@ function Controller() {
                 <Route path="/tables" element={
                     <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Receptionist']}>
                         <TablePage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/change-table/:tableId" element={
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Waiter']}>
+                        <ChangeTablePage />
                     </ProtectedRoute>
                 } />
                 <Route path="/tabletypes" element={

@@ -4,6 +4,18 @@ import baseUrlPost from "../apis/basepost";
 import baseUrlDelete from "../apis/basedelete";
 
 export const Order = "orders";
+export const Table = "table";
+
+export const ChangeTable = async (tableId: string, data: { newTableId: string, note: string }) => {
+    try {
+        const response: AxiosResponse = await baseUrlDelete.put(`${Table}/change-table/${tableId}`, data);
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error changing table:", error);
+        throw error;
+    }
+};
 
 export const GetOrderDetail = async (orderId: string) => {
     try {
