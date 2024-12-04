@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { UpdateTableType } from "../../services/tabletype-services";
-import { Breadcrumb, Col, Row } from "antd";
-
+import { Breadcrumb, Col, Row, Image, Button } from "antd";
+import { UploadOutlined } from '@ant-design/icons';
 const UpdateTableTypePage = () => {
     const { tableTypeId } = useParams<{ tableTypeId: string }>();
     const [tableTypeName, setTableTypeName] = useState<string>('');
@@ -137,23 +137,31 @@ const UpdateTableTypePage = () => {
                     <Col span={24} md={12}>
                         {/* Image Upload */}
                         <div className="mb-3">
-                            {imageUrl && (
-                                <div className="col-md-12">
-                                    <img
-                                        src={imageUrl}
-                                        alt="Selected"
-                                        className="img-thumbnail"
-                                        style={{ width: '100%', maxHeight: '300px', objectFit: 'cover' }}
-                                    />
-                                </div>
-                            )}
-                            <label htmlFor="fileInput" className="form-label">Upload Image</label>
+                            <Image
+                                src={imageUrl || 'https://via.placeholder.com/200'}
+                                alt="Table Type"
+                                width={200}
+                                height={200}
+                                style={{ objectFit: 'cover' }}
+                                className="mb-3"
+                            />
+                            {/* <label htmlFor="fileInput" className="form-label">Upload Image</label> */}
+                            <Button
+                                type="primary"
+                                icon={<UploadOutlined />}
+                                onClick={() => fileInputRef.current?.click()}
+                                style={{ display: 'block', marginLeft: 30, marginTop: 16 }}
+                            >
+                                Upload Image
+                            </Button>
+
                             <input
                                 type="file"
                                 id="fileInput"
                                 className="form-control"
                                 ref={fileInputRef}
                                 onChange={handleFileChange}
+                                style={{ display: 'none' }}
                             />
                         </div>
                     </Col>
