@@ -152,7 +152,7 @@ function Controller() {
                         <CreateTableTypePage />
                     </ProtectedRoute>
                 } />
-                <Route path="/tabletypes/update/:tabletypeId" element={
+                <Route path="/tabletypes/update/:tableTypeId" element={
                     <ProtectedRoute requiredRoles={['Boss']}>
                         <UpdateTableTypePage />
                     </ProtectedRoute>

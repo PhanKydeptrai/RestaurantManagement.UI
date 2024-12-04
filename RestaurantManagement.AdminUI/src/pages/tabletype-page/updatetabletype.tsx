@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { UpdateTableType } from "../../services/tabletype-services";
-import { Breadcrumb, Col, Row, Image, Button } from "antd";
+import { GetDetailTableType, UpdateTableType } from "../../services/tabletype-services";
+import { Breadcrumb, Col, Row, Image, Button, notification } from "antd";
 import { UploadOutlined } from '@ant-design/icons';
+
 const UpdateTableTypePage = () => {
     const { tableTypeId } = useParams<{ tableTypeId: string }>();
     const [tableTypeName, setTableTypeName] = useState<string>('');
@@ -19,21 +20,18 @@ const UpdateTableTypePage = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`https://localhost:7057/api/tabletype/${tableTypeId}`, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-api-key': '30B34DCD-1CC0-4AAF-B622-7982847F221F'
+                if (tableTypeId) {
+                    const response = await GetDetailTableType(tableTypeId);
+                    if (response && response.value) {
+                        setTableTypeName(response.value.tableTypeName);
+                        setTableCapacity(response.value.capacity);
+                        setTablePrice(response.value.tablePrice);
+                        setDescription(response.value.description);
+                        setImageUrl(response.value.image);
                     }
-                });
-
-                const data = await response.json();
-                // Ensure the data returned matches the state names and structure
-                setTableTypeName(data.value.tableTypeName);
-                setTableCapacity(data.value.tableCapacity);
-                setTableStatus(data.value.tableStatus);
-                setImageUrl(data.value.imageUrl);
-                setTablePrice(data.value.tablePrice);
-                setDescription(data.value.description);
+                } else {
+                    console.error('Table Type Id is not defined');
+                }
             } catch (error) {
                 console.error('Error fetching table type data:', error);
             }
@@ -79,12 +77,9 @@ const UpdateTableTypePage = () => {
 
     // Handle form submission
     const handleSubmit = async (event: React.FormEvent) => {
-        event.preventDefault();
+        event.preventDefault(); // Ngăn chặn form reload trang khi nhấn nút submit
 
-        if (!validateForm()) {
-            return;
-        }
-
+        // Xử lý gửi dữ liệu form
         const formData = new FormData();
         formData.append('tableTypeName', tableTypeName);
         formData.append('tableCapacity', tableCapacity.toString());
@@ -92,49 +87,50 @@ const UpdateTableTypePage = () => {
         formData.append('tablePrice', tablePrice.toString());
         formData.append('description', description);
 
+        // Kiểm tra và đính kèm hình ảnh nếu có
         if (fileInputRef.current && fileInputRef.current.files) {
-            formData.append('image', fileInputRef.current.files[0]); // Assuming image is part of the form
+            formData.append('image', fileInputRef.current.files[0]);
         }
 
         try {
             if (tableTypeId) {
-                const response = await UpdateTableType(tableTypeId, formData);
-                console.log("Response from API:", response);  // Check the response from the API
-                if (response.success) {  // Assuming `success` field is returned in the response
-                    console.log("Successfully updated");
-                    setTimeout(() => {
-                        navigate('/tabletypes'); // Redirect after successful update
-                    }, 2000);
-                } else {
-                    console.log("Update failed:", response);  // Log failure
-                }
+                const response = await UpdateTableType(tableTypeId, formData); // Gọi API cập nhật dữ liệu
+                console.log("API Response:", response);
+                notification.success({
+                    message: 'Update table type successfully',
+                    description: 'The table type has been updated'
+                }); // Hiển thị thông báo cập nhật thành công
+                setTimeout(() => {
+                    navigate('/tabletypes'); // Chuyển hướng về danh sách table types sau khi cập nhật thành công
+                }, 2000);
             } else {
-                console.log("Table Type Id is not found");
+                console.log("Table Type Id is not found");  // Nếu không có tableTypeId
             }
         } catch (error: any) {
-            console.log("Failed update:", error);  // Log if there's an error
+            console.log("Failed update:", error);  // Nếu có lỗi trong quá trình gọi API
         }
     };
 
+
     return (
         <>
-            <form onSubmit={handleSubmit} className="col-md-12">
-                <Row gutter={16} style={{ marginBottom: 24 }}>
-                    <Col span={24}>
-                        <Breadcrumb>
-                            <Breadcrumb.Item>
-                                <Link to="/">Dashboard</Link>
-                            </Breadcrumb.Item>
-                            <Breadcrumb.Item>
-                                <Link to="/tabletypes">Table Type</Link>
-                            </Breadcrumb.Item>
-                            <Breadcrumb.Item>Update</Breadcrumb.Item>
-                        </Breadcrumb>
-                    </Col>
-                </Row>
 
-                <Row gutter={16} key={tableTypeId}>
-                    <Col span={24} md={12}>
+            <Row gutter={16} style={{ marginBottom: 24 }}>
+                <Col span={24}>
+                    <Breadcrumb>
+                        <Breadcrumb.Item>
+                            <Link to="/">Dashboard</Link>
+                        </Breadcrumb.Item>
+                        <Breadcrumb.Item>
+                            <Link to="/tabletypes">Table Type</Link>
+                        </Breadcrumb.Item>
+                        <Breadcrumb.Item>Update</Breadcrumb.Item>
+                    </Breadcrumb>
+                </Col>
+            </Row>
+            <form onSubmit={handleSubmit} className="col-md-12">
+                <Row gutter={[16, 24]}>
+                    <Col xs={24} sm={24} md={12} lg={12} xl={8}>
                         {/* Image Upload */}
                         <div className="mb-3">
                             <Image
@@ -145,7 +141,6 @@ const UpdateTableTypePage = () => {
                                 style={{ objectFit: 'cover' }}
                                 className="mb-3"
                             />
-                            {/* <label htmlFor="fileInput" className="form-label">Upload Image</label> */}
                             <Button
                                 type="primary"
                                 icon={<UploadOutlined />}
@@ -166,7 +161,7 @@ const UpdateTableTypePage = () => {
                         </div>
                     </Col>
 
-                    <Col span={24} md={12}>
+                    <Col xs={24} sm={24} md={12} lg={12} xl={16}>
                         {/* Input Fields */}
                         <div className="form-group mb-3">
                             <label htmlFor="tableTypeName">Table Type Name</label>
@@ -220,7 +215,9 @@ const UpdateTableTypePage = () => {
                         </div>
 
                         {/* Submit Button */}
-                        <button type="submit" className="btn btn-primary">Update</button>
+                        <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
+                            Update
+                        </button>
                     </Col>
                 </Row>
             </form>
@@ -229,4 +226,3 @@ const UpdateTableTypePage = () => {
 };
 
 export default UpdateTableTypePage;
-
