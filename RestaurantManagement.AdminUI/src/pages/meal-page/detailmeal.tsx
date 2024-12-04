@@ -35,7 +35,7 @@ const DetailMealPage = () => {
                                 <Link to="/"><td>Dashboard</td></Link>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>
-                                <Link to="/meal"><td>Meal</td></Link>
+                                <Link to="/meals"><td>Meal</td></Link>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>Detail</Breadcrumb.Item>
                         </Breadcrumb>

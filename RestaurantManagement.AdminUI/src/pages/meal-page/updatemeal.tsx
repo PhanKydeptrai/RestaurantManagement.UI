@@ -140,7 +140,7 @@ const UpdateMealPage = () => {
                                 <Link to="/"><td>Dashboard</td></Link>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>
-                                <Link to="/meal"><td>Meal</td></Link>
+                                <Link to="/meals"><td>Meal</td></Link>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>Update</Breadcrumb.Item>
                         </Breadcrumb>
