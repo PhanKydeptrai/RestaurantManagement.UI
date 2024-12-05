@@ -48,12 +48,12 @@ const AddvoucherForBill = () => {
                 const response = await MakeVoucher(tableId, voucherData);
                 console.log('Success', response);
                 if (response?.isSuccess) {
-                    notification.success({ message: 'Add voucher successfully!' });
+                    notification.success({ message: 'Thêm thành công!', description: 'Voucher đã được thêm vào hóa đơn!' });
                     setTimeout(() => {
                         navigate(`/paymentInfo/${tableId}`);
                     }, 2000);
                 } else {
-                    notification.error({ message: 'Add voucher failed!' });
+                    notification.error({ message: 'Thêm thất bại', description: 'Đã xảy ra lỗi trong quá trình thực hiện. Vui lòng thử lại sau!' });
                 }
             }
         } catch (error) {
