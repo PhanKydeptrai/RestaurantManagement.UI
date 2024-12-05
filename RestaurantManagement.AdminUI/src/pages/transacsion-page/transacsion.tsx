@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { OrderPayCash, OrderPayVNPay, } from "../../services/order-services";
+import { OrderPayCash, OrderPayVNPay } from "../../services/order-services";
 import { ToastContainer } from "react-toastify";
 import { Button, Input, Table, Typography, Form, Row, Col, Breadcrumb, TableColumnsType, notification } from "antd";
 import { OrderDetailDto } from "../../models/orderDto";
 import { MakePayment } from "../../services/voucher-services";
+import { RemoveTransaction } from "../../services/statistics-services";
 
 const { Title } = Typography;
 
@@ -27,33 +28,54 @@ const OrderDetailPage = () => {
         };
         fetchData();
     }, [tableId]);
+
     const handleCash = async (tableId: string) => {
         try {
             console.log("Updating order: ", tableId);
             const response = await OrderPayCash(tableId);
             if (response?.isSuccess) {
-                notification.success({ message: 'Pay cash successfully!' });
+                notification.success({
+                    message: 'Thanh toán thành công!',
+                    description: 'Đơn hàng của bạn đã được thanh toán thành công. Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!'
+                });
                 setTimeout(() => {
                     navigate('/bills');
                 }, 2000);
             } else {
-                notification.error({ message: 'Pay cash failed!' });
+                notification.error({ message: 'Thanh toán thất bại', description: 'Đơn hàng của bạn chưa được thanh toán. Vui lòng thử lại sau!' });
             }
         } catch (error) {
-
             console.error("Error updating order:", error);
         }
-    }
+    };
+
     const handleVNPay = async (tableId: string) => {
         try {
             console.log("Updating order: ", tableId);
             const response = await OrderPayVNPay(tableId);
             window.open(`https://localhost:7057/api/orders/vn-pay/${tableId}`);
-
         } catch (error) {
             console.error("Error updating order:", error);
         }
-    }
+    };
+
+    const handleDelete = async (tableId: string) => {
+        try {
+            console.log("Deleting order: ", tableId);
+            const response = await RemoveTransaction(tableId);
+            if (response?.isSuccess) {
+                notification.success({ message: 'Huỷ thanh toán thành công', description: 'Đơn hàng của bạn đã được huỷ thành công. Vui lòng kiểm tra lại thông tin đơn hàng trước khi thực hiện thanh toán' });
+                setTimeout(() => {
+                    navigate('/orders');
+                }, 2000);
+            } else {
+                notification.error({ message: 'Huỷ đơn hàng thất bại!', description: 'Đơn hàng của bạn chưa được huỷ. Vui lòng thử lại sau!' });
+            }
+        } catch (error) {
+            console.error("Error deleting order:", error);
+        }
+    };
+
     // Cấu hình cột cho bảng
     const columns: TableColumnsType<OrderDetailDto> = [
         {
@@ -74,7 +96,6 @@ const OrderDetailPage = () => {
             dataIndex: "quantity",
             key: "quantity",
         },
-
         {
             title: "Unit Price",
             dataIndex: "unitPrice",
@@ -120,7 +141,6 @@ const OrderDetailPage = () => {
                     <Title level={2}>Order Detail</Title>
 
                     <Table<OrderDetailDto>
-
                         columns={columns}
                         dataSource={dataSource}  // Sử dụng dataSource
                         rowKey="orderDetailId"
@@ -128,8 +148,43 @@ const OrderDetailPage = () => {
                         bordered
                         scroll={{ x: 'max-content' }}
                     />
-                    <Button type="primary" onClick={() => handleCash(tableId as string)}>Thanh toán bằng tiền mặt </Button>
-                    <Button type="primary" onClick={() => handleVNPay(tableId as string)}>Thanh toán bằng VNPay</Button>
+
+                    {/* Payment and Cancel Buttons */}
+                    <div style={{ marginTop: 20 }}>
+                        <Row gutter={[16, 16]}>
+                            <Col xs={24} sm={8} md={6} lg={5}>
+                                <Button
+                                    type="primary"
+                                    danger
+                                    block
+                                    onClick={() => handleDelete(tableId as string)}
+                                    style={{ whiteSpace: "normal", wordWrap: "break-word" }}
+                                >
+                                    Huỷ đơn hàng
+                                </Button>
+                            </Col>
+                            <Col xs={24} sm={8} md={6} lg={5}>
+                                <Button
+                                    type="primary"
+                                    block
+                                    onClick={() => handleCash(tableId as string)}
+                                    style={{ whiteSpace: "normal", wordWrap: "break-word" }}
+                                >
+                                    Thanh toán bằng tiền mặt
+                                </Button>
+                            </Col>
+                            <Col xs={24} sm={8} md={6} lg={5}>
+                                <Button
+                                    type="primary"
+                                    block
+                                    onClick={() => handleVNPay(tableId as string)}
+                                    style={{ whiteSpace: "normal", wordWrap: "break-word" }}
+                                >
+                                    Thanh toán bằng VNPay
+                                </Button>
+                            </Col>
+                        </Row>
+                    </div>
                 </div>
             </main>
         </>
