@@ -12,6 +12,7 @@ import Login from './pages/auth-page/login';
 import TransactionCompletePage from './pages/transacsion-page/transactioncomplete';
 import TransactionErrorPage from './pages/transacsion-page/transactionerror';
 import TransactionLayout from './transactionlayout';
+import ResetPasswordPage from './pages/auth-page/resetpassword';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import react router
 
@@ -20,7 +21,7 @@ library.add(fas);
 function App() {
   const location = useLocation();
   const isLoginPage = location.pathname === '/';
-  const isTransactionPage = ['/donetransaction', '/errortransaction'].includes(location.pathname);
+  const isTransactionPage = ['/donetransaction', '/errortransaction', '/forgotpassword'].includes(location.pathname);
   return (
     <>
       {!isLoginPage && !isTransactionPage && <Header />}
@@ -32,7 +33,7 @@ function App() {
       <div>
         <Routes>
           <Route path="/" element={<Login />} />
-
+          <Route path='/forgotpassword' element={<ResetPasswordPage />} />
           <Route path='/donetransaction' element={<TransactionCompletePage />} />
           <Route path='/errortransaction' element={<TransactionErrorPage />} />
 

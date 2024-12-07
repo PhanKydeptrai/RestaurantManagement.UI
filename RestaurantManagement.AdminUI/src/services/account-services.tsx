@@ -1,6 +1,8 @@
 import { AxiosResponse } from "axios";
 import baseUrlDelete from "../apis/basedelete";
 import baseUrlPost from "../apis/basepost";
+import baseUrl from "../apis/base";
+
 
 export const Account = "account";
 export const Employee = "employee";
@@ -33,4 +35,16 @@ export const UpdateAccountEmp = async (formData: FormData, employeeId: string) =
         console.log(error.response.data);
         return error.response.data;
     }
+}
+
+export const EmployeeResetPassword = async (email: string) => {
+    const res = await baseUrl.post(`${Account}/employee-password`, { email })
+        .then((response: AxiosResponse) => {
+            console.log(response.data);
+
+        }).catch((error) => {
+            console.log(error);
+            return error;
+        });
+    return res;
 }
