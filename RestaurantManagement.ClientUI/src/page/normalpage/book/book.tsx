@@ -1,7 +1,7 @@
 import { DatePicker, Form, FormProps, Input, InputNumber, message, TimePicker } from "antd";
 import { useEffect, useState } from "react";
 import dayjs, { Dayjs } from 'dayjs';
-import { CreateBooking, GetAllBooking } from "../../../services/book-services";
+import { BookingSubcribe, CreateBooking, GetAllBooking } from "../../../services/book-services";
 import { BookDto } from "../../../models/bookingDto";
 
 
@@ -72,26 +72,42 @@ const BookFormOfNormal = () => {
         e.preventDefault();
         console.log('submit');
 
-        const data = {
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            phoneNumber: phoneNumber,
-            bookingDate: bookingDate,
-            bookingTime: `${bookingTime}:00`,
-            numberOfCustomers: numberOfCustomer,
-            note: note
-        }
-        console.log("Data be sent: ", data);
-        try {
-            const res = CreateBooking(data);
-            console.log("this is response: ", res);
-            message.success('Booking successfully');
+        const token = sessionStorage.getItem('token');
+        if (!token) {
+            const data = {
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                phoneNumber: phoneNumber,
+                bookingDate: bookingDate,
+                bookingTime: `${bookingTime}:00`,
+                numberOfCustomers: numberOfCustomer,
+                note: note
+            }
+            console.log("Data be sent: ", data);
+            try {
+                const res = CreateBooking(data);
+                console.log("this is response: ", res);
+                message.success('Booking successfully');
 
-        } catch (error) {
-            console.log("this is error: ", error);
-
-
+            } catch (error) {
+                console.log("this is error: ", error);
+            }
+        } else {
+            const dataSub = {
+                bookingDate: bookingDate,
+                bookingTime: `${bookingTime}:00`,
+                numberOfCustomers: numberOfCustomer,
+                note: note
+            }
+            console.log("Data be sent: ", dataSub);
+            try {
+                const res = BookingSubcribe(dataSub);
+                console.log("this is response: ", res);
+                message.success('Booking successfully');
+            } catch (error) {
+                console.log("this is error: ", error);
+            }
         }
     }
 
@@ -220,7 +236,7 @@ const BookFormOfNormal = () => {
                         </form>
                     </>
                 ) : (
-                    <form action="">
+                    <form onSubmit={handleSubmit}>
                         <div className="row mb-3">
                             <div className="col-md-6">
                                 <label>Day</label>
