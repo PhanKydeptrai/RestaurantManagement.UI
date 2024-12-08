@@ -75,7 +75,10 @@ const BookFormOfNormal = () => {
         } catch (error) {
             console.error("Error fetching booking by id:", error);
             setBookingDetails(null);
-            message.error('Error fetching booking details');
+            notification.error({
+                message: 'Lỗi khi tìm kiếm booking',
+                description: 'Vui lòng thử lại sau',
+            });
         } finally {
             setLoading(false);
         }
@@ -107,15 +110,24 @@ const BookFormOfNormal = () => {
             if (!token) {
                 // Create booking if not logged in
                 await CreateBooking(data);
-                message.success('Booking successfully');
+                notification.success({
+                    message: 'Booking thành công',
+                    description: 'Vui lòng kiểm tra email để xác nhận booking',
+                });
             } else {
                 // Subscribe to booking if logged in
                 await BookingSubcribe(data);
-                message.success('Booking successfully');
+                notification.success({
+                    message: 'Booking thành công',
+                    description: 'Vui lòng kiểm tra email để xác nhận booking',
+                });
             }
         } catch (error) {
             console.error('Error during booking submission:', error);
-            message.error('Booking failed');
+            notification.error({
+                message: 'Lỗi khi đặt bàn',
+                description: 'Vui lòng thử lại sau',
+            });
         }
     }
 
