@@ -22,7 +22,7 @@ export const GetBookingById = async (id: string) => {
     const res = await baseUrl.get<BookingDto>(`${Booking}/${id}`)
         .then((response: AxiosResponse) => {
             console.log(response.data);
-            return response.data;
+            return response.data.value;
         }).catch((error) => {
             console.log(error);
             return error;
