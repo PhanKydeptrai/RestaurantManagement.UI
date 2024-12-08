@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Input, message } from "antd";
+import { Input, message, notification } from "antd";
 import { BookingSubcribe, CreateBooking, GetAllBooking, GetBookingById } from "../../../services/book-services";
 import { BookDto } from "../../../models/bookingDto";
 import dayjs from 'dayjs';
@@ -51,7 +51,7 @@ const BookFormOfNormal = () => {
         }
     }, []);
 
-    // Search booking by ID
+
     const handleSearchId = async (id: string) => {
         if (id.trim() === '') {
             setBookingDetails(null);
@@ -67,7 +67,10 @@ const BookFormOfNormal = () => {
                 setBookingDetails(results);
             } else {
                 setBookingDetails(null);
-                message.error('No booking found for the given ID');
+                notification.error({
+                    message: 'Mã booking không tồn tại',
+                    description: 'Vui lòng kiểm tra lại mã booking và thử lại',
+                });
             }
         } catch (error) {
             console.error("Error fetching booking by id:", error);
@@ -77,6 +80,11 @@ const BookFormOfNormal = () => {
             setLoading(false);
         }
     }
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            handleSearchId(e.currentTarget.value);
+        }
+    };
 
     // Handle booking form submission
     const handleSubmit = async (e: React.FormEvent) => {
@@ -123,7 +131,7 @@ const BookFormOfNormal = () => {
                     <label htmlFor="">Search Booking by ID</label>
                     <Input
                         placeholder="Enter booking ID"
-                        onChange={(e) => handleSearchId(e.target.value)} // Trigger on each input change
+                        onKeyDown={handleKeyPress}// Trigger on each input change
                     />
                 </div>
             </div>
