@@ -18,7 +18,7 @@ const UpdateCategoryPage = () => {
         // Fetch category data using categoryId and set initial state
         const fetchCategoryData = async () => {
             try {
-                const response = await fetch(`https://localhost:7057/api/category/${categoryId}`);
+                const response = await fetch(`https://restaurantmanagement.azurewebsites.net/api/category/${categoryId}`);
                 const data = await response.json();
                 console.log(data);
                 setCategoryName(data.value.categoryName);

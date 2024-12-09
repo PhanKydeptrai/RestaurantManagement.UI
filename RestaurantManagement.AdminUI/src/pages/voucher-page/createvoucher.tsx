@@ -105,7 +105,7 @@ const CreateVoucherPage = () => {
                 console.error('No token found');
                 return;
             }
-            const response = await fetch('https://localhost:7057/api/voucher', {
+            const response = await fetch('https://restaurantmanagement.azurewebsites.net/api/voucher', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

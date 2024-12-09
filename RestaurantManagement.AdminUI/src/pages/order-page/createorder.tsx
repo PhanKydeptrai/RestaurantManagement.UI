@@ -103,7 +103,7 @@ const CreateOrderPage = () => {
         console.error('No token found');
         return;
       }
-      const response = await fetch(`https://localhost:7057/api/orders/${tableId}`, {
+      const response = await fetch(`https://restaurantmanagement.azurewebsites.net/api/orders/${tableId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
