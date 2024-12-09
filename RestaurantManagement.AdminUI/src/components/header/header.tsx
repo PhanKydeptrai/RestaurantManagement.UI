@@ -4,6 +4,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { EmployeeDto } from "../../models/employeeDto";
+import { Link } from "react-router-dom";
 
 
 const Header = () => {
@@ -63,7 +64,7 @@ const Header = () => {
                         </a>
                         <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUser">
                             {/* <li><a className="dropdown-item" href="/AdminLayout/BossLayout/profile.html">Profile</a></li> */}
-                            <li><a className="dropdown-item" href="/account">Profile</a></li>
+                            <li><Link to="/account"></Link>Profile</li>
                             <li><a className="dropdown-item" href="/log">History</a></li>
                             <li><a className="dropdown-item" href="#" onClick={handleLogout}>Logout</a></li>
                         </ul>
