@@ -19,7 +19,7 @@ const CreateTablePage = () => {
     const [tableTypeInfo, setTableTypeInfo] = useState<TableTypeInfo[]>([]);
 
     useEffect(() => {
-        fetch('https://localhost:7057/api/tabletype/tabletype-info')
+        fetch('https://restaurantmanagement.azurewebsites.net/api/tabletype/tabletype-info')
             .then(response => response.json())
             .then(data => setTableTypeInfo(data.value))
             .catch(error => console.log(error));

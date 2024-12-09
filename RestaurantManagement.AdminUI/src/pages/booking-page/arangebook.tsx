@@ -48,11 +48,12 @@ const ArrangeBookPage = () => {
                 console.error('No token found');
                 return;
             }
-            const response = await fetch(`https://localhost:7057/api/booking/table-arrange/${BookingId}`, {
+            const response = await fetch(`https://restaurantmanagement.azurewebsites.net/api/booking/table-arrange/${BookingId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`,
+                    'x-api-key': '30B34DCD-1CC0-4AAF-B622-7982847F221F'
                 },
                 body: JSON.stringify(data),
             });

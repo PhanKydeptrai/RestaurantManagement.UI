@@ -4,7 +4,7 @@ import { Form, Input, Row, Col, Image, Breadcrumb } from "antd";
 import { GetDetailCategory } from "../../services/category-service";
 
 const DetailCategoryPage = () => {
-    const { categoryId } = useParams<{ categoryId: string }>();
+    const { categoryId } = useParams<{ categoryId: string }>(); // Lấy id từ url
     const [category, setCategory] = useState<any>(null);
 
     useEffect(() => {

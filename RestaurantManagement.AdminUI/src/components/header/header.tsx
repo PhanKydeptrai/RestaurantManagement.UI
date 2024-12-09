@@ -4,6 +4,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { EmployeeDto } from "../../models/employeeDto";
+import { Link } from "react-router-dom";
 
 
 const Header = () => {
@@ -18,7 +19,7 @@ const Header = () => {
                     return;
                 }
 
-                const response = await axios.get('https://localhost:7057/api/account/account-emp-info', {
+                const response = await axios.get('https://restaurantmanagement.azurewebsites.net/api/account/account-emp-info', {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json',
@@ -63,8 +64,8 @@ const Header = () => {
                         </a>
                         <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUser">
                             {/* <li><a className="dropdown-item" href="/AdminLayout/BossLayout/profile.html">Profile</a></li> */}
-                            <li><a className="dropdown-item" href="/account">Profile</a></li>
-                            <li><a className="dropdown-item" href="/log">History</a></li>
+                            <li><Link to="/account" className="dropdown-item">Profile</Link></li>
+                            <li><Link to="/log" className="dropdown-item">History</Link></li>
                             <li><a className="dropdown-item" href="#" onClick={handleLogout}>Logout</a></li>
                         </ul>
                     </div>

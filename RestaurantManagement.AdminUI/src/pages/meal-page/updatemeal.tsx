@@ -44,7 +44,7 @@ const UpdateMealPage = () => {
     }, [mealId]);
 
     useEffect(() => {
-        fetch('https://localhost:7057/api/category/category-info')
+        fetch('https://restaurantmanagement.azurewebsites.net/api/category/category-info')
             .then(response => response.json())
             .then(data => setCategoryInfo(data.value))
             .catch(error => console.log(error))

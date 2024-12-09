@@ -53,7 +53,7 @@ const OrderDetailPage = () => {
         try {
             console.log("Updating order: ", tableId);
             const response = await OrderPayVNPay(tableId);
-            window.open(`https://localhost:7057/api/orders/vn-pay/${tableId}`);
+            window.open(`https://restaurantmanagement.azurewebsites.net/api/orders/vn-pay/${tableId}`);
         } catch (error) {
             console.error("Error updating order:", error);
         }

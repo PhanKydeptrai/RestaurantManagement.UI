@@ -13,7 +13,7 @@ export interface BookingDto {
 export interface BookingDto2 {
     bookingDate: string;
     bookingTime: string;
-    numberOfCustomer: number;
+    numberOfCustomers: number;
     note: string;
 }
 export interface BookDto {

@@ -8,20 +8,20 @@ import { ContainerOutlined, DeleteOutlined, EditOutlined, FormOutlined, LeftOutl
 const { Option } = Select;
 
 const CategoryPage = () => {
-    const [categories, setCategories] = useState<CategoryDto[]>([]);
-    const [pageIndex, setPageIndex] = useState(1);
-    const [pageSize] = useState(8); // Setting page size to 8
-    const [hasNextPage, setHasNextPage] = useState(false);
-    const [hasPreviousPage, setHasPreviousPage] = useState(false);
-    const [totalCount, setTotalCount] = useState(0);
+    const [categories, setCategories] = useState<CategoryDto[]>([]); // Đây lấy về categories DTO của model Dto
+    const [pageIndex, setPageIndex] = useState(1);  // trang mặt định là 1
+    const [pageSize] = useState(8); // Số lượng mặt định là 8
+    const [hasNextPage, setHasNextPage] = useState(false); // Mặc định không có trang tiếp theo
+    const [hasPreviousPage, setHasPreviousPage] = useState(false); // Mặc định không có trang trước
+    const [totalCount, setTotalCount] = useState(0); // Mặc định tổng số mục là 0
 
-    const [searchTerm, setSearchTerm] = useState('');
-    const [filter, setFilter] = useState('');
-    const [sortColumn, setSortColumn] = useState('');
-    const [sortOrder, setSortOrder] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [searchTerm, setSearchTerm] = useState(''); // Mặc định không có từ khóa tìm kiếm
+    const [filter, setFilter] = useState(''); // Mặc định không có bộ lọc
+    const [sortColumn, setSortColumn] = useState(''); // Mặc định không có cột sắp xếp
+    const [sortOrder, setSortOrder] = useState(''); // Mặc định không có thứ tự sắp xếp
+    const [loading, setLoading] = useState(false); // Mặc định không có trạng thái tải
 
-
+    // use Effect tải dữ liệu từ API - cụ thể ở đây là GetAllCategory
     useEffect(() => {
         const fetchData = async () => {
             const result = await GetAllCategory(filter, searchTerm, sortColumn, sortOrder, pageSize, pageIndex);
@@ -34,6 +34,7 @@ const CategoryPage = () => {
     }, [pageIndex, pageSize, filter, searchTerm, sortColumn, sortOrder]); // Include pageSize in the dependency array
 
     //#region Filter
+    // Hàm xử lý thay đổi trạng thái bộ lọc (Active, InActive, All)
     const handleFilterStatusChange = async (value: string) => {
         setFilter(value);
         const results = await GetCategoryFilter(pageSize, pageIndex, value);
@@ -43,6 +44,7 @@ const CategoryPage = () => {
     //#endregion
 
     //#region Search
+    // Hàm xử lý thay đổi từ khóa tìm kiếm và gửi yêu cầu tìm kiếm
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
@@ -83,6 +85,7 @@ const CategoryPage = () => {
     //#endregion
 
     //#region Delete and Restore
+    // Hàm xử lý xoá loại món (Chuyển trạng thái từ Active sang InActive)
     const handleDelete = async (id: string) => {
         setLoading(true);
         try {
