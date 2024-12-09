@@ -11,7 +11,6 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 import Login from './pages/auth-page/login';
 import TransactionCompletePage from './pages/transacsion-page/transactioncomplete';
 import TransactionErrorPage from './pages/transacsion-page/transactionerror';
-import TransactionLayout from './transactionlayout';
 import ResetPasswordPage from './pages/auth-page/resetpassword';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import react router

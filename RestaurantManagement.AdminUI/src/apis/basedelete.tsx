@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const baseUrlDelete = axios.create({
-    baseURL: 'https://restaurantmanagement.azurewebsites.net/',
+    baseURL: 'https://restaurantmanagement.azurewebsites.net/api/',
     headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${sessionStorage.getItem('token')}`,

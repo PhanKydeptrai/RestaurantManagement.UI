@@ -9,12 +9,12 @@ import { Breadcrumb, Col, Row, Image, Button, Input } from "antd";
 
 
 const CreateCategoryPage = () => {
-    const [name, setName] = useState('');
-    const [imageUrl, setImageUrl] = useState<string | null>(null);
+    const [name, setName] = useState(''); // Tên loại món
+    const [imageUrl, setImageUrl] = useState<string | null>(null); // Ảnh loại món
     //const [description, setDescription] = useState('');
-    const [errors, setErrors] = useState<{ name?: string }>({});
-    const fileInputRef = useRef<HTMLInputElement | null>(null);
-    const navigate = useNavigate();
+    const [errors, setErrors] = useState<{ name?: string }>({}); // Kiểm tra validatiom tại validation form
+    const fileInputRef = useRef<HTMLInputElement | null>(null); // Tham chiếu đến input file -> lấy ảnh từ máy
+    const navigate = useNavigate(); // chuyển trang
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -24,6 +24,11 @@ const CreateCategoryPage = () => {
                 setImageUrl(reader.result as string);
             };
             reader.readAsDataURL(file);
+        }
+    };
+    const handleFileSelect = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
         }
     };
 
@@ -99,11 +104,7 @@ const CreateCategoryPage = () => {
 
     }
 
-    const handleFileSelect = () => {
-        if (fileInputRef.current) {
-            fileInputRef.current.click();
-        }
-    };
+
 
 
     return (
@@ -150,52 +151,10 @@ const CreateCategoryPage = () => {
                             </Row>
                             <Row justify="center">
                                 <Button className="text-center" type="primary" htmlType="submit">Lưu</Button>
-                            </Row>                        </div>
+                            </Row>
+                        </div>
                     </Col>
                 </Row>
-
-
-                {/* <div className="row">
-                    <div className="col-12 ">
-                        <div className="row">
-                            <div className="col-md-3 border-right">
-                                <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-                                    <img className=" mt-5" width="350px" src={imageUrl || 'https://via.placeholder.com/350'} alt="" />
-                                    <button type="button" className="btn btn-success mt-3" onClick={handleFileSelect}>
-                                        Chọn ảnh
-                                    </button>
-                                    <input
-                                        type="file"
-                                        ref={fileInputRef}
-                                        style={{ display: 'none' }}
-                                        accept="image/*"
-                                        onChange={handleFileChange}
-                                    />
-                                </div>
-                            </div>
-                            <div className="col-md-9 border-right">
-                                <div className="p-3 py-5">
-                                    <div className="row mt-3">
-                                        <div className="col-md-9 m-lg-3">
-                                            <label className="labels">Tên loại món</label>
-                                            <input type="text" className="form-control" placeholder="Nhập tên loại danh mục"
-                                                value={name}
-                                                onChange={(e) => setName(e.target.value)} />
-                                            {errors.name && <p className="text-danger">{errors.name}</p>}
-                                        </div>
-                                    </div>
-
-                                    <div className="row mt-2">
-                                        <span className="col-md-3"></span>
-                                        <div className="col-md-3"></div>
-                                        <span className="col-md-6"><button className="btn btn-success mt-3" type="submit">Lưu thay đổi</button></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> */}
-
                 <ToastContainer />
             </form>
         </>
