@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { CustomerResetPassword } from "../../services/auth-services";
-import { Form, Input, Button, Alert } from "antd";
+import { Form, Input, Button, Alert, notification } from "antd";
 
 const ResetPasswordPage = () => {
     const [email, setEmail] = useState('');
@@ -11,8 +11,16 @@ const ResetPasswordPage = () => {
         setLoading(true);
         try {
             const response = await CustomerResetPassword(values.email);
+            notification.success({
+                message: 'Đặt lại mật khẩu thành công',
+                description: 'Vui lòng kiểm tra email của bạn để đặt lại mật khẩu.',
+            });
             setMessage('Yêu cầu đặt lại mật khẩu đã được gửi. Vui lòng kiểm tra email của bạn.');
         } catch (error) {
+            notification.error({
+                message: 'Lỗi',
+                description: 'Đã xảy ra lỗi. Vui lòng thử lại.',
+            });
             setMessage('Đã xảy ra lỗi. Vui lòng thử lại.');
         } finally {
             setLoading(false);

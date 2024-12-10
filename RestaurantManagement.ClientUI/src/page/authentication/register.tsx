@@ -3,6 +3,7 @@ import { CustomerRegister } from "../../services/auth-services";
 import { toast, ToastContainer } from "react-toastify";
 import { validate } from "uuid";
 import { useNavigate } from "react-router-dom";
+import { notification } from "antd";
 
 const RegisterPage = () => {
 
@@ -71,11 +72,17 @@ const RegisterPage = () => {
         try {
             const response = await CustomerRegister(firstName, lastName, email, password, phone, gender);
             if (response) {
-                notifySucess();
+                notification.success({
+                    message: 'Đăng ký thành công',
+                    description: 'Vui lòng kiểm tra email để xác nhận tài khoản',
+                });
                 navigate('/login');
             }
             else {
-                notifyError();
+                notification.error({
+                    message: 'Đăng ký thất bại',
+                    description: 'Đã có lỗi trong quá trình đăng ký',
+                });
             }
             console.log('Registration successful:', response);
         } catch (error) {

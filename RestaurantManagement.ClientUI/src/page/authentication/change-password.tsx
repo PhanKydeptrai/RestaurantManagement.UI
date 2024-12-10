@@ -17,14 +17,14 @@ const ChangePasswordPage = () => {
             const response = await CustomerChangePassword(oldPassword, newPassword); // Call API function
             if (response && response.isSuccess) {
                 notification.success({
-                    message: 'Password Changed Successfully',
-                    description: 'Plesae check your email for verifying your new password.',
+                    message: 'Thay đổi mật khẩu thành công',
+                    description: 'Vui lòng kiểm tra email để cập nhật những thông tin cần thiết',
                 });
                 form.resetFields(); // Reset form after success
             } else {
                 notification.error({
-                    message: 'Password Change Failed',
-                    description: response.errors[0].message || 'There was an error while changing your password.',
+                    message: 'Đổi mật khẩu thất bại',
+                    description: response.errors[0].message || 'Đã có lỗi trong quá trình thay đổi mật khẩu',
                 });
             }
         } catch (error) {
@@ -54,23 +54,23 @@ const ChangePasswordPage = () => {
                     <Form.Item
                         label="Old Password"
                         name="oldPassword"
-                        rules={[{ required: true, message: 'Please enter your old password!' }]}
+                        rules={[{ required: true, message: 'Vui lòng nhập mật khẩu cũ' }]}
                     >
-                        <Input.Password placeholder="Enter your old password" />
+                        <Input.Password placeholder="Nhập mật khẩu cũ" />
                     </Form.Item>
 
                     <Form.Item
                         label="New Password"
                         name="newPassword"
                         rules={[
-                            { required: true, message: 'Please enter your new password!' },
+                            { required: true, message: 'Vui lòng nhập mật khẩu mới' },
                             {
                                 min: 8,
-                                message: 'Password must be at least 8 characters long.',
+                                message: 'Mật khẩu phải chứa ít nhất 8 ký tự',
                             },
                         ]}
                     >
-                        <Input.Password placeholder="Enter your new password" />
+                        <Input.Password placeholder="Nhập mật khẩu mới" />
                     </Form.Item>
 
                     <Form.Item
@@ -78,18 +78,18 @@ const ChangePasswordPage = () => {
                         name="confirmPassword"
                         dependencies={['newPassword']}
                         rules={[
-                            { required: true, message: 'Please confirm your new password!' },
+                            { required: true, message: 'Vui lòng nhập lại mật khẩu mới' },
                             ({ getFieldValue }) => ({
                                 validator(_, value) {
                                     if (!value || getFieldValue('newPassword') === value) {
                                         return Promise.resolve();
                                     }
-                                    return Promise.reject('The two passwords do not match!');
+                                    return Promise.reject('Mật khẩu không khớp xin vui lòng kiểm tra lại');
                                 },
                             }),
                         ]}
                     >
-                        <Input.Password placeholder="Confirm your new password" />
+                        <Input.Password placeholder="Xác nhận mật khẩu mới" />
                     </Form.Item>
 
                     <Form.Item style={{ textAlign: 'center' }}>
