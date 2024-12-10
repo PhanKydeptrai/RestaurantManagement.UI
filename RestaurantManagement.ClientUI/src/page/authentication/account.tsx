@@ -22,7 +22,7 @@ const AccountPage = () => {
                     return;
                 }
 
-                const response = await axios.get('https://localhost:7057/api/account/account-cus-info', {
+                const response = await axios.get('https://restaurantmanagement.azurewebsites.net/api/account/account-cus-info', {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json',
