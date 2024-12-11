@@ -13,6 +13,7 @@ import ResetPasswordPage from './page/authentication/resetpassword';
 import AccountPage from './page/authentication/account';
 import ChangePasswordPage from './page/authentication/change-password';
 import VoucherPage from './page/normalpage/voucher/voucher';
+import BookRulesPage from './page/normalpage/rules/bookrule';
 library.add(fas);
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgotpassword" element={<ResetPasswordPage />} />
+        <Route path="/rule" element={<BookRulesPage />}></Route>
         {/* Main */}
         <Route path="/" element={showLayout ? <ContentPage /> : null}>
           <Route path="menu" element={<MenuPage />} />
@@ -32,7 +34,7 @@ function App() {
           <Route path="account" element={<AccountPage />} />
           <Route path="changePassword" element={<ChangePasswordPage />} />
           <Route path="voucher" element={<VoucherPage />} />
-
+          <Route path="rule" element={<BookRulesPage />}></Route>
 
         </Route>
 

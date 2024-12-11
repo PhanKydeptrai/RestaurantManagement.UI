@@ -6,6 +6,7 @@ import ProtectedRoute from "./components/protectedroute/protectedroute";
 import AccountPage from "./page/authentication/account";
 import ChangePasswordPage from "./page/authentication/change-password";
 import VoucherPage from "./page/normalpage/voucher/voucher";
+import BookRulesPage from "./page/normalpage/rules/bookrule";
 
 function ControllerPage() {
     return (
@@ -17,7 +18,6 @@ function ControllerPage() {
                 <Route path="/account" element={<AccountPage />} />
                 <Route path="/changePassword" element={<ChangePasswordPage />} />
                 <Route path="voucher" element={<VoucherPage />} />
-
                 <Route path="/abc" element={
                     <ProtectedRoute>
                         <Route path="/home" element={<HomePage />} />
