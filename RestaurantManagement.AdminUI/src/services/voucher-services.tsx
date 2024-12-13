@@ -24,12 +24,12 @@ export const GetAllVouchers = async (pageSize: number, pageIndex: number, search
 
 export const DeleteVoucher = async (voucherId: string) => {
     const res = await baseUrlDelete.delete(`${Voucher}/${voucherId}`)
-    return res;
+    return res.data;
 }
 export const CreateVoucher = async (voucher: VoucherDto) => {
     try {
         const res = await baseUrlPost.post(`${Voucher}`, voucher)
-        return res;
+        return res.data;
     }
     catch (error) {
         console.log(error);

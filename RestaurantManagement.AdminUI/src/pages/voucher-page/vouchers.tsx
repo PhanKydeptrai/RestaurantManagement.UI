@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { VoucherDto } from "../../models/voucherDto";
 import { DeleteVoucher, GetAllVouchers } from "../../services/voucher-services";
-import { Button, Input, Table, Pagination, notification, Tag, Space, TableColumnsType } from "antd";
+import { Button, Input, Table, Pagination, notification, Tag, Space, TableColumnsType, Modal } from "antd";
 import { DeleteOutlined, FormOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 const VoucherPage = () => {
@@ -43,15 +43,40 @@ const VoucherPage = () => {
     //#endregion
 
     const handleDelete = async (id: string) => {
-
-        try {
-            await DeleteVoucher(id);
-            const results = await GetAllVouchers(8, pageIndex, searchTerm);
-            setVouchers(results.items);
-            notification.success({ message: "Xoá voucher thành công", description: "Voucher đã được xoá" });
-        } catch (error) {
-            notification.error({ message: "Error", description: "Xoá thất bại. Vui lòng kiểm tra lại" });
-        }
+        Modal.confirm({
+            title: 'Bạn có chắc chắn muốn xoá voucher này?',
+            icon: <DeleteOutlined />,
+            content: 'Chọn "Đồng ý" để xoá voucher này, chọn "Huỷ" để thoát.',
+            okText: 'Đồng ý',
+            okType: 'danger',
+            cancelText: 'Huỷ',
+            onOk: async () => {
+                setLoading(true);
+                try {
+                    const result = await DeleteVoucher(id);
+                    if (result && result.isSuccess) {
+                        const results = await GetAllVouchers(pageSize, pageIndex, searchTerm);
+                        setVouchers(results.items);
+                        notification.success({
+                            message: 'Xoá thành công',
+                            description: 'Voucher đã được xoá thành công',
+                        });
+                    } else {
+                        notification.error({
+                            message: 'Xoá thất bại',
+                            description: result.error[0]?.message || 'Đã có lỗi xảy ra trong quá trình xoá voucher',
+                        });
+                    }
+                } catch (error) {
+                    notification.error({
+                        message: 'Delete failed',
+                        description: 'Delete voucher failed',
+                    });
+                } finally {
+                    setLoading(false);
+                }
+            }
+        });
     };
 
     const columns: TableColumnsType<VoucherDto> = [
