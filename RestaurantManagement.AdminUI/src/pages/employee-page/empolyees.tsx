@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Table, Button, Select, Input, Space, Pagination, Row, Col, Breadcrumb, Tag, notification, TableColumnsType } from 'antd';
+import { Table, Button, Select, Input, Space, Pagination, Row, Col, Breadcrumb, Tag, notification, TableColumnsType, Modal } from 'antd';
 import { EmployeeDto } from "../../models/employeeDto";
 import { DeleteEmployee, GetAllEmployee, GetEmpGender, GetEmpRole, GetEmpStatus, GetEmpSearch, RestoreEmployee } from "../../services/employee-service";
 import { ContainerOutlined, DeleteOutlined, FormOutlined, LeftOutlined, RedoOutlined, RightOutlined } from '@ant-design/icons';
@@ -67,70 +67,88 @@ const EmployeePage = () => {
         }
     };
 
-    const handleDelete = async (id: string) => {
-        setLoading(true);
-        try {
-            // Gọi API xóa nhân viên
-            const result = await DeleteEmployee(id);
+    const handleDelete = (id: string) => {
+        // Hiển thị Modal xác nhận trước khi xóa
+        Modal.confirm({
+            title: 'Bạn thực sự muốn xoá nhân viên này?',
+            icon: <DeleteOutlined />,
+            content: 'Lựa chọn, "Đồng ý" để xác nhận xoá nhân viên này. Và chọn "Huỷ" để hủy bỏ thao tác.',
+            okText: 'Đồng ý',
+            okType: 'danger',
+            cancelText: 'Huỷ',
+            onOk: async () => {
+                setLoading(true);
+                try {
+                    // Gọi API xóa nhân viên
+                    const result = await DeleteEmployee(id);
 
-            // Kiểm tra kết quả trả về của API
-            if (result && result.isSuccess) {
-                // Nếu xóa thành công, cập nhật lại danh sách nhân viên
-                const results = await GetAllEmployee(filterGender, filterRole, filterStatus, searchTerm, '', '', pageSize, pageIndex);
-                setEmployees(results.items);
+                    if (result && result.isSuccess) {
+                        // Nếu xóa thành công, cập nhật lại danh sách nhân viên
+                        const results = await GetAllEmployee(filterGender, filterRole, filterStatus, searchTerm, '', '', pageSize, pageIndex);
+                        setEmployees(results.items);
 
-                notification.success({
-                    message: 'Xoá thành công!',
-                    description: 'Nhân viên đã được xoá thành công!',
-                });
-            } else {
-                // Nếu API không trả về thành công
-                notification.error({
-                    message: 'Xoá thất bại!',
-                    description: result.errors[0]?.message || 'Nhân viên chưa được xoá!',
-                });
-            }
-        }
-        catch (error) {
-            // Xử lý lỗi khi gọi API
-            console.error('Error deleting employee:', error);
-            notification.error({
-                message: 'Xoá Thất Bại!',
-                description: 'An unexpected error occurred while deleting the employee.',
-            });
-        } finally {
-            setLoading(false);
-        }
+                        notification.success({
+                            message: 'Xoá thành công!',
+                            description: 'Nhân viên đã được xoá thành công. Email đã được gửi về tài khoản của nhân viên',
+                        });
+                    } else {
+                        notification.error({
+                            message: 'Xoá thất bại',
+                            description: result.errors[0]?.message || 'Đã có lỗi khi thực hiện xoá nhân viên',
+                        });
+                    }
+                }
+                catch (error) {
+                    notification.error({
+                        message: 'Delete failed!',
+                        description: 'An unexpected error occurred while deleting the employee.',
+                    });
+                } finally {
+                    setLoading(false);
+                }
+            },
+        });
     };
 
 
-    const handleRestore = async (id: string) => {
-        setLoading(true);
-        try {
-            const result = await RestoreEmployee(id);
-            if (result && result.isSuccess) {
-                const results = await GetAllEmployee(filterGender, filterRole, filterStatus, searchTerm, '', '', pageSize, pageIndex);
-                setEmployees(results.items);
-                notification.success({
-                    message: 'Khôi phục nhân viên thành công!',
-                    description: 'Nhân viên đã được khôi phục thành công!',
-                });
-            } else {
-                notification.error({
-                    message: 'Khôi phục nhân viên thất bại!',
-                    description: 'Nhân viên chưa được khôi phục!',
-                });
-            }
-        } catch (error) {
-            notification.error({
-                message: 'Khôi Phục Thất Bại!',
-                description: 'This employee has not been restored!',
-            });
-        } finally {
-            setLoading(false);
-        }
-    };
+    const handleRestore = (id: string) => {
+        // Hiển thị Modal xác nhận trước khi khôi phục
+        Modal.confirm({
+            title: 'Bạn thực sự muốn khôi phục nhân viên này?',
+            icon: <RedoOutlined />,
+            content: 'Chọn "Đồng ý" để xác nhận khôi phục nhân viên này. Và chọn "Huỷ" để hủy bỏ thao tác.',
+            okText: 'Đồng ý',
+            okType: 'primary',
+            cancelText: 'Huỷ',
+            onOk: async () => {
+                setLoading(true);
+                try {
+                    const result = await RestoreEmployee(id);
+                    if (result && result.isSuccess) {
+                        const results = await GetAllEmployee(filterGender, filterRole, filterStatus, searchTerm, '', '', pageSize, pageIndex);
+                        setEmployees(results.items);
 
+                        notification.success({
+                            message: 'Khôi phục nhân viên thành công',
+                            description: 'Nhân viên đã được khôi phục thành công',
+                        });
+                    } else {
+                        notification.error({
+                            message: 'Khôi phục nhân viên thất bại',
+                            description: 'Đã có lỗi khi thực hiện khôi phục nhân viên',
+                        });
+                    }
+                } catch (error) {
+                    notification.error({
+                        message: 'Restore failed!',
+                        description: 'An unexpected error occurred while restoring the employee.',
+                    });
+                } finally {
+                    setLoading(false);
+                }
+            },
+        });
+    };
     const columns: TableColumnsType<EmployeeDto> = [
         { title: 'Last Name', dataIndex: 'lastName', key: 'lastName' },
         { title: 'Fisrt Name', dataIndex: 'firstName', key: 'firstName' },

@@ -102,6 +102,6 @@ export const GetDetailEmployee = async (employeeId: string) => {
 }
 
 export const RestoreEmployee = async (id: string) => {
-    const res = await baseUrlPost.put(`${Employee}/restore-employee/${id}`, null);
+    const res = await baseUrlDelete.put(`${Employee}/restore-employee/${id}`);
     return res.data;
 }
