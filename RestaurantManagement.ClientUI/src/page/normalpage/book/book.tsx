@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
-import { Input, message, notification } from "antd";
+import { Input, message, notification, Row } from "antd";
 import { BookingSubcribe, CreateBooking, GetAllBooking, GetBookingById } from "../../../services/book-services";
 import { BookDto } from "../../../models/bookingDto";
 import dayjs from 'dayjs';
+import { Descriptions } from 'antd';
+import { Link } from "react-router-dom";
+import { InfoOutlined } from '@ant-design/icons';
+
 
 const BookFormOfNormal = () => {
     const [firstName, setFirstName] = useState('');
@@ -136,7 +140,9 @@ const BookFormOfNormal = () => {
         setBookingTime(e.target.value);
     };
 
+
     return (
+
         <div className="container">
             <div className="row justify-content-center">
                 <div className="col-md-4">
@@ -153,22 +159,55 @@ const BookFormOfNormal = () => {
                 <p>Loading...</p>
             ) : (
                 bookingDetails && (
-                    <div className="booking-details mt-4">
+                    <div className="booking-details mt-4 justify-content-center center col-12 col-offset-6
+">
                         <h3>Booking Details</h3>
-                        <p><strong>Booking ID:</strong> {bookingDetails.bookId}</p>
-                        <p><strong>First Name:</strong> {bookingDetails.firstName}</p>
-                        <p><strong>Last Name:</strong> {bookingDetails.lastName}</p>
-                        <p><strong>Email:</strong> {bookingDetails.email}</p>
-                        <p><strong>Phone Number:</strong> {bookingDetails.phone}</p>
-                        <p><strong>Booking Date:</strong> {dayjs(bookingDetails.bookingDate).format('YYYY-MM-DD')}</p>
-                        <p><strong>Booking Time:</strong> {bookingDetails.bookingTime}</p>
-                        <p><strong>Number of People:</strong> {bookingDetails.numberOfCustomers}</p>
-                        <p><strong>Note:</strong> {bookingDetails.note}</p>
+                        <Descriptions bordered column={1}>
+                            <Descriptions.Item label="Booking ID">
+                                {bookingDetails.bookId}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="First Name">
+                                {bookingDetails.firstName}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="Last Name">
+                                {bookingDetails.lastName}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="Email">
+                                {bookingDetails.email}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="Phone Number">
+                                {bookingDetails.phone}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="Booking Date">
+                                {dayjs(bookingDetails.bookingDate).format('YYYY-MM-DD')}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="Booking Time">
+                                {bookingDetails.bookingTime}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="Number of People">
+                                {bookingDetails.numberOfCustomers}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="Note">
+                                {bookingDetails.note}
+                            </Descriptions.Item>
+                        </Descriptions>
                     </div>
                 )
             )}
+            <Row className="my-3 justify-content-center text-center">
+                <div className="position-relative d-inline-block">
+                    <h2 className="my-4">
+                        Book For Table
+                    </h2>
+                    <Link to='/rule' className="position-absolute" style={{ left: '100%', transform: 'translateX(-10px) translateY(-50%)' }}>
+                        <InfoOutlined title="Điều khoản nhà hàng" />
+                    </Link>
+                </div>
+            </Row>
 
-            <h2 className="text-center my-4">Book For Table</h2>
+
+
+
 
             {/* Show different form based on login status */}
             {!isLoggedIn ? (

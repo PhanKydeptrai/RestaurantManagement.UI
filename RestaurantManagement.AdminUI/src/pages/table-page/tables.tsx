@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { TableDto } from "../../models/tableDto";
 import { DeleteTable, GetAllTables, RestoreTable } from "../../services/table-services";
 import { Link } from "react-router-dom";
-import { Table, Button, Input, Pagination, Space, message, Tag, notification, TableColumnsType } from "antd";
+import { Table, Button, Input, Pagination, Space, message, Tag, notification, TableColumnsType, Modal } from "antd";
 import { DeleteOutlined, FormOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
 
 const TablePage = () => {
@@ -41,46 +41,66 @@ const TablePage = () => {
     };
 
     const handleDelete = async (id: string) => {
-        try {
-            const result = await DeleteTable(id)
-            if (result && result.isSuccess) {
-                const results = await GetAllTables(pageSize, pageIndex, searchTerm);
-                setTables(results.items);
-                notification.success({
-                    message: 'Xoá thành công',
-                    description: 'Bàn đã được xoá',
-                })
-            } else {
-                notification.error({
-                    message: 'Xoá thất bại',
-                    description: 'Xoá bàn thất bại',
-                })
+        Modal.confirm({
+            title: 'Bạn có thực sự muốn xoá bàn này?',
+            icon: <DeleteOutlined />,
+            content: 'Chọn "Đồng ý" để xoá bàn này, chọn "Huỷ" để thoát.',
+            okText: 'Đồng ý',
+            okType: 'danger',
+            cancelText: 'Huỷ',
+            onOk: async () => {
+                try {
+                    const result = await DeleteTable(id)
+                    if (result && result.isSuccess) {
+                        const results = await GetAllTables(pageSize, pageIndex, searchTerm);
+                        setTables(results.items);
+                        notification.success({
+                            message: 'Xoá thành công',
+                            description: 'Bàn đã được xoá',
+                        })
+                    } else {
+                        notification.error({
+                            message: 'Xoá thất bại',
+                            description: 'Xoá bàn thất bại',
+                        })
+                    }
+                } catch (error) {
+                    message.error('Failed to delete table');
+                }
             }
-        } catch (error) {
-            message.error('Failed to delete table');
-        }
+        });
     };
 
     const handleRestore = async (id: string) => {
-        try {
-            const result = await RestoreTable(id)
-            if (result && result.isSuccess) {
-                const results = await GetAllTables(pageSize, pageIndex, searchTerm);
-                setTables(results.items);
-                notification.success({
-                    message: 'Khôi phục thành công',
-                    description: 'Bàn đã được khôi phục',
-                })
-            } else {
-                notification.error({
-                    message: 'Khôi phục thất bại',
-                    description: 'Khôi phục bàn thất bại',
-                })
-            }
+        Modal.confirm({
+            title: 'Bạn có thực sự muốn khôi phục bàn này?',
+            icon: <RedoOutlined />,
+            content: 'Chọn "Đồng ý" để khôi phục bàn này, chọn "Huỷ" để thoát.',
+            okText: 'Đồng ý',
+            okType: 'primary',
+            cancelText: 'Huỷ',
+            onOk: async () => {
+                try {
+                    const result = await RestoreTable(id)
+                    if (result && result.isSuccess) {
+                        const results = await GetAllTables(pageSize, pageIndex, searchTerm);
+                        setTables(results.items);
+                        notification.success({
+                            message: 'Khôi phục thành công',
+                            description: 'Bàn đã được khôi phục',
+                        })
+                    } else {
+                        notification.error({
+                            message: 'Khôi phục thất bại',
+                            description: 'Khôi phục bàn thất bại',
+                        })
+                    }
 
-        } catch (error) {
-            message.error('Failed to restore table');
-        }
+                } catch (error) {
+                    message.error('Failed to restore table');
+                }
+            }
+        });
     };
 
     const columns: TableColumnsType<TableDto> = [

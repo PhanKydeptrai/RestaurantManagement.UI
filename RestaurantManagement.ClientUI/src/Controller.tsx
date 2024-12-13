@@ -17,7 +17,6 @@ function ControllerPage() {
                 <Route path="/account" element={<AccountPage />} />
                 <Route path="/changePassword" element={<ChangePasswordPage />} />
                 <Route path="voucher" element={<VoucherPage />} />
-
                 <Route path="/abc" element={
                     <ProtectedRoute>
                         <Route path="/home" element={<HomePage />} />

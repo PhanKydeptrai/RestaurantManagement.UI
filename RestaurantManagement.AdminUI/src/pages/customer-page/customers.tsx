@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { DeleteOutlined, RedoOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { Table, Select, Input, Button, Pagination, Tag, Space, notification, TableColumnsType } from "antd";
+import { Table, Select, Input, Button, Pagination, Tag, Space, notification, TableColumnsType, Modal } from "antd";
 import { CustomerDto } from "../../models/customerDto";
 import { DeleteCustomer, GetAllCustomer, GetCusGender, GetCusStatus, GetFilterTypeCus, GetSreachCus, RestoreCustomer } from "../../services/customer-services";
 
@@ -73,53 +73,72 @@ const CustomerPage = () => {
     };
 
     const handleDelete = async (id: string) => {
-        try {
-            const result = await DeleteCustomer(id)
-            console.log(result);
-            if (result && result.isSuccess) {
-                const results = await GetAllCustomer(filterUserType, filterGender, filterStatus, searchTerm, pageIndex, pageSize, sortColumn, sortOrder);
-                setCustomers(results.items);
-                notification.success({
-                    message: 'Xoá thành công!',
-                    description: 'Khách hàng đã được xoá khỏi hệ thống. Email thông báo đã được gửi đến khách hàng',
-                })
-            } else {
-                notification.error({
-                    message: 'Xoá thất bại!',
-                    description: 'Có lỗi xảy ra khi xoá khách hàng',
-                })
+        Modal.confirm({
+            title: "Bạn có thực sự muốn xóa khách hàng này?",
+            icon: <DeleteOutlined />,
+            content: 'Chọn "Đồng ý" để xác nhận xoá khách hàng. Chọn "Hủy" để quay lại',
+            okText: 'Đồng ý',
+            cancelText: 'Hủy',
+            okType: 'danger',
+            onOk: async () => {
+                try {
+                    const result = await DeleteCustomer(id)
+                    console.log(result);
+                    if (result && result.isSuccess) {
+                        const results = await GetAllCustomer(filterUserType, filterGender, filterStatus, searchTerm, pageIndex, pageSize, sortColumn, sortOrder);
+                        setCustomers(results.items);
+                        notification.success({
+                            message: 'Xoá thành công!',
+                            description: 'Khách hàng đã được xoá khỏi hệ thống. Email thông báo đã được gửi đến khách hàng',
+                        })
+                    } else {
+                        notification.error({
+                            message: 'Xoá thất bại!',
+                            description: 'Có lỗi xảy ra khi xoá khách hàng',
+                        })
+                    }
+                } catch (error) {
+                    notification.error({
+                        message: 'Xoá thất bại!',
+                        description: 'Có lỗi xảy ra khi xoá khách hàng',
+                    })
+                }
             }
-        } catch (error) {
-            notification.error({
-                message: 'Xoá thất bại!',
-                description: 'Có lỗi xảy ra khi xoá khách hàng',
-            })
-        }
+        });
     }
     const handleRestore = async (id: string) => {
-        try {
-            const result = await RestoreCustomer(id)
-            console.log(result);
-            if (result && result.isSuccess) {
-                const results = await GetAllCustomer(filterUserType, filterGender, filterStatus, searchTerm, pageIndex, pageSize, sortColumn, sortOrder);
+        Modal.confirm({
+            title: "Bạn có thực sự muốn khôi phục khách hàng này?",
+            icon: <RedoOutlined />,
+            content: 'Chọn "Đồng ý" để xác nhận khôi phục khách hàng. Chọn "Hủy" để quay lại',
+            okText: 'Đồng ý',
+            cancelText: 'Hủy',
+            onOk: async () => {
+                try {
+                    const result = await RestoreCustomer(id)
+                    console.log(result);
+                    if (result && result.isSuccess) {
+                        const results = await GetAllCustomer(filterUserType, filterGender, filterStatus, searchTerm, pageIndex, pageSize, sortColumn, sortOrder);
 
-                setCustomers(results.items);
-                notification.success({
-                    message: 'Khôi phục thành công!',
-                    description: 'Khách hàng đã được khôi phục. Email thông báo đã được gửi đến khách hàng',
-                })
-            } else {
-                notification.error({
-                    message: 'Khôi phục thất bại!',
-                    description: 'Có lỗi xảy ra khi khôi phục khách hàng',
-                })
+                        setCustomers(results.items);
+                        notification.success({
+                            message: 'Khôi phục thành công!',
+                            description: 'Khách hàng đã được khôi phục. Email thông báo đã được gửi đến khách hàng',
+                        })
+                    } else {
+                        notification.error({
+                            message: 'Khôi phục thất bại!',
+                            description: 'Có lỗi xảy ra khi khôi phục khách hàng',
+                        })
+                    }
+                } catch (error) {
+                    notification.error({
+                        message: 'Khôi phục thất bại!',
+                        description: 'Có lỗi xảy ra khi khôi phục khách hàng',
+                    })
+                }
             }
-        } catch (error) {
-            notification.error({
-                message: 'Khôi phục thất bại!',
-                description: 'Có lỗi xảy ra khi khôi phục khách hàng',
-            })
-        }
+        })
     }
     // Columns for Ant Design Table
     const columns: TableColumnsType<CustomerDto> = [

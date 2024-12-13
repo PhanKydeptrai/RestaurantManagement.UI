@@ -3,7 +3,7 @@ import { TableTypeDto } from "../../models/tabletypeDto";
 import { DeleteTableType, GetAllTableType, GetAllTableTypes, RestoreTableType } from "../../services/tabletype-services";
 import { render } from "react-dom";
 import { text } from "@fortawesome/fontawesome-svg-core";
-import { Button, message, notification, Pagination, Space, Table, TableColumnsType, Tag } from "antd";
+import { Button, message, Modal, notification, Pagination, Space, Table, TableColumnsType, Tag } from "antd";
 import { DeleteOutlined, EditOutlined, FormOutlined, RedoOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
@@ -30,51 +30,71 @@ const TableTypesPage = () => {
     }, [pageIndex, pageSize, searchTerm, filterStatus, sortColumn, sortOrder]);
 
     const handleDelete = async (id: string) => {
-        try {
-            const result = await DeleteTableType(id);
-            if (result && result.isSuccess) {
-                const results = await GetAllTableType(searchTerm, filterStatus, sortColumn, sortOrder, pageIndex, pageSize);
-                setTableTypes(results.items);
-                notification.success({
-                    message: 'Xoá loại bàn thành công',
-                    description: 'Loại bàn đã được xoá'
-                });
-            } else {
-                notification.error({
-                    message: 'Xoá loại bàn thất bại',
-                    description: result.error[0]?.message || 'Xoá loại ban không thành công'
-                });
+        Modal.confirm({
+            title: 'Bạn có thực sự muốn xoá loại bàn này?',
+            icon: <DeleteOutlined />,
+            content: 'Chọn "Đồng ý" để xoá loại bàn này, chọn "Huỷ" để thoát.',
+            okText: 'Đồng ý',
+            okType: 'danger',
+            cancelText: 'Huỷ',
+            onOk: async () => {
+                try {
+                    const result = await DeleteTableType(id);
+                    if (result && result.isSuccess) {
+                        const results = await GetAllTableType(searchTerm, filterStatus, sortColumn, sortOrder, pageIndex, pageSize);
+                        setTableTypes(results.items);
+                        notification.success({
+                            message: 'Xoá loại bàn thành công',
+                            description: 'Loại bàn đã được xoá'
+                        });
+                    } else {
+                        notification.error({
+                            message: 'Xoá loại bàn thất bại',
+                            description: result.error[0]?.message || 'Xoá loại ban không thành công'
+                        });
+                    }
+                } catch (error) {
+                    notification.error({
+                        message: 'Xoá thất bại',
+                        description: 'Xoá loại bàn không thành công'
+                    });
+                }
             }
-        } catch (error) {
-            notification.error({
-                message: 'Xoá thất bại',
-                description: 'Xoá loại bàn không thành công'
-            });
-        }
+        });
     }
 
     const handleRestore = async (id: string) => {
-        try {
-            const result = await RestoreTableType(id);
-            if (result && result.isSuccess) {
-                const results = await GetAllTableType(searchTerm, filterStatus, sortColumn, sortOrder, pageIndex, pageSize);
-                setTableTypes(results.items);
-                notification.success({
-                    message: 'Khôi phục loại bàn thành công',
-                    description: 'Loại bàn đã được khôi phục'
-                });
-            } else {
-                notification.error({
-                    message: 'Khôi phục loại bàn thất bại',
-                    description: result.error[0]?.message || 'Khôi phục loại bàn không thành công'
-                });
+        Modal.confirm({
+            title: 'Bạn có muốn khôi phục loại bàn này?',
+            icon: <RedoOutlined />,
+            content: 'Chọn "Đồng ý" để khôi phục loại bàn này, chọn "Huỷ" để thoát.',
+            okText: 'Đồng ý',
+            okType: 'primary',
+            cancelText: 'Huỷ',
+            onOk: async () => {
+                try {
+                    const result = await RestoreTableType(id);
+                    if (result && result.isSuccess) {
+                        const results = await GetAllTableType(searchTerm, filterStatus, sortColumn, sortOrder, pageIndex, pageSize);
+                        setTableTypes(results.items);
+                        notification.success({
+                            message: 'Khôi phục loại bàn thành công',
+                            description: 'Loại bàn đã được khôi phục'
+                        });
+                    } else {
+                        notification.error({
+                            message: 'Khôi phục loại bàn thất bại',
+                            description: result.error[0]?.message || 'Khôi phục loại bàn không thành công'
+                        });
+                    }
+                } catch (error) {
+                    notification.error({
+                        message: 'Khôi phục thất bại',
+                        description: 'Khôi phục loại bàn không thành công'
+                    });
+                }
             }
-        } catch (error) {
-            notification.error({
-                message: 'Khôi phục thất bại',
-                description: 'Khôi phục loại bàn không thành công'
-            });
-        }
+        });
     }
 
     const columns: TableColumnsType<TableTypeDto> = [

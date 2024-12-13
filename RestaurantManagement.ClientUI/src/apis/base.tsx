@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-    baseURL: "https://localhost:7057/api/",
+    baseURL: "https://restaurantmanagement.azurewebsites.net/api/",
     timeout: 5000,
     headers: {
         'Content-Type': 'application/json',

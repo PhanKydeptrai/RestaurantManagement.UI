@@ -3,7 +3,7 @@ import { MealDto } from "../../models/mealDto";
 import { DeleteMeal, FilterCategory, FilterMealStatus, FilterSellStatus, GetAllMeal, GetAllMeals, RestoresMeal } from "../../services/meal-services";
 import { Link } from "react-router-dom";
 import { ContainerOutlined, DeleteOutlined, EditOutlined, FormOutlined, LeftOutlined, RedoOutlined, RightOutlined } from '@ant-design/icons';
-import { Button, Input, Select, Space, Table, Pagination, Row, Col, Breadcrumb, Tag, notification, TableColumnsType } from "antd";
+import { Button, Input, Select, Space, Table, Pagination, Row, Col, Breadcrumb, Tag, notification, TableColumnsType, Modal } from "antd";
 const { Option } = Select;
 
 const MealPage = () => {
@@ -76,61 +76,77 @@ const MealPage = () => {
 
     //#region Delete and Restore
     const handleDelete = async (id: string) => {
-        setLoading(true);
-        try {
-            const result = await DeleteMeal(id)
-            if (result && result.isSuccess) {
-                const results = await GetAllMeals(pageSize, pageIndex, searchTerm);
-                setMeals(results.items);
-                notification.success({
-                    message: 'Xoá thành công',
-                    description: 'Món ăn đã được xoá thành công!'
-                });
-            } else {
-                notification.error({
-                    message: 'Xoá thất bại',
-                    description: 'Có lỗi xảy ra khi xoá món ăn!'
-                });
-            }
-        }
-        catch (error) {
-            console.error('Failed to delete meal:', error);
-            notification.error({
-                message: 'Delete meal Failed',
-                description: 'There was an error while deleting the meal.',
-            });
-        } finally {
-            setLoading(false);
-        }
+        Modal.confirm({
+            title: 'Bạn có thực sự muốn xoá món không?',
+            icon: <DeleteOutlined />,
+            content: 'Chọn "Đồng ý" để xoá món ăn này. Chọn "Huỷ" để quay lại.',
+            okText: 'Đồng ý',
+            okType: 'danger',
+            cancelText: 'Huỷ',
+            onOk: async () => {
+                setLoading(true);
+                try {
+                    const result = await DeleteMeal(id);
+                    if (result && result.isSuccess) {
+                        const results = await GetAllMeals(pageSize, pageIndex, searchTerm);
+                        setMeals(results.items);
+                        notification.success({
+                            message: 'Xoá thành công món ăn',
+                            description: 'Món ăn đã được xoá thành công!',
+                        });
+                    } else {
+                        notification.error({
+                            message: 'Xoá thất bại món ăn',
+                            description: 'Đã có lỗi xảy ra trong quá trình xoá món ăn!',
+                        });
+                    }
+                } catch (error) {
+                    notification.error({
+                        message: 'Delete Failed',
+                        description: 'There was an error while deleting the meal.',
+                    });
+                } finally {
+                    setLoading(false);
+                }
+            },
+        });
     };
 
     const handleRestore = async (id: string) => {
-        setLoading(true);
-        try {
-            const result = await RestoresMeal(id);
-            if (result && result.isSuccess) {
-                const results = await GetAllMeals(pageSize, pageIndex, searchTerm);
-                setMeals(results.items);
-                notification.success({
-                    message: 'Khôi phục thành công',
-                    description: 'Món ăn đã được khôi phục thành công!'
-                });
-            } else {
-                notification.error({
-                    message: 'Khôi phục thất bại',
-                    description: 'Có lỗi xảy ra khi khôi phục món ăn!'
-                });
-            }
-        }
-        catch (error) {
-            console.error('Failed to restore meal:', error);
-            notification.error({
-                message: 'Restore meal Failed',
-                description: 'There was an error while restoring the meal.',
-            });
-        } finally {
-            setLoading(false);
-        }
+        Modal.confirm({
+            title: 'Bạn có muốn khôi phục món này không?',
+            icon: <RedoOutlined />,
+            content: 'Chọn "Đồng ý" để khôi phục món ăn này. Chọn "Huỷ" để quay lại.',
+            okText: 'Đồng ý',
+            okType: 'primary',
+            cancelText: 'Huỷ',
+            onOk: async () => {
+                setLoading(true);
+                try {
+                    const result = await RestoresMeal(id);
+                    if (result && result.isSuccess) {
+                        const results = await GetAllMeals(pageSize, pageIndex, searchTerm);
+                        setMeals(results.items);
+                        notification.success({
+                            message: 'Khôi phục món thành công',
+                            description: 'Món ăn đã được khôi phục thành công!',
+                        });
+                    } else {
+                        notification.error({
+                            message: 'Khôi phục món thất bại',
+                            description: 'Đã có lỗi xảy ra trong quá trình khôi phục món ăn!',
+                        });
+                    }
+                } catch (error) {
+                    notification.error({
+                        message: 'Restore Failed',
+                        description: 'There was an error while restoring the meal.',
+                    });
+                } finally {
+                    setLoading(false);
+                }
+            },
+        });
     };
     //#endregion
 

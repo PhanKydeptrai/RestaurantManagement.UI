@@ -22,7 +22,7 @@ const AccountPage = () => {
                     return;
                 }
 
-                const response = await axios.get('https://localhost:7057/api/account/account-cus-info', {
+                const response = await axios.get('https://restaurantmanagement.azurewebsites.net/api/account/account-cus-info', {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json',
@@ -138,10 +138,10 @@ const AccountPage = () => {
                                                 <Form.Item
                                                     label="First Name"
                                                     name="firstName"
-                                                    rules={[{ required: true, message: 'Please enter your first name!' }]}
+                                                    rules={[{ required: true, message: 'Vui lòng nhập tên của bạn' }]}
                                                 >
                                                     <Input
-                                                        placeholder="Enter first name"
+                                                        placeholder="Nhập tên"
                                                         onChange={(e) => handleChange(e, 'firstName')}
                                                     />
                                                 </Form.Item>
@@ -150,10 +150,10 @@ const AccountPage = () => {
                                                 <Form.Item
                                                     label="Last Name"
                                                     name="lastName"
-                                                    rules={[{ required: true, message: 'Please enter your last name!' }]}
+                                                    rules={[{ required: true, message: 'Vui lòng nhập họ của bạn' }]}
                                                 >
                                                     <Input
-                                                        placeholder="Enter last name"
+                                                        placeholder="Nhập họ"
                                                         onChange={(e) => handleChange(e, 'lastName')}
                                                     />
                                                 </Form.Item>
@@ -165,10 +165,10 @@ const AccountPage = () => {
                                                 <Form.Item
                                                     label="Email"
                                                     name="email"
-                                                    rules={[{ required: true, message: 'Please enter your email!' }]}
+                                                    rules={[{ required: true, message: 'Vui lòng nhập email' }]}
                                                 >
                                                     <Input
-                                                        placeholder="Enter email"
+                                                        placeholder="Nhập email"
                                                         onChange={(e) => handleChange(e, 'email')} readOnly
                                                     />
                                                 </Form.Item>
@@ -177,10 +177,10 @@ const AccountPage = () => {
                                                 <Form.Item
                                                     label="Phone Number"
                                                     name="phoneNumber"
-                                                    rules={[{ required: true, message: 'Please enter your phone number!' }]}
+                                                    rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}
                                                 >
                                                     <Input
-                                                        placeholder="Enter phone number"
+                                                        placeholder="Nhập số điện thoại"
                                                         onChange={(e) => handleChange(e, 'phoneNumber')}
                                                     />
                                                 </Form.Item>
@@ -192,10 +192,10 @@ const AccountPage = () => {
                                                 <Form.Item
                                                     label="Gender"
                                                     name="gender"
-                                                    rules={[{ required: true, message: 'Please enter your gender!' }]}
+                                                    rules={[{ required: true, message: 'Vui lòng nhập giới tính' }]}
                                                 >
                                                     <Input
-                                                        placeholder="Enter gender"
+                                                        placeholder="Chọn giới tính"
                                                         onChange={(e) => handleChange(e, 'gender')}
                                                     />
                                                 </Form.Item>
