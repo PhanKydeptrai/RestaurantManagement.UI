@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { CategoryDto } from "../../models/categoryDto";
 import React, { useEffect, useState } from "react";
 import { DeleteCategory, GetAllCategory, GetCategoryFilter, GetCategorySearch, RestoreCategory, SortCategory } from "../../services/category-service";
-import { Breadcrumb, Button, Col, Input, notification, Pagination, Row, Select, Space, Table, TableColumnsType, Tag } from "antd";
+import { Breadcrumb, Button, Col, Input, Modal, notification, Pagination, Row, Select, Space, Table, TableColumnsType, Tag } from "antd";
 import { ContainerOutlined, DeleteOutlined, EditOutlined, FormOutlined, LeftOutlined, RedoOutlined, RightOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
@@ -87,59 +87,79 @@ const CategoryPage = () => {
     //#region Delete and Restore
     // Hàm xử lý xoá loại món (Chuyển trạng thái từ Active sang InActive)
     const handleDelete = async (id: string) => {
-        setLoading(true);
-        try {
-            const result = await DeleteCategory(id);
-            if (result && result.isSuccess) {
-                const results = await GetAllCategory(filter, searchTerm, sortColumn, sortOrder, pageSize, pageIndex);
-                setCategories(results.items);
+        Modal.confirm({
+            title: 'Ban có chắc chắn muốn xoá loại món này không?',
+            icon: <DeleteOutlined />,
+            content: 'Chọn "Đồng ý" để xoá loại món này. Chọn "Huỷ" để thoát.',
+            okText: 'Đồng ý',
+            okType: 'danger',
+            cancelText: 'Huỷ',
+            onOk: async () => {
+                setLoading(true);
+                try {
+                    const result = await DeleteCategory(id);
+                    if (result && result.isSuccess) {
+                        const results = await GetAllCategory(filter, searchTerm, sortColumn, sortOrder, pageSize, pageIndex);
+                        setCategories(results.items);
 
-                notification.success({
-                    message: 'Xoá loại món thành công',
-                    description: 'Loại món đã được xoá',
-                });
-            } else {
-                notification.error({
-                    message: 'Xoá loại món thất bại',
-                    description: result.error[0]?.message || 'Xoá loại món không thành công',
-                });
+                        notification.success({
+                            message: 'Xoá loại món thành công',
+                            description: 'Loại món đã được xoá',
+                        });
+                    } else {
+                        notification.error({
+                            message: 'Xoá loại món thất bại',
+                            description: result.error[0]?.message || 'Xoá loại món không thành công',
+                        });
+                    }
+                } catch (error) {
+                    notification.error({
+                        message: 'Xoá loại món thất bại',
+                        description: 'Xoá loại món không thành công',
+                    });
+                } finally {
+                    setLoading(false);
+                }
             }
-        } catch (error) {
-            notification.error({
-                message: 'Xoá loại món thất bại',
-                description: 'Xoá loại món không thành công',
-            });
-        } finally {
-            setLoading(false);
-        }
+        });
     };
 
     const handleRestore = async (id: string) => {
-        setLoading(true);
-        try {
-            const result = await RestoreCategory(id);
-            if (result && result.isSuccess) {
-                const results = await GetAllCategory(filter, searchTerm, sortColumn, sortOrder, pageSize, pageIndex);
-                setCategories(results.items);
+        Modal.confirm({
+            title: 'Bạn có chắc chắn muốn khôi phục loại món này không?',
+            icon: <RedoOutlined />,
+            content: 'Chọn "Đồng ý" để khôi phục loại món này. Chọn "Huỷ" để thoát.',
+            okText: 'Đồng ý',
+            okType: 'primary',
+            cancelText: 'Huỷ',
+            onOk: async () => {
+                setLoading(true);
+                try {
+                    const result = await RestoreCategory(id);
+                    if (result && result.isSuccess) {
+                        const results = await GetAllCategory(filter, searchTerm, sortColumn, sortOrder, pageSize, pageIndex);
+                        setCategories(results.items);
 
-                notification.success({
-                    message: 'Khôi phục loại món thành công',
-                    description: 'Loại món đã được khôi phục',
-                });
-            } else {
-                notification.error({
-                    message: 'Khôi phục loại món thất bại',
-                    description: 'Khôi phục loại món không thành công',
-                });
+                        notification.success({
+                            message: 'Khôi phục loại món thành công',
+                            description: 'Loại món đã được khôi phục',
+                        });
+                    } else {
+                        notification.error({
+                            message: 'Khôi phục loại món thất bại',
+                            description: 'Khôi phục loại món không thành công',
+                        });
+                    }
+                } catch (error) {
+                    notification.error({
+                        message: 'Khôi phục loại món thất bại',
+                        description: 'Khôi phục loại món không thành công',
+                    });
+                } finally {
+                    setLoading(false);
+                }
             }
-        } catch (error) {
-            notification.error({
-                message: 'Khôi phục loại món thất bại',
-                description: 'Khôi phục loại món không thành công',
-            });
-        } finally {
-            setLoading(false);
-        }
+        });
     };
     //#endregion
 
