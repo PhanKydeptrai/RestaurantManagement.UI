@@ -6,7 +6,6 @@ import ProtectedRoute from "./components/protectedroute/protectedroute";
 import AccountPage from "./page/authentication/account";
 import ChangePasswordPage from "./page/authentication/change-password";
 import VoucherPage from "./page/normalpage/voucher/voucher";
-import BookRulesPage from "./page/normalpage/rules/bookrule";
 
 function ControllerPage() {
     return (
