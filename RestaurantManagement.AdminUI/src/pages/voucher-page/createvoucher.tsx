@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { CreateVoucher } from "../../services/voucher-services";
-import { notification } from "antd";
-
+import { Form, Input, notification, Select } from "antd";
+import TextArea from "antd/es/input/TextArea";
+const { Option } = Select;
 const CreateVoucherPage = () => {
 
     const [voucherName, setVoucherName] = useState('');
@@ -16,7 +17,7 @@ const CreateVoucherPage = () => {
     const [expiredDate, setExpiredDate] = useState('');
     const [description, setDescription] = useState('');
 
-    const [errors, setErrors] = useState<{ voucherName?: string, maxDiscount?: string, voucherCondition?: string, startDate?: string, expiredDate?: string, description?: string }>();
+    const [errors, setErrors] = useState<{ voucherName?: string, maxDiscount?: string, voucherCondition?: string, startDate?: string, expiredDate?: string, description?: string, voucherCode?: string, percentageDiscount?: string, minOrderAmount?: string }>();
     const navigate = useNavigate();
 
 
@@ -46,7 +47,7 @@ const CreateVoucherPage = () => {
         });
     }
     const validationForm = () => {
-        const newErrors: { voucherName?: string, maxDiscount?: string, voucherCondition?: string, startDate?: string, expiredDate?: string, description?: string } = {};
+        const newErrors: { voucherName?: string, maxDiscount?: string, voucherCondition?: string, startDate?: string, expiredDate?: string, description?: string, voucherCode?: string, percentageDiscount?: string, minOrderAmount?: string } = {};
 
         if (voucherName === '') {
             newErrors.voucherName = 'Tên voucher không được để trống';
@@ -57,6 +58,22 @@ const CreateVoucherPage = () => {
         if (isNaN(maximumDiscountAmount)) {
             newErrors.maxDiscount = 'Giảm giá tối đa phải là số';
         }
+        if (voucherCode === '') {
+            newErrors.voucherCode = 'Mã voucher không được để trống';
+        }
+        if (percentageDiscount <= 0) {
+            newErrors.percentageDiscount = 'Giảm giá phải là số lớn hơn 0';
+        }
+        if (isNaN(percentageDiscount)) {
+            newErrors.percentageDiscount = 'Giảm giá phải là số';
+        }
+        if (Number(minimumOrderAmount) <= 0) {
+            newErrors.minOrderAmount = 'Số tiền tối thiểu phải là số lớn hơn 0';
+        }
+        if (isNaN(minimumOrderAmount)) {
+            newErrors.minOrderAmount = 'Số tiền tối thiểu phải là số';
+        }
+
         // if (Number(voucherCondition) <= 0) {
         //     newErrors.voucherCondition = 'Điều kiện voucher phải là số lớn hơn 0';
         // }
@@ -154,45 +171,98 @@ const CreateVoucherPage = () => {
                 </div>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
-                        <label htmlFor="voucherName" className="form-label">Tên voucher</label>
-                        <input type="text" className="form-control" id="voucherName" onChange={(e) => setVoucherName(e.target.value)} />
+                        <Form.Item label="Tên voucher" validateStatus={errors?.voucherName ? 'error' : 'success'} help={errors?.voucherName}>
+                            <Input type="text" placeholder="Tên voucher" value={voucherName} onChange={(e) => setVoucherName(e.target.value)} />
+                        </Form.Item>
                         {errors?.voucherName && <div className="text-danger">{errors.voucherName}</div>}
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="voucherCode" className="form-label">Mã voucher</label>
-                        <input type="text" className="form-control" id="voucherCode" onChange={(e) => setVoucherCode(e.target.value)} />
+                        <Form.Item label="Mã Voucher" validateStatus={errors?.voucherCode ? 'error' : 'success'} help={errors?.voucherCode}>
+                            <Input
+                                type="text"
+                                placeholder="Mã Voucher"
+                                value={voucherCode}
+                                onChange={(e) => setVoucherCode(e.target.value)}
+                            />
+                        </Form.Item>
+                        {errors?.voucherCode && <div className="text-danger">{errors.voucherCode}</div>}
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="percentageDiscount" className="form-label">Giảm giá %</label>
-                        <input type="number" className="form-control" id="percentageDiscount" onChange={(e) => setPercentageDiscount(parseInt(e.target.value))} />
+                        <Form.Item label="Giảm giá %" validateStatus={errors?.percentageDiscount ? 'error' : 'success'} help={errors?.percentageDiscount}>
+                            <Input
+                                type="number"
+                                placeholder="Giảm giá %"
+                                value={percentageDiscount}
+                                onChange={(e) => setPercentageDiscount(parseInt(e.target.value))}
+                            />
+                        </Form.Item>
+                        {errors?.percentageDiscount && <div className="text-danger">{errors.percentageDiscount}</div>}
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="maxDiscount" className="form-label">Giảm giá tối đa</label>
-                        <input type="number" className="form-control" id="maxDiscount" onChange={(e) => setMaximumDiscountAmount(parseInt(e.target.value))} />
+                        <Form.Item label="Giảm giá tối đa" validateStatus={errors?.maxDiscount ? 'error' : 'success'} help={errors?.maxDiscount}>
+                            <Input
+                                type="number"
+                                placeholder="Giảm giá tối đa"
+                                value={maximumDiscountAmount}
+                                onChange={(e) => setMaximumDiscountAmount(parseInt(e.target.value))}
+                            />
+                        </Form.Item>
                         {errors?.maxDiscount && <div className="text-danger">{errors.maxDiscount}</div>}
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="minOrderAmount" className="form-label">Số tiền tối thiểu</label>
-                        <input type="number" className="form-control" id="minOrderAmount" onChange={(e) => setMinimumOrderAmount(parseInt(e.target.value))} />
+                        <Form.Item label="Số tiền tối thiểu" validateStatus={errors?.minOrderAmount ? 'error' : 'success'} help={errors?.minOrderAmount}>
+                            <Input
+                                type="number"
+                                placeholder="Số tiền tối thiểu"
+                                value={minimumOrderAmount}
+                                onChange={(e) => setMinimumOrderAmount(parseInt(e.target.value))}
+                            />
+                        </Form.Item>
+                        {errors?.minOrderAmount && <div className="text-danger">{errors.minOrderAmount}</div>}
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="voucherCondition" className="form-label">Điều kiện voucher</label>
-                        <input type="number" className="form-control" id="voucherCondition" onChange={(e) => setVoucherCondition(parseInt(e.target.value))} />
+                        <Form.Item label="Điều kiện voucher" validateStatus={errors?.voucherCondition ? 'error' : 'success'} help={errors?.voucherCondition}>
+                            <Input
+                                type="number"
+                                placeholder="Điều kiện voucher"
+                                value={voucherCondition}
+                                onChange={(e) => setVoucherCondition(parseInt(e.target.value))}
+                            />
+                        </Form.Item>
                         {/* {errors?.voucherCondition && <div className="text-danger">{errors.voucherCondition}</div>} */}
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="startDate" className="form-label">Ngày bắt đầu</label>
-                        <input type="date" className="form-control" id="startDate" onChange={(e) => setStartDate(e.target.value)} />
+                        <Form.Item label="Ngày bắt đầu" validateStatus={errors?.startDate ? 'error' : 'success'} help={errors?.startDate}>
+                            <Input
+                                type="date"
+                                placeholder="Ngày bắt đầu"
+                                value={startDate}
+                                onChange={(e) => setStartDate(e.target.value)}
+                            />
+                        </Form.Item>
                         {errors?.startDate && <div className="text-danger">{errors.startDate}</div>}
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="expiredDate" className="form-label">Ngày hết hạn</label>
-                        <input type="date" className="form-control" id="expiredDate" onChange={(e) => setExpiredDate(e.target.value)} />
+                        <Form.Item label="Ngày hết hạn" validateStatus={errors?.expiredDate ? 'error' : 'success'} help={errors?.expiredDate}>
+                            <Input
+                                type="date"
+                                placeholder="Ngày hết hạn"
+                                value={expiredDate}
+                                onChange={(e) => setExpiredDate(e.target.value)}
+                            />
+                        </Form.Item>
                         {errors?.expiredDate && <div className="text-danger">{errors.expiredDate}</div>}
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="description" className="form-label">Mô tả</label>
-                        <textarea className="form-control" id="description" onChange={(e) => setDescription(e.target.value)} />
+                        <Form.Item label="Mô tả" validateStatus={errors?.description ? 'error' : 'success'} help={errors?.description}>
+                            <TextArea
+                                placeholder="Mô tả"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+
+                            />
+                        </Form.Item>
+
                         {errors?.description && <div className="text-danger">{errors.description}</div>}
                     </div>
 
