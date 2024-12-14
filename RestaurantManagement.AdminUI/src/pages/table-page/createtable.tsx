@@ -72,7 +72,6 @@ const CreateTablePage = () => {
         const data = {
             quantity: quantity,
             tableTypeId: tableTypeId,
-            tableTypeName: tableTypeName
         };
 
         console.log('Data to be sent:', data);
@@ -88,7 +87,8 @@ const CreateTablePage = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`,
+                    'x-api-key': '30B34DCD-1CC0-4AAF-B622-7982847F221F'
                 },
 
                 body: JSON.stringify(data),
