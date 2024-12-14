@@ -153,7 +153,14 @@ const EmployeePage = () => {
         });
     };
     const columns: TableColumnsType<EmployeeDto> = [
-        { title: 'Last Name', dataIndex: 'lastName', key: 'lastName' },
+        {
+            title: 'No.',
+            key: 'rowNumber',
+            render: (text: string, record: EmployeeDto, index: number) => {
+                const rowNumber = (pageIndex - 1) * pageSize + (index + 1);
+                return rowNumber;
+            }
+        }, { title: 'Last Name', dataIndex: 'lastName', key: 'lastName' },
         { title: 'Fisrt Name', dataIndex: 'firstName', key: 'firstName' },
         { title: 'Email', dataIndex: 'email', key: 'email' },
         { title: 'Phone Number', dataIndex: 'phoneNumber', key: 'phoneNumber' },
