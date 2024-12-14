@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useRef, useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
-import { UpdateCategory } from '../../services/category-service';
+import { GetDetailCategory, UpdateCategory } from '../../services/category-service';
 import { Breadcrumb, Button, Col, Row, Image } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
@@ -18,13 +18,18 @@ const UpdateCategoryPage = () => {
         // Fetch category data using categoryId and set initial state
         const fetchCategoryData = async () => {
             try {
-                const response = await fetch(`https://restaurantmanagement.azurewebsites.net/api/category/${categoryId}`);
-                const data = await response.json();
-                console.log(data);
-                setCategoryName(data.value.categoryName);
-                setImageUrl(data.value.imageUrl);
-            } catch (error) {
-                console.error('Error fetching category data:', error);
+                if (categoryId) {
+                    const response = await GetDetailCategory(categoryId);
+                    if (response && response.value) {
+                        setCategoryName(response.value.categoryName);
+                        setImageUrl(response.value.imageUrl);
+                    }
+                }
+                else {
+                    throw new Error('Category ID is undefined');
+                }
+            } catch (error: any) {
+                console.error('Failed to fetch category data:', error.response?.data);
             }
         };
 
