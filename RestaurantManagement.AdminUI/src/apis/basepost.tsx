@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const baseUrlPost = axios.create({
-    baseURL: 'https://restaurantmanagement.azurewebsites.net/',
+    baseURL: 'https://restaurantmanagement.azurewebsites.net/api/',
     headers: {
         'Content-Type': 'multipart/form-data',
         'Authorization': `Bearer ${sessionStorage.getItem('token')}`,

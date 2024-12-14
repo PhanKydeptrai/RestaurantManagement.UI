@@ -84,7 +84,7 @@ const CreateTablePage = () => {
                 return;
             }
 
-            const response = await fetch('https://localhost:7057/api/table', {
+            const response = await fetch('https://restaurantmanagement.azurewebsites.net/api/table', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
