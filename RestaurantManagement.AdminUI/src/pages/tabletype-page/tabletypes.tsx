@@ -99,6 +99,16 @@ const TableTypesPage = () => {
 
     const columns: TableColumnsType<TableTypeDto> = [
         {
+            title: 'No.',
+            key: 'rowNumber',
+            render: (text: string, record: TableTypeDto, index: number) => {
+                const rowNumber = sortOrder === 'asc'
+                    ? (pageIndex - 1) * pageSize + (index + 1)
+                    : (totalCount - (pageIndex - 1) * pageSize - index);
+                return rowNumber;
+            }
+        },
+        {
             title: 'TableType',
             dataIndex: 'tableTypeName',
             key: 'tableTypeName'
