@@ -33,7 +33,8 @@ const EmployeePage = () => {
     const handleFilterStatusChange = async (value: string) => {
         setFilterStatus(value);
         const results = await GetEmpStatus(pageSize, pageIndex, value);
-        setEmployees(results.value.items);
+        setEmployees(results.items);
+        setPageIndex(1);
         setHasNextPage(results.value.hasNextPage);
         setHasPreviousPage(results.value.haspreviousPage);
         setTotalCount(results.length);
@@ -43,6 +44,7 @@ const EmployeePage = () => {
         setFilterGender(value);
         const results = await GetEmpGender(pageSize, pageIndex, value);
         setEmployees(results.items);
+        setPageIndex(1);
         setHasNextPage(results.hasNextPage);
         setHasPreviousPage(results.haspreviousPage);
         setTotalCount(results.length);
@@ -52,6 +54,7 @@ const EmployeePage = () => {
         setFilterRole(value);
         const results = await GetEmpRole(pageSize, pageIndex, value);
         setEmployees(results.items);
+        setPageIndex(1);
         setTotalCount(results.length);
     };
 
