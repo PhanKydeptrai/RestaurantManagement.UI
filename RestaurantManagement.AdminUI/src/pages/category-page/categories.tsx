@@ -166,6 +166,14 @@ const CategoryPage = () => {
     //#endregion
 
     const columns: TableColumnsType<CategoryDto> = [
+        {
+            title: 'No.',
+            key: 'rowNumber',
+            render: (text: string, record: CategoryDto, index: number) => {
+                const rowNumber = (pageIndex - 1) * pageSize + (index + 1);
+                return rowNumber;
+            }
+        },
         { title: 'Category Name', dataIndex: 'categoryName', key: 'categoryName' },
         {
             title: 'Status', dataIndex: 'categoryStatus', key: 'categoryStatus',
