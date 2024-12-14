@@ -81,7 +81,7 @@ export const FilterMealStatus = async (filterMealStatus: string, page: number, p
     const res = await baseUrl.get<MealDto[]>(`${Meal}?filterMealStatus=${filterMealStatus}&page=${page}&pageSize=${pageSize}`)
         .then((response: AxiosResponse) => {
             console.log(response.data);
-            return response.data;
+            return response.data.value;
         }).catch((error) => {
             console.log(error);
             return error;
