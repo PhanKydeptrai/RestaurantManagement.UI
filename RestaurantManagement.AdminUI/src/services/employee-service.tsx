@@ -9,7 +9,7 @@ export const Employee = "employee";
 
 export const GetAllEmployee = async (filterGender: string, filterRole: string, filterStatus: string, sreachTerm: string, sortColumn: string, sortOrder: string, pageSize: number, pageIndex: number,) => {
     //console.log(`${baseUrl}/${Employee}?page=${pageIndex}&pageSize=${pageSize}`);
-    const res = await baseUrl.get<EmployeeDto[]>(`${Employee}?filterGender=${filterGender}&filterRole=${filterRole}&filterStatus=${filterStatus}&sreachTerm=${sreachTerm}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&page=${pageIndex}&pageSize=${pageSize}`)
+    const res = await baseUrl.get<EmployeeDto[]>(`${Employee}?filterGender=${filterGender}&filterRole=${filterRole}&filterStatus=${filterStatus}&searchTerm=${sreachTerm}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&page=${pageIndex}&pageSize=${pageSize}`)
         //const res = await baseUrl.get<EmployeeDto[]>(`https://localhost:7057/api/employee?page=${pageIndex}&pageSize=${pageSize}`)
         .then((response: AxiosResponse) => {
             console.log(response.data.value);

@@ -38,6 +38,7 @@ const CategoryPage = () => {
     const handleFilterStatusChange = async (value: string) => {
         setFilter(value);
         const results = await GetCategoryFilter(pageSize, pageIndex, value);
+        setPageIndex(1);
         setCategories(results.items);
         setTotalCount(results.totalCount);
     };
@@ -52,6 +53,7 @@ const CategoryPage = () => {
     const handleSearchSubmit = async (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             const results = await GetCategorySearch(pageSize, pageIndex, searchTerm);
+            setPageIndex(1);
             setCategories(results.items);
             setTotalCount(results.totalCount);
         };

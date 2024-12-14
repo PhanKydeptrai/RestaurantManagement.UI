@@ -38,6 +38,7 @@ const CustomerPage = () => {
     const handleFilterUserType = async (value: string) => {
         setFilterUserType(value);
         const results = await GetFilterTypeCus(value, pageIndex, pageSize);
+        setPageIndex(1);
         setCustomers(results.items);
         setTotalCount(results.totalCount);
     };
@@ -46,6 +47,7 @@ const CustomerPage = () => {
     const handleFilterGenderChange = async (value: string) => {
         setFilterGender(value);
         const results = await GetCusGender(pageSize, pageIndex, value);
+        setPageIndex(1);
         setCustomers(results.items);
         setTotalCount(results.totalCount);
     };
@@ -54,6 +56,7 @@ const CustomerPage = () => {
     const handleFilterStatusChange = async (value: string) => {
         setFilterStatus(value);
         const results = await GetCusStatus(pageSize, pageIndex, value);
+        setPageIndex(1);
         setCustomers(results.items);
         setTotalCount(results.totalCount);
     };
@@ -67,6 +70,7 @@ const CustomerPage = () => {
     const handleSearchSubmit = async (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             const results = await GetSreachCus(searchTerm, pageIndex, pageSize);
+            setPageIndex(1);
             setCustomers(results.items);
             setTotalCount(results.totalCount);
         }
@@ -235,7 +239,7 @@ const CustomerPage = () => {
                     <Select value={filterStatus} onChange={handleFilterStatusChange} style={{ width: '100%' }} >
                         <Option value="">Status</Option>
                         <Option value="Active">Active</Option>
-                        <Option value="Inactive">Inactive</Option>
+                        <Option value="Deleted">Deleted</Option>
                     </Select>
                 </div>
                 <div className="col-md-4">
