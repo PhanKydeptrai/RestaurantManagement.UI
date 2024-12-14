@@ -1,14 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { GetDetailTableType, UpdateTableType } from "../../services/tabletype-services";
-import { Breadcrumb, Col, Row, Image, Button, notification } from "antd";
+import { Breadcrumb, Col, Row, Image, Button, notification, Select, Form, Input } from "antd";
 import { UploadOutlined } from '@ant-design/icons';
-
+const { Option } = Select;
 const UpdateTableTypePage = () => {
     const { tableTypeId } = useParams<{ tableTypeId: string }>();
     const [tableTypeName, setTableTypeName] = useState<string>('');
     const [tableCapacity, setTableCapacity] = useState<number>(0);
-    const [tableStatus, setTableStatus] = useState<string>('');
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const [tablePrice, setTablePrice] = useState<number>(0);
@@ -56,20 +55,21 @@ const UpdateTableTypePage = () => {
         const newErrors: { tableTypeName?: string, tableCapacity?: string, tableStatus?: string, tablePrice?: string, description?: string } = {};
 
         if (!tableTypeName) {
-            newErrors.tableTypeName = 'Please enter the table type name';
+            newErrors.tableTypeName = 'Vui lòng nhập tên loại bàn';
         }
         if (!tableCapacity) {
-            newErrors.tableCapacity = 'Please enter the table capacity';
-        }
-        if (!tableStatus) {
-            newErrors.tableStatus = 'Please enter the table status';
+            newErrors.tableCapacity = 'Vui lòng nhập số lượng bàn';
         }
         if (!tablePrice) {
-            newErrors.tablePrice = 'Please enter the table price';
+            newErrors.tablePrice = 'Vui lòng nhập giá bàn';
+        }
+        if (tablePrice < 0) {
+            newErrors.tablePrice = 'Giá bàn phải lớn hơn hoặc bằng 0';
         }
         if (!description) {
-            newErrors.description = 'Please enter the description';
+            newErrors.description = 'Vui lòng nhập mô tả';
         }
+
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -83,7 +83,6 @@ const UpdateTableTypePage = () => {
         const formData = new FormData();
         formData.append('tableTypeName', tableTypeName);
         formData.append('tableCapacity', tableCapacity.toString());
-        formData.append('tableStatus', tableStatus);
         formData.append('tablePrice', tablePrice.toString());
         formData.append('description', description);
 
@@ -163,54 +162,32 @@ const UpdateTableTypePage = () => {
 
                     <Col xs={24} sm={24} md={12} lg={12} xl={16}>
                         {/* Input Fields */}
-                        <div className="form-group mb-3">
-                            <label htmlFor="tableTypeName">Table Type Name</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                id="tableTypeName"
-                                placeholder="Enter table type name"
-                                value={tableTypeName}
-                                onChange={(e) => setTableTypeName(e.target.value)}
-                            />
+                        <div className="form-group mb-3">\
+                            <Form.Item label="Table Type Name" validateStatus={errors.tableTypeName ? 'error' : 'success'} help={errors.tableTypeName}>
+                                <Input placeholder="Nhập tên loại bàn" value={tableTypeName} onChange={(e) => setTableTypeName(e.target.value)} />
+                            </Form.Item>
                             {errors.tableTypeName && <p style={{ color: 'red' }}>{errors.tableTypeName}</p>}
                         </div>
 
                         <div className="form-group mb-3">
-                            <label htmlFor="tableCapacity">Table Capacity</label>
-                            <input
-                                type="number"
-                                className="form-control"
-                                id="tableCapacity"
-                                placeholder="Enter table capacity"
-                                value={tableCapacity}
-                                onChange={(e) => setTableCapacity(parseInt(e.target.value))}
-                            />
+                            <Form.Item label="Table Capacity" validateStatus={errors.tableCapacity ? 'error' : 'success'} help={errors.tableCapacity}>
+                                <Input type="number" placeholder="Nhập số lượng bàn" value={tableCapacity} onChange={(e) => setTableCapacity(parseInt(e.target.value))} />
+                            </Form.Item>
                             {errors.tableCapacity && <p style={{ color: 'red' }}>{errors.tableCapacity}</p>}
                         </div>
 
                         <div className="form-group mb-3">
-                            <label htmlFor="tablePrice">Table Price</label>
-                            <input
-                                type="number"
-                                className="form-control"
-                                id="tablePrice"
-                                placeholder="Enter table price"
-                                value={tablePrice}
-                                onChange={(e) => setTablePrice(parseInt(e.target.value))}
-                            />
+                            <Form.Item label="Table Price" validateStatus={errors.tablePrice ? 'error' : 'success'} help={errors.tablePrice}>
+                                <Input type="number" placeholder="Nhập giá bàn" value={tablePrice} onChange={(e) => setTablePrice(parseInt(e.target.value))} />
+                            </Form.Item>
+
                             {errors.tablePrice && <p style={{ color: 'red' }}>{errors.tablePrice}</p>}
                         </div>
 
                         <div className="form-group mb-3">
-                            <label htmlFor="description">Description</label>
-                            <textarea
-                                className="form-control"
-                                id="description"
-                                placeholder="Enter description"
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                            />
+                            <Form.Item label="Description" validateStatus={errors.description ? 'error' : 'success'} help={errors.description}>
+                                <Input.TextArea placeholder="Nhập mô tả" value={description} onChange={(e) => setDescription(e.target.value)} />
+                            </Form.Item>
                             {errors.description && <p style={{ color: 'red' }}>{errors.description}</p>}
                         </div>
 
