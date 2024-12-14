@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { GetBookingById } from "../../services/book-services";
-
+import { Form, Input, Select } from "antd";
+import TextArea from "antd/es/input/TextArea";
+const { Option } = Select;
 const DetailBookingPage = () => {
     const { bookId } = useParams<{ bookId: string }>();
     const [book, setBook] = useState<any>();
@@ -35,60 +37,91 @@ const DetailBookingPage = () => {
                     <h2>Chi tiết Booking</h2>
                     <form>
                         <div className="mb-3">
-                            <label className="form-label">Mã Booking</label>
-                            <input type="text" className="form-control" value={book?.value.bookId} readOnly />
+                            <Form.Item label='Mã Booking'>
+                                <Input
+                                    type="text"
+                                    value={book?.value.bookId}
+                                    readOnly
+                                />
+                            </Form.Item>
                         </div>
                         <div className="mb-3">
-                            <label className="form-label">Mã Người Dùng</label>
-                            <input type="text" className="form-control" value={book?.value.userId} readOnly />
+                            <Form.Item label='Mã Người Dùng'>
+                                <Input
+                                    type="text"
+                                    value={book?.value.userId}
+                                    readOnly
+                                />
+                            </Form.Item>
                         </div>
                         <div className="mb-3">
-                            <label className="form-label">Tên</label>
-                            <input type="text" className="form-control" value={book?.value.firstName} readOnly />
+                            <Form.Item label='Họ và tên'>
+                                <Input
+                                    type="text"
+                                    value={book?.value.lastName + ' ' + book?.value.firstName}
+                                    readOnly
+                                />
+                            </Form.Item>
                         </div>
                         <div className="mb-3">
-                            <label className="form-label">Họ</label>
-                            <input type="text" className="form-control" value={book?.value.lastName} readOnly />
+                            <Form.Item label='Email'>
+                                <Input
+                                    type="email"
+                                    value={book?.value.email}
+                                    readOnly
+                                />
+                            </Form.Item>
                         </div>
                         <div className="mb-3">
-                            <label className="form-label">Email</label>
-                            <input type="email" className="form-control" value={book?.value.email} readOnly />
+                            <Form.Item label='Số Điện Thoại'>
+                                <Input
+                                    type="text"
+                                    value={book?.value.phone}
+                                    readOnly
+                                />
+                            </Form.Item>
+
                         </div>
                         <div className="mb-3">
-                            <label className="form-label">Số Điện Thoại</label>
-                            <input type="text" className="form-control" value={book?.value.phone} readOnly />
+                            <Form.Item label="Ngày Đặt">
+                                <Input type="text" value={book?.value.bookingDate} readOnly />
+                            </Form.Item>
                         </div>
                         <div className="mb-3">
-                            <label className="form-label">Ngày Đặt</label>
-                            <input type="date" className="form-control" value={book?.value.bookingDate} readOnly />
+                            <Form.Item label="Giờ Đặt">
+                                <Input type="time" value={book?.value.bookingTime} readOnly />
+                            </Form.Item>
                         </div>
                         <div className="mb-3">
-                            <label className="form-label">Giờ Đặt</label>
-                            <input type="time" className="form-control" value={book?.value.bookingTime} readOnly />
+                            <Form.Item label="Giá Booking">
+                                <Input type="number" value={book?.value.bookingPrice} readOnly />
+                            </Form.Item>
                         </div>
                         <div className="mb-3">
-                            <label className="form-label">Giá Booking</label>
-                            <input type="number" className="form-control" value={book?.value.bookingPrice} readOnly />
+                            <Form.Item label="Trạng Thái Thanh Toán">
+                                <Input type="text" value={book?.value.paymentStatus} readOnly />
+                            </Form.Item>
                         </div>
                         <div className="mb-3">
-                            <label className="form-label">Trạng Thái Thanh Toán</label>
-                            <input type="text" className="form-control" value={book?.value.paymentStatus} readOnly />
+                            <Form.Item label="Trạng Thái Booking">
+                                <Input type="text" value={book?.value.bookingStatus} readOnly />
+                            </Form.Item>
                         </div>
                         <div className="mb-3">
-                            <label className="form-label">Trạng Thái Booking</label>
-                            <input type="text" className="form-control" value={book?.value.bookingStatus} readOnly />
+                            <Form.Item label="Số bàn">
+                                <Input type="text" value={book?.value.tableId} readOnly />
+                            </Form.Item>
                         </div>
                         <div className="mb-3">
-                            <label className="form-label">Số Bàn</label>
-                            <input type="text" className="form-control" value={book?.value.tableId} readOnly />
+                            <Form.Item label="Số Khách">
+                                <Input type="number" value={book?.value.numberOfCustomers} readOnly />
+                            </Form.Item>
                         </div>
                         <div className="mb-3">
-                            <label className="form-label">Số Khách</label>
-                            <input type="number" className="form-control" value={book?.value.numberOfCustomers} readOnly />
-                        </div>
-                        <div className="mb-3">
-                            <label className="form-label">Ghi Chú</label>
-                            <textarea className="form-control" value={book?.value.note} readOnly></textarea>
+                            <Form.Item label="Ghi Chú">
+                                <TextArea value={book?.value.note} readOnly />
+                            </Form.Item>
+
                         </div>
                     </form>
                 </div>
