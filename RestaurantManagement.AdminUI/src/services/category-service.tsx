@@ -90,8 +90,8 @@ export const GetCategoryInfo = async () => {
     return res;
 }
 
-export const GetDetailCategory = async (id: string) => {
-    const res = await baseUrl.get<CategoryDto>(`${Category}/${id}`)
+export const GetDetailCategory = async (categoryId: string) => {
+    const res = await baseUrl.get<CategoryDto>(`${Category}/${categoryId}`)
         .then((response: AxiosResponse) => {
             console.log(response.data);
             return response.data;
