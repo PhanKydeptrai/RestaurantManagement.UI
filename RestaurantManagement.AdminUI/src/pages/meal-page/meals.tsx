@@ -35,11 +35,8 @@ const MealPage = () => {
 
     const handleFilterMealStatus = async (value: string) => {
         const results = await FilterMealStatus(value, pageIndex, pageSize);
-        setMeals(results.value.items);
+        setMeals(results.items);
         setFilterMealStatus(value);
-        setPageIndex(1);
-        setHasNextPage(results.hasNextPage);
-        setHasPreviousPage(results.haspreviousPage);
         setTotalCount(results.totalCount);
     };
     //#endregion

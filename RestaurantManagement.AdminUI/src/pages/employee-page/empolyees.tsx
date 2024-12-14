@@ -216,7 +216,7 @@ const EmployeePage = () => {
                         <Option value="Manager">Manager</Option>
                         <Option value="Receptionist">Receptionist</Option>
                         <Option value="Waiter">Waiter</Option>
-                        <Option value="Cashier">Cashier</Option>
+                        <Option value="Carshier">Carshier</Option>
                     </Select>
                 </div>
                 <div className="col-md-2">

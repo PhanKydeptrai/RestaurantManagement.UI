@@ -62,6 +62,9 @@ const CreateTableTypePage = () => {
         if (!tablePrice) {
             newErrors.tablePrice = 'Vui lòng nhập giá bàn!';
         }
+        if (Number(tablePrice) < 0) {
+            newErrors.tablePrice = 'Vui lòng nhập giá lớn hơn 0!';
+        }
         if (isNaN(Number(tablePrice))) {
             newErrors.tablePrice = 'Vui lòng nhập số!';
         }
