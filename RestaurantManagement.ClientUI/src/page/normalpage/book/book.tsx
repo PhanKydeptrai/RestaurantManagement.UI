@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Input, message, notification, Row } from "antd";
+import { Input, message, Modal, notification, Row } from "antd";
 import { BookingSubcribe, CreateBooking, GetAllBooking, GetBookingById } from "../../../services/book-services";
 import { BookDto } from "../../../models/bookingDto";
 import dayjs from 'dayjs';
@@ -95,44 +95,50 @@ const BookFormOfNormal = () => {
 
     // Handle booking form submission
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log('Submit');
+        Modal.confirm({
+            title: 'Xác nhận đặt bàn',
 
-        const token = sessionStorage.getItem('token');
-        const data = {
-            firstName,
-            lastName,
-            email,
-            phoneNumber,
-            bookingDate,
-            bookingTime: `${bookingTime}:00`,
-            numberOfCustomers: numberOfCustomer,
-            note
-        };
+            onOk: async () => {
+                e.preventDefault();
+                console.log('Submit');
 
-        try {
-            if (!token) {
-                // Create booking if not logged in
-                await CreateBooking(data);
-                notification.success({
-                    message: 'Booking thành công',
-                    description: 'Vui lòng kiểm tra email để xác nhận booking',
-                });
-            } else {
-                // Subscribe to booking if logged in
-                await BookingSubcribe(data);
-                notification.success({
-                    message: 'Booking thành công',
-                    description: 'Vui lòng kiểm tra email để xác nhận booking',
-                });
+                const token = sessionStorage.getItem('token');
+                const data = {
+                    firstName,
+                    lastName,
+                    email,
+                    phoneNumber,
+                    bookingDate,
+                    bookingTime: `${bookingTime}:00`,
+                    numberOfCustomers: numberOfCustomer,
+                    note
+                };
+
+                try {
+                    if (!token) {
+                        // Create booking if not logged in
+                        await CreateBooking(data);
+                        notification.success({
+                            message: 'Booking thành công',
+                            description: 'Vui lòng kiểm tra email để xác nhận booking',
+                        });
+                    } else {
+                        // Subscribe to booking if logged in
+                        await BookingSubcribe(data);
+                        notification.success({
+                            message: 'Booking thành công',
+                            description: 'Vui lòng kiểm tra email để xác nhận booking',
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error during booking submission:', error);
+                    notification.error({
+                        message: 'Lỗi khi đặt bàn',
+                        description: 'Vui lòng thử lại sau',
+                    });
+                }
             }
-        } catch (error) {
-            console.error('Error during booking submission:', error);
-            notification.error({
-                message: 'Lỗi khi đặt bàn',
-                description: 'Vui lòng thử lại sau',
-            });
-        }
+        });
     }
 
     // Handle time change (when the user selects time)

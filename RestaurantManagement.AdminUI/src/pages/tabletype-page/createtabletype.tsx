@@ -2,14 +2,15 @@ import { useRef, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { CreateTableType } from "../../services/tabletype-services";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, Image, notification } from "antd";
-
+import { Button, Form, Image, Input, notification, Select } from "antd";
+import TextArea from "antd/es/input/TextArea";
+const { Option } = Select;
 const CreateTableTypePage = () => {
     const [tableTypeName, setTableTypeName] = useState('');
     const [status, setStatus] = useState('');
     const [tablePrice, setTablePrice] = useState('');
     const [description, setDescription] = useState('');
-    const [tableCapacity, setTableCapacity] = useState(0);
+    const [tableCapacity, setTableCapacity] = useState('');
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const navigate = useNavigate();
     const [errors, setErrors] = useState<{ tableTypeName?: string, status?: string, tablePrice?: string, tableCapacity?: string }>();
@@ -64,6 +65,9 @@ const CreateTableTypePage = () => {
         if (isNaN(Number(tablePrice))) {
             newErrors.tablePrice = 'Vui lòng nhập số!';
         }
+        if (Number(tableCapacity) < 0) {
+            newErrors.tableCapacity = 'Vui lòng nhập số lượng lớn hơn 0!';
+        }
         if (!tableCapacity) {
             newErrors.tableCapacity = 'Vui lòng nhập số lượng!';
         } else if (isNaN(Number(tableCapacity))) {
@@ -84,7 +88,7 @@ const CreateTableTypePage = () => {
         formData.append('tableTypeName', tableTypeName);
         formData.append('tablePrice', tablePrice);
         formData.append('description', description);
-        formData.append('tableCapacity', tableCapacity.toString());
+        formData.append('tableCapacity', tableCapacity);
         if (fileInputRef.current && fileInputRef.current.files) {
             formData.append('image', fileInputRef.current.files[0]);
         }
@@ -129,58 +133,65 @@ const CreateTableTypePage = () => {
                     </div>
                 </div>
 
-                <form onSubmit={handleSubmit}>
+                <Form onSubmitCapture={handleSubmit}>
                     <div className="row">
                         {/* Input fields (left side) */}
                         <div className="col-md-6 col-12">
                             <div className="form-group mb-3">
-                                <label htmlFor="tableTypeName">Tên loại bàn</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="tableTypeName"
-                                    placeholder="Tên loại bàn"
-                                    value={tableTypeName}
-                                    onChange={(e) => setTableTypeName(e.target.value)}
-                                />
+                                <Form.Item label="Tên loại bàn" validateStatus={errors?.tableTypeName ? 'error' : ''} help={errors?.tableTypeName}>
+
+                                    <Input
+                                        type="text"
+                                        placeholder="Tên loại bàn"
+                                        value={tableTypeName}
+                                        onChange={(e) => setTableTypeName(e.target.value)}
+                                    />
+                                </Form.Item>
                                 {errors?.tableTypeName && <div className="text-danger">{errors.tableTypeName}</div>}
                             </div>
 
                             <div className="form-group mb-3">
-                                <label htmlFor="tablePrice">Giá bàn</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="tablePrice"
-                                    placeholder="Giá bàn"
-                                    value={tablePrice}
-                                    onChange={(e) => setTablePrice(e.target.value)}
-                                />
+                                <Form.Item label="Giá bàn" validateStatus={errors?.tablePrice ? 'error' : ''} help={errors?.tablePrice}>
+                                    <Input
+                                        //type="text"
+                                        type="number"
+                                        placeholder="Giá bàn"
+                                        value={tablePrice}
+                                        onChange={(e) => setTablePrice(e.target.value)}
+                                    />
+
+                                </Form.Item>
                                 {errors?.tablePrice && <div className="text-danger">{errors.tablePrice}</div>}
                             </div>
 
                             <div className="form-group mb-3">
-                                <label htmlFor="tableCapacity">Số lượng</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="tableCapacity"
-                                    placeholder="Số lượng"
-                                    value={tableCapacity}
-                                    onChange={(e) => setTableCapacity(parseInt(e.target.value))}
-                                />
+                                <Form.Item label="Số lượng người/bàn" validateStatus={errors?.tableCapacity ? 'error' : ''} help={errors?.tableCapacity}>
+                                    <Input
+                                        type="number"
+                                        placeholder="Số lượng người/bàn"
+                                        value={tableCapacity}
+                                        onChange={(e) => setTableCapacity(e.target.value)}
+                                    />
+                                </Form.Item>
                                 {errors?.tableCapacity && <div className="text-danger">{errors.tableCapacity}</div>}
                             </div>
 
                             <div className="form-group mb-3">
-                                <label htmlFor="description">Mô tả</label>
+                                <Form.Item label="Mô tả">
+                                    <TextArea
+                                        placeholder="Mô tả"
+                                        value={description}
+                                        onChange={(e) => setDescription(e.target.value)}
+                                    />
+                                </Form.Item>
+                                {/* <label htmlFor="description">Mô tả</label>
                                 <textarea
                                     className="form-control"
                                     id="description"
                                     placeholder="Mô tả"
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
-                                />
+                                /> */}
                             </div>
                         </div>
 
@@ -201,7 +212,7 @@ const CreateTableTypePage = () => {
                     <div className="text-center">
                         <button type="submit" className="btn btn-primary mt-3">Submit</button>
                     </div>
-                </form>
+                </Form>
             </main>
 
             {/* Toast Notifications */}
