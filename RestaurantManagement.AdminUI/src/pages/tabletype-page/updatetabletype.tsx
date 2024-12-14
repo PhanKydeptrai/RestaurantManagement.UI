@@ -97,8 +97,8 @@ const UpdateTableTypePage = () => {
                 const response = await UpdateTableType(tableTypeId, formData); // Gọi API cập nhật dữ liệu
                 console.log("API Response:", response);
                 notification.success({
-                    message: 'Update table type successfully',
-                    description: 'The table type has been updated'
+                    message: 'Cập nhật loại bàn thành công',
+                    description: 'Dữ liệu loại bàn đã được cập nhật'
                 }); // Hiển thị thông báo cập nhật thành công
                 setTimeout(() => {
                     navigate('/tabletypes'); // Chuyển hướng về danh sách table types sau khi cập nhật thành công

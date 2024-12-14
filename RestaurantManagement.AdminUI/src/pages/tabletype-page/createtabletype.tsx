@@ -82,14 +82,13 @@ const CreateTableTypePage = () => {
         }
         const formData = new FormData();
         formData.append('tableTypeName', tableTypeName);
-        formData.append('status', status);
         formData.append('tablePrice', tablePrice);
         formData.append('description', description);
         formData.append('tableCapacity', tableCapacity.toString());
         if (fileInputRef.current && fileInputRef.current.files) {
             formData.append('image', fileInputRef.current.files[0]);
         }
-        console.log(tableCapacity); // Kiểm tra xem giá trị tableCapacity có chính xác không
+        console.log(formData); // Kiểm tra xem giá trị tableCapacity có chính xác không
 
 
         const response = await CreateTableType(formData);
