@@ -12,7 +12,8 @@ const OrderPage = () => {
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPreviousPage, setHasPreviousPage] = useState(false);
     const [totalCount, setTotalCount] = useState(0);
-
+    const [sortColumn, setSortColumn] = useState("");
+    const [sortOrder, setSortOrder] = useState("");
 
     const [filterUserId, setFilterUserId] = useState("");
     const [filterTableId, setFilterTableId] = useState("");
@@ -66,6 +67,16 @@ const OrderPage = () => {
     };
     //#region Table Columns
     const columns: TableColumnsType<OrderDto> = [
+        {
+            title: "No.",
+            key: "rowNumber",
+            render: (text: string, record: OrderDto, index: number) => {
+                const rowNumber = sortOrder === "asc"
+                    ? (pageIndex - 1) * pageSize + (index + 1)
+                    : totalCount - (pageIndex - 1) * pageSize - index;
+                return rowNumber;
+            },
+        },
         {
             title: "Order ID",
             dataIndex: "orderId",

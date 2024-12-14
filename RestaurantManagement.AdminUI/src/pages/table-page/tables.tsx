@@ -13,7 +13,8 @@ const TablePage = () => {
     const [hasPreviousPage, setHasPreviousPage] = useState(false);
     const [totalCount, setTotalCount] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
-
+    const [sortColumn, setSortColumn] = useState('');
+    const [sortOrder, setSortOrder] = useState('');
     useEffect(() => {
         const fetchData = async () => {
             const result = await GetAllTables(pageSize, pageIndex, searchTerm);
@@ -104,6 +105,16 @@ const TablePage = () => {
     };
 
     const columns: TableColumnsType<TableDto> = [
+        {
+            title: 'No.',
+            key: 'rowNumber',
+            render: (text: string, record: TableDto, index: number) => {
+                const rowNumber = sortOrder === 'asc'
+                    ? (pageIndex - 1) * pageSize + (index + 1)
+                    : totalCount - (pageIndex - 1) * pageSize - index;
+                return rowNumber;
+            },
+        },
         {
             title: 'Table Id',
             dataIndex: 'tableId',

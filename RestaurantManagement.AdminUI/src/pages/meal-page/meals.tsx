@@ -13,7 +13,8 @@ const MealPage = () => {
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPreviousPage, setHasPreviousPage] = useState(false);
     const [totalCount, setTotalCount] = useState(0);
-
+    const [sortColumn, setSortColumn] = useState('');
+    const [sortOrder, setSortOrder] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
     const [filterCategory, setFilterCategory] = useState('');
     const [filterSellStatus, setFilterSellStatus] = useState('');
@@ -22,7 +23,7 @@ const MealPage = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const result = await GetAllMeal(filterCategory, filterSellStatus, filterMealStatus, searchTerm, '', '', pageIndex, pageSize);
+            const result = await GetAllMeal(filterCategory, filterSellStatus, filterMealStatus, searchTerm, sortColumn, sortOrder, pageIndex, pageSize);
             setMeals(result.items);
             setHasNextPage(result.hasNextPage);
             setHasPreviousPage(result.haspreviousPage);
@@ -149,6 +150,16 @@ const MealPage = () => {
     //#endregion
 
     const columns: TableColumnsType<MealDto> = [
+        {
+            title: 'No.',
+            key: 'rowNumber',
+            render: (text: string, record: MealDto, index: number) => {
+                const rowNumber = sortOrder === 'ASC'
+                    ? (pageIndex - 1) * pageSize + (index + 1)
+                    : (totalCount - (pageIndex - 1) * pageSize - index); // Đảo ngược số thứ tự khi sắp xếp DESC
+                return rowNumber;
+            }
+        },
         { title: 'Meal Name', dataIndex: 'mealName', key: 'mealName' },
         { title: 'Category', dataIndex: 'categoryName', key: 'categoryName' },
         { title: 'Price', dataIndex: 'price', key: 'price' },

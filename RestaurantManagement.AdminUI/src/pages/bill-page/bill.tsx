@@ -41,6 +41,16 @@ const BillPage = () => {
     };
 
     const columns: TableColumnsType<BillDto> = [
+        {
+            title: 'No.',
+            key: 'rowNumber',
+            render: (text: string, record: BillDto, index: number) => {
+                const rowNumber = sortOrder === 'asc'
+                    ? (pageIndex - 1) * pageSize + (index + 1)
+                    : (totalCount - (pageIndex - 1) * pageSize - index); // Đảo ngược số thứ tự khi sắp xếp DESC
+                return rowNumber;
+            }
+        },
         { title: 'Bill ID', dataIndex: 'billId', key: 'billId' },
         { title: 'Table ID', dataIndex: 'tableId', key: 'tableId' },
         { title: 'Total Price', dataIndex: 'totalPrice', key: 'totalPrice' },

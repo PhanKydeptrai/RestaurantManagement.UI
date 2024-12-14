@@ -71,6 +71,16 @@ const BookingPage = () => {
     // Columns configuration for the table using ColumnsType
     const columns: ColumnsType<BookDto> = [
         {
+            title: 'No.',
+            key: 'rowNumber',
+            render: (text: string, record: BookDto, index: number) => {
+                const rowNumber = sortOrder === 'asc'
+                    ? (pageIndex - 1) * pageSize + (index + 1)
+                    : (totalCount - (pageIndex - 1) * pageSize - index); // Đảo ngược số thứ tự khi sắp xếp DESC
+                return rowNumber;
+            }
+        },
+        {
             title: 'Email',
             dataIndex: 'email',
             key: 'email',

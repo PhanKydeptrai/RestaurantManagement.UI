@@ -12,6 +12,8 @@ const EmployeePage = () => {
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPreviousPage, setHasPreviousPage] = useState(false);
     const [totalCount, setTotalCount] = useState(0);
+    const [sortColumn, setSortColumn] = useState(''); // Mặc định không có cột sắp xếp
+    const [sortOrder, setSortOrder] = useState('');
 
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState<string>('');
@@ -21,7 +23,7 @@ const EmployeePage = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const results = await GetAllEmployee(filterGender, filterRole, filterStatus, searchTerm, '', '', pageSize, pageIndex);
+            const results = await GetAllEmployee(filterGender, filterRole, filterStatus, searchTerm, sortColumn, sortOrder, pageSize, pageIndex);
             setEmployees(results.items);
             setHasNextPage(results.hasNextPage);
             setHasPreviousPage(results.haspreviousPage);
@@ -153,6 +155,16 @@ const EmployeePage = () => {
         });
     };
     const columns: TableColumnsType<EmployeeDto> = [
+        {
+            title: 'No.',
+            key: 'rowNumber',
+            render: (text: string, record: EmployeeDto, index: number) => {
+                const rowNumber = sortOrder === 'asc'
+                    ? (pageIndex - 1) * pageSize + (index + 1)
+                    : (totalCount - (pageIndex - 1) * pageSize - index); // Đảo ngược số thứ tự khi sắp xếp DESC
+                return rowNumber;
+            }
+        },
         { title: 'Last Name', dataIndex: 'lastName', key: 'lastName' },
         { title: 'Fisrt Name', dataIndex: 'firstName', key: 'firstName' },
         { title: 'Email', dataIndex: 'email', key: 'email' },

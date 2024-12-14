@@ -14,6 +14,8 @@ const VoucherPage = () => {
     const [totalCount, setTotalCount] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(false);
+    const [sortColumn, setSortColumn] = useState('');
+    const [sortOrder, setSortOrder] = useState('');
     useEffect(() => {
         const fetchData = async () => {
             const result = await GetAllVouchers(pageSize, pageIndex, searchTerm);
@@ -80,6 +82,16 @@ const VoucherPage = () => {
     };
 
     const columns: TableColumnsType<VoucherDto> = [
+        {
+            title: 'No.',
+            key: 'rowNumber',
+            render: (text: string, record: VoucherDto, index: number) => {
+                const rowNumber = sortOrder === 'asc'
+                    ? (pageIndex - 1) * pageSize + (index + 1)
+                    : (totalCount - (pageIndex - 1) * pageSize - index);
+                return rowNumber;
+            },
+        },
         {
             title: 'Voucher Name',
             dataIndex: 'voucherName',
