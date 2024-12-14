@@ -74,7 +74,9 @@ const BookingPage = () => {
             title: 'No.',
             key: 'rowNumber',
             render: (text: string, record: BookDto, index: number) => {
-                const rowNumber = (pageIndex - 1) * pageSize + (index + 1);
+                const rowNumber = sortOrder === 'asc'
+                    ? (pageIndex - 1) * pageSize + (index + 1)
+                    : (totalCount - (pageIndex - 1) * pageSize - index); // Đảo ngược số thứ tự khi sắp xếp DESC
                 return rowNumber;
             }
         },
