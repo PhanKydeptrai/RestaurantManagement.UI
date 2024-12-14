@@ -71,6 +71,14 @@ const BookingPage = () => {
     // Columns configuration for the table using ColumnsType
     const columns: ColumnsType<BookDto> = [
         {
+            title: 'No.',
+            key: 'rowNumber',
+            render: (text: string, record: BookDto, index: number) => {
+                const rowNumber = (pageIndex - 1) * pageSize + (index + 1);
+                return rowNumber;
+            }
+        },
+        {
             title: 'Email',
             dataIndex: 'email',
             key: 'email',
