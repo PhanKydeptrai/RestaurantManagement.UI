@@ -54,6 +54,9 @@ import VerifyAccountPage from "./pages/transacsion-page/verifyaccount";
 import VerifyAccountCompletePage from "./pages/transacsion-page/verifyaccountcomplete";
 import ChangePasswordResultPage from "./pages/transacsion-page/changepasswordresult";
 import TransactionResultEmailPage from "./pages/transacsion-page/transactionresultemail";
+import NoTimePage from "./pages/transacsion-page/notime";
+import NoTimeRequestPage from "./pages/transacsion-page/notimerequest";
+import DeleteAccountResultPage from "./pages/transacsion-page/deleteaccountresult";
 
 function Controller() {
     return (
@@ -67,6 +70,9 @@ function Controller() {
                 <Route path="/verifyaccountcomplete" element={<VerifyAccountCompletePage />} />
                 <Route path="/changepasswordresult" element={<ChangePasswordResultPage />} />
                 <Route path="/transactionresult" element={<TransactionResultEmailPage />} />
+                <Route path="/notime" element={<NoTimePage />} />
+                <Route path="/notimeemail" element={<NoTimeRequestPage />} />
+                <Route path="/deleteaccount" element={<DeleteAccountResultPage />} />
                 <Route path="/dashboard" element={
                     <ProtectedRoute requiredRoles={['Boss', 'Manager']}>
                         <Home />

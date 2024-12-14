@@ -16,6 +16,9 @@ import VerifyAccountPage from './pages/transacsion-page/verifyaccount';
 import VerifyAccountCompletePage from './pages/transacsion-page/verifyaccountcomplete';
 import ChangePasswordResultPage from './pages/transacsion-page/changepasswordresult';
 import TransactionResultEmailPage from './pages/transacsion-page/transactionresultemail';
+import NoTimePage from './pages/transacsion-page/notime';
+import NoTimeRequestPage from './pages/transacsion-page/notimerequest';
+import DeleteAccountResultPage from './pages/transacsion-page/deleteaccountresult';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import react router
 
@@ -24,7 +27,7 @@ library.add(fas);
 function App() {
   const location = useLocation();
   const isLoginPage = location.pathname === '/';
-  const isTransactionPage = ['/donetransaction', '/errortransaction', '/forgotpassword', '/verifyaccount', '/verifyaccountcomplete', '/changepasswordresult', '/transactionresult'].includes(location.pathname);
+  const isTransactionPage = ['/deleteaccount', '/notimeemail', '/notime', '/donetransaction', '/errortransaction', '/forgotpassword', '/verifyaccount', '/verifyaccountcomplete', '/changepasswordresult', '/transactionresult'].includes(location.pathname);
   return (
     <>
       {!isLoginPage && !isTransactionPage && <Header />}
@@ -43,6 +46,9 @@ function App() {
           <Route path="/verifyaccountcomplete" element={<VerifyAccountCompletePage />} />
           <Route path="/changepasswordresult" element={<ChangePasswordResultPage />} />
           <Route path="/transactionresult" element={<TransactionResultEmailPage />} />
+          <Route path="/notime" element={<NoTimePage />} />
+          <Route path="/notimeemail" element={<NoTimeRequestPage />} />
+          <Route path="/deleteaccount" element={<DeleteAccountResultPage />} />
         </Routes>
       </div>
 
