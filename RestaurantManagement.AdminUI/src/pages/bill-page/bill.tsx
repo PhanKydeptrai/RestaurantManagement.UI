@@ -41,6 +41,14 @@ const BillPage = () => {
     };
 
     const columns: TableColumnsType<BillDto> = [
+        {
+            title: 'No.',
+            key: 'rowNumber',
+            render: (text: string, record: BillDto, index: number) => {
+                const rowNumber = (pageIndex - 1) * pageSize + (index + 1);
+                return rowNumber;
+            }
+        },
         { title: 'Bill ID', dataIndex: 'billId', key: 'billId' },
         { title: 'Table ID', dataIndex: 'tableId', key: 'tableId' },
         { title: 'Total Price', dataIndex: 'totalPrice', key: 'totalPrice' },
