@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { CreateEmployee } from "../../services/employee-service";
-import { Form, Input, Select, Button, Row, Col, Image, Breadcrumb } from "antd";
+import { Form, Input, Select, Button, Row, Col, Image, Breadcrumb, notification } from "antd";
 
 const { Option } = Select;
 
@@ -92,13 +92,19 @@ const CreateEmployeePage = () => {
         }
 
         const response = await CreateEmployee(formData);
-        if (response.isSuccess) {
-            notifySuccess();
+        if (response && response.isSuccess) {
+            notification.success({
+                message: 'Thành công',
+                description: 'Tạo nhân viên thành công! Đang chuyển hướng về trang danh sách nhân viên...',
+            });
             setTimeout(() => {
                 navigate('/employees');
             }, 2000);
         } else {
-            notifyError();
+            notification.error({
+                message: 'Lỗi',
+                description: 'Vui lòng kiểm tra lại thông tin!',
+            });
         }
     };
 
