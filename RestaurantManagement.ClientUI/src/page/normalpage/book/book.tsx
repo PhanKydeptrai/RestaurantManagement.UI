@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Input, message, Modal, notification, Row } from "antd";
+import { Form, Input, message, Modal, notification, Row, Select } from "antd";
 import { BookingSubcribe, CreateBooking, GetAllBooking, GetBookingById } from "../../../services/book-services";
 import { BookDto } from "../../../models/bookingDto";
 import dayjs from 'dayjs';
@@ -7,7 +7,7 @@ import { Descriptions } from 'antd';
 import { Link } from "react-router-dom";
 import { InfoOutlined } from '@ant-design/icons';
 
-
+const { Option } = Select;
 const BookFormOfNormal = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -36,6 +36,9 @@ const BookFormOfNormal = () => {
     const [pageIndex, setPageIndex] = useState(1);
     const [pageSize, setPageSize] = useState(8);
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
     // Fetch booking list for pagination
     useEffect(() => {
         const fecthData = async () => {
@@ -55,7 +58,49 @@ const BookFormOfNormal = () => {
         }
     }, []);
 
+    // const showModal = () => {
+    //     setIsModalOpen(true);
+    // };
 
+    // const handleOk = () => {
+    //     setIsModalOpen(false);
+    // };
+
+    // const handleCancel = () => {
+    //     setIsModalOpen(false);
+    // };
+    const validationForm = () => {
+        const newErrors: { [key: string]: string } = {};
+        if (!firstName) {
+            newErrors.firstName = 'Vui lòng nhập tên';
+        }
+        if (!lastName) {
+            newErrors.lastName = 'Vui lòng nhập họ';
+        }
+        if (!phoneNumber) {
+            newErrors.phoneNumber = 'Số điện thoại không được bỏ trống';
+        }
+        if (Number(phoneNumber) < 0) {
+            newErrors.phoneNumber = 'Số điện thoại không không phải là số âm';
+        }
+        if (phoneNumber.length < 10 || phoneNumber.length > 11) {
+            newErrors.phoneNumber = 'Số điện thoại không hợp lệ';
+        }
+        if (!email) {
+            newErrors.email = 'Email không được bỏ trống';
+        }
+        if (!bookingDate) {
+            newErrors.bookingDate = 'Vui lòng chọn ngày đặt bàn';
+        }
+        if (!bookingTime) {
+            newErrors.bookingTime = 'Vui lòng chọn giờ đặt bàn';
+        }
+        if (!numberOfCustomer) {
+            newErrors.numberOfCustomer = 'Vui lòng chọn số lượng khách';
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
     const handleSearchId = async (id: string) => {
         if (id.trim() === '') {
             setBookingDetails(null);
@@ -93,15 +138,28 @@ const BookFormOfNormal = () => {
         }
     };
 
+
     // Handle booking form submission
     const handleSubmit = async (e: React.FormEvent) => {
+
         Modal.confirm({
             title: 'Xác nhận đặt bàn',
+            okText: 'Đồng ý',
+            okType: 'primary',
+            cancelText: 'Huỷ',
+            content: (
+                <>
+                    <p> Bạn có chắc chắn muốn đặt bàn không? Bạn đã đọc và đồng ý với điều khoản của nhà hàng không?</p>
 
+                </>
+            ),
             onOk: async () => {
                 e.preventDefault();
-                console.log('Submit');
+                if (!validationForm()) {
+                    return;
+                }
 
+                // Lấy thông tin từ form
                 const token = sessionStorage.getItem('token');
                 const data = {
                     firstName,
@@ -116,19 +174,35 @@ const BookFormOfNormal = () => {
 
                 try {
                     if (!token) {
-                        // Create booking if not logged in
-                        await CreateBooking(data);
-                        notification.success({
-                            message: 'Booking thành công',
-                            description: 'Vui lòng kiểm tra email để xác nhận booking',
-                        });
+                        // Nếu chưa đăng nhập, gọi API tạo booking
+                        const results = await CreateBooking(data);
+                        if (results && results.isSucceess) {
+                            notification.success({
+                                message: 'Booking thành công',
+                                description: 'Vui lòng kiểm tra email để xác nhận booking',
+                            });
+                        } else {
+                            notification.error({
+                                message: 'Booking thất bại',
+                                description: 'Vui lòng thử lại sau',
+                            });
+                        }
+
                     } else {
-                        // Subscribe to booking if logged in
-                        await BookingSubcribe(data);
-                        notification.success({
-                            message: 'Booking thành công',
-                            description: 'Vui lòng kiểm tra email để xác nhận booking',
-                        });
+                        // Nếu đã đăng nhập, gọi API đăng ký booking
+                        const results = await BookingSubcribe(data);
+
+                        if (results && results.isSucceess) {
+                            notification.success({
+                                message: 'Đăng ký booking thành công',
+                                description: 'Vui lòng kiểm tra email để xác nhận booking',
+                            });
+                        } else {
+                            notification.error({
+                                message: 'Đăng ký booking thất bại',
+                                description: 'Vui lòng thử lại sau',
+                            });
+                        }
                     }
                 } catch (error) {
                     console.error('Error during booking submission:', error);
@@ -137,9 +211,14 @@ const BookFormOfNormal = () => {
                         description: 'Vui lòng thử lại sau',
                     });
                 }
+            },
+            onCancel() {
+                console.log('Cancel booking');
             }
         });
-    }
+    };
+
+
 
     // Handle time change (when the user selects time)
     const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,9 +231,9 @@ const BookFormOfNormal = () => {
         <div className="container">
             <div className="row justify-content-center">
                 <div className="col-md-4">
-                    <label htmlFor="">Search Booking by ID</label>
+                    <label htmlFor="">Tìm kiếm theo ID bàn</label>
                     <Input
-                        placeholder="Enter booking ID"
+                        placeholder="Nhập mã đặt bàn"
                         onKeyDown={handleKeyPress}// Trigger on each input change
                     />
                 </div>
@@ -167,200 +246,258 @@ const BookFormOfNormal = () => {
                 bookingDetails && (
                     <div className="booking-details mt-4 justify-content-center center col-12 col-offset-6
 ">
-                        <h3>Booking Details</h3>
+                        <h3>Thông tin đặt bàn của bạn</h3>
                         <Descriptions bordered column={1}>
-                            <Descriptions.Item label="Booking ID">
+                            <Descriptions.Item label="Mã đặt bàn">
                                 {bookingDetails.bookId}
                             </Descriptions.Item>
-                            <Descriptions.Item label="First Name">
+                            <Descriptions.Item label="Tên">
                                 {bookingDetails.firstName}
                             </Descriptions.Item>
-                            <Descriptions.Item label="Last Name">
+                            <Descriptions.Item label="Họ">
                                 {bookingDetails.lastName}
                             </Descriptions.Item>
                             <Descriptions.Item label="Email">
                                 {bookingDetails.email}
                             </Descriptions.Item>
-                            <Descriptions.Item label="Phone Number">
+                            <Descriptions.Item label="Số điện thoại">
                                 {bookingDetails.phone}
                             </Descriptions.Item>
-                            <Descriptions.Item label="Booking Date">
+                            <Descriptions.Item label="Ngày đặt bàn">
                                 {dayjs(bookingDetails.bookingDate).format('YYYY-MM-DD')}
                             </Descriptions.Item>
-                            <Descriptions.Item label="Booking Time">
+                            <Descriptions.Item label="Giờ đặt bàn">
                                 {bookingDetails.bookingTime}
                             </Descriptions.Item>
-                            <Descriptions.Item label="Number of People">
+                            <Descriptions.Item label="Số lượng người">
                                 {bookingDetails.numberOfCustomers}
                             </Descriptions.Item>
-                            <Descriptions.Item label="Note">
+                            <Descriptions.Item label="Ghi chú">
                                 {bookingDetails.note}
                             </Descriptions.Item>
                         </Descriptions>
                     </div>
                 )
             )}
+            <div className="container mt-5">
+                <div className="row">
+                    <h3 className="text-center w-100">Điều khoản dịch vụ</h3>
+                </div>
+                <div className="row">
+                    <div className="col-md-3 mb-4">
+                        <div className="card h-100">
+                            <div className="card-body">
+                                <h5 className="card-title text-center">Phí đặt bàn</h5>
+                                <p className="card-text">
+                                    Đặt bàn sẽ tính phí, thành toán 50% phí đặt bàn khi đặt bàn trên website.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-3 mb-4">
+                        <div className="card h-100">
+                            <div className="card-body">
+                                <h5 className="card-title text-center">Đổi bàn</h5>
+                                <p className="card-text">
+                                    Nhà hàng chỉ hỗ trợ khách đổi bàn sang loại bàn có nhiều người hơn.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-3 mb-4">
+                        <div className="card h-100">
+                            <div className="card-body">
+                                <h5 className="card-title text-center">Ưu đãi</h5>
+                                <p className="card-text">
+                                    Đặt nhiều hơn 5 bàn giảm 20% phí.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-3 mb-4">
+                        <div className="card h-100">
+                            <div className="card-body">
+                                <h5 className="card-title text-center">Thời gian chờ</h5>
+                                <p className="card-text">
+                                    Bàn quý khách đặt sẽ có thời gian chờ là 2 tiếng, tính từ thời gian hẹn.
+                                    Quý khách vui lòng liên hệ hotline (+84) 984009581 khi có bất kỳ thay đổi gì về thời gian hẹn.
+                                </p>
+                                <i>
+                                    <p><strong>Lưu ý:</strong> Bàn sẽ tự động huỷ sau 2 tiếng nếu quý khách không đến, tính từ thời gian hẹn.</p>
+                                </i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <Row className="my-3 justify-content-center text-center">
                 <div className="position-relative d-inline-block">
                     <h2 className="my-4">
-                        Book For Table
+                        Đặt bàn
                     </h2>
-                    <Link to='/rule' className="position-absolute" style={{ left: '100%', transform: 'translateX(-10px) translateY(-50%)' }}>
-                        <InfoOutlined title="Điều khoản nhà hàng" />
-                    </Link>
                 </div>
             </Row>
 
+            {
+                !isLoggedIn ? (
+                    <form onSubmit={handleSubmit}>
+                        <div className="row mb-3">
+                            <div className="col-md-6">
+                                <Form.Item label='Tên' name='firstName' rules={[{ required: true, message: 'Please input your first name!' }]}>
+                                    <Input
+                                        type="text"
+                                        value={firstName}
+                                        onChange={(e) => setFirstName(e.target.value)}
+                                    />
+                                </Form.Item>
+                                {errors.firstName && <p className="text-danger">{errors.firstName}</p>}
+                            </div>
+                            <div className="col-md-6">
+                                <Form.Item label='Họ' name='lastName' rules={[{ required: true, message: 'Please input your last name!' }]} >
+                                    <Input
+                                        type="text"
+                                        value={lastName}
+                                        onChange={(e) => setLastName(e.target.value)}
+                                    />
+                                </Form.Item>
+                                {errors.lastName && <p className="text-danger">{errors.lastName}</p>}
+                            </div>
+                        </div>
 
+                        <div className="row mb-3">
+                            <div className="col-md-6">
+                                <Form.Item label='Email' name='email' rules={[{ required: true, message: 'Please input your email!' }]} >
+                                    <Input
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                    />
+                                </Form.Item>
+                                {errors.email && <p className="text-danger">{errors.email}</p>}
+                            </div>
+                            <div className="col-md-6">
+                                <Form.Item label='Số điện thoại' name='phoneNumber' rules={[{ required: true, message: 'Please input your phone number!' }]} >
+                                    <Input
+                                        type="number"
+                                        value={phoneNumber}
+                                        onChange={(e) => setPhoneNumber(e.target.value)}
+                                    />
+                                </Form.Item>
+                                {errors.phoneNumber && <p className="text-danger">{errors.phoneNumber}</p>}
+                            </div>
+                        </div>
 
+                        <div className="row mb-3">
+                            <div className="col-md-6">
+                                <Form.Item label='Ngày' name='bookingDate' rules={[{ required: true, message: 'Please input your booking date!' }]} >
+                                    <Input
+                                        type="date"
+                                        value={bookingDate}
+                                        onChange={(e) => setBookingDate(e.target.value)}
+                                    />
+                                </Form.Item>
 
+                                {errors.bookingDate && <p className="text-danger">{errors.bookingDate}</p>}
+                            </div>
+                            <div className="col-md-6">
+                                <Form.Item label='Giờ' name='bookingTime' rules={[{ required: true, message: 'Please input your booking time!' }]} >
+                                    <Input
+                                        type="time"
+                                        value={bookingTime}
+                                        onChange={handleTimeChange}
+                                    />
+                                </Form.Item>
+                                {errors.bookingTime && <p className="text-danger">{errors.bookingTime}</p>}
+                            </div>
+                        </div>
 
-            {/* Show different form based on login status */}
-            {!isLoggedIn ? (
-                <form onSubmit={handleSubmit}>
-                    <div className="row mb-3">
-                        <div className="col-md-6">
-                            <label>First Name</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                value={firstName}
-                                onChange={(e) => setFirstName(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <div className="col-md-6">
-                            <label>Last Name</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                value={lastName}
-                                onChange={(e) => setLastName(e.target.value)}
-                                required
-                            />
-                        </div>
-                    </div>
+                        <div className="row mb-3">
+                            <div className="col-md-6">
+                                <Form.Item label='Số người' name='numberOfCustomer' rules={[{ required: true, message: 'Please input number of people!' }]} >
+                                    <Input
+                                        type="number"
+                                        value={numberOfCustomer}
+                                        onChange={(e) => setNumberOfCustomer(parseInt(e.target.value))}
+                                    />
+                                </Form.Item>
+                                {errors.numberOfCustomer && <p className="text-danger">{errors.numberOfCustomer}</p>}
+                            </div>
+                            <div className="col-md-6">
+                                <Form.Item label='Ghi chú' name='note' >
+                                    <Input.TextArea
+                                        value={note}
+                                        onChange={(e) => setNote(e.target.value)}
+                                    />
+                                </Form.Item>
 
-                    <div className="row mb-3">
-                        <div className="col-md-6">
-                            <label>Email</label>
-                            <input
-                                type="email"
-                                className="form-control"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
+                            </div>
                         </div>
-                        <div className="col-md-6">
-                            <label>Phone Number</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                value={phoneNumber}
-                                onChange={(e) => setPhoneNumber(e.target.value)}
-                                required
-                            />
-                        </div>
-                    </div>
 
-                    <div className="row mb-3">
-                        <div className="col-md-6">
-                            <label>Day</label>
-                            <input
-                                type="date"
-                                className="form-control"
-                                value={bookingDate}
-                                onChange={(e) => setBookingDate(e.target.value)}
-                            />
+                        <div className="text-center my-4">
+                            <button type="submit" className="btn btn-success">
+                                Đặt bàn ngay
+                            </button>
                         </div>
-                        <div className="col-md-6">
-                            <label>Time</label>
-                            <input
-                                type="time"
-                                className="form-control"
-                                value={bookingTime}
-                                onChange={handleTimeChange}
-                            />
+                    </form>
+                ) : (
+                    <form onSubmit={handleSubmit}>
+                        <div className="row mb-3">
+                            <div className="col-md-6">
+                                <Form.Item label='Ngày' name='bookingDate' rules={[{ required: true, message: 'Please input your booking date!' }]} >
+                                    <Input
+                                        type="date"
+                                        value={bookingDate}
+                                        onChange={(e) => setBookingDate(e.target.value)}
+                                    />
+                                    {errors.bookingDate && <p className="text-danger">{errors.bookingDate}</p>}
+                                </Form.Item>
+                            </div>
+                            <div className="col-md-6">
+                                <Form.Item label='Giờ' name='bookingTime' rules={[{ required: true, message: 'Please input your booking time!' }]} >
+                                    <Input
+                                        type="time"
+                                        value={bookingTime}
+                                        onChange={handleTimeChange}
+                                    />
+                                    {errors.bookingTime && <p className="text-danger">{errors.bookingTime}</p>}
+                                </Form.Item>
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="row mb-3">
-                        <div className="col-md-6">
-                            <label>Number of People</label>
-                            <input
-                                type="number"
-                                className="form-control"
-                                value={numberOfCustomer}
-                                onChange={(e) => setNumberOfCustomer(parseInt(e.target.value))}
-                            />
-                        </div>
-                        <div className="col-md-6">
-                            <label>Note</label>
-                            <textarea
-                                className="form-control"
-                                value={note}
-                                onChange={(e) => setNote(e.target.value)}
-                            />
-                        </div>
-                    </div>
+                        <div className="row mb-3">
+                            <div className="col-md-6">
+                                <Form.Item label='Số lượng người' name='numberOfCustomer' rules={[{ required: true, message: 'Please input number of people!' }]} >
+                                    <Input
+                                        type="number"
+                                        value={numberOfCustomer}
+                                        onChange={(e) => setNumberOfCustomer(parseInt(e.target.value))}
+                                    />
+                                    {errors.numberOfCustomer && <p className="text-danger">{errors.numberOfCustomer}</p>}
+                                </Form.Item>
 
-                    <div className="text-center my-4">
-                        <button type="submit" className="btn btn-success">
-                            Book Now
-                        </button>
-                    </div>
-                </form>
-            ) : (
-                <form onSubmit={handleSubmit}>
-                    <div className="row mb-3">
-                        <div className="col-md-6">
-                            <label>Day</label>
-                            <input
-                                type="date"
-                                className="form-control"
-                                value={bookingDate}
-                                onChange={(e) => setBookingDate(e.target.value)}
-                            />
-                        </div>
-                        <div className="col-md-6">
-                            <label>Time</label>
-                            <input
-                                type="time"
-                                className="form-control"
-                                value={bookingTime}
-                                onChange={handleTimeChange}
-                            />
-                        </div>
-                    </div>
+                            </div>
+                            <div className="col-md-6">
+                                <Form.Item label='Ghi chú' name='note' >
+                                    <Input.TextArea
+                                        value={note}
+                                        onChange={(e) => setNote(e.target.value)}
+                                    />
 
-                    <div className="row mb-3">
-                        <div className="col-md-6">
-                            <label>Number of People</label>
-                            <input
-                                type="number"
-                                className="form-control"
-                                value={numberOfCustomer}
-                                onChange={(e) => setNumberOfCustomer(parseInt(e.target.value))}
-                            />
-                        </div>
-                        <div className="col-md-6">
-                            <label>Note</label>
-                            <textarea
-                                className="form-control"
-                                value={note}
-                                onChange={(e) => setNote(e.target.value)}
-                            />
-                        </div>
-                    </div>
+                                </Form.Item>
 
-                    <div className="text-center my-4">
-                        <button type="submit" className="btn btn-success">
-                            Book Now
-                        </button>
-                    </div>
-                </form>
-            )}
-        </div>
+                            </div>
+                        </div>
+
+                        <div className="text-center my-4">
+                            <button type="submit" className="btn btn-success">
+                                Đặt bàn ngay
+                            </button>
+                        </div>
+                    </form>
+                )
+            }
+
+        </div >
     );
 };
 
