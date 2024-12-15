@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { CustomerLogin } from '../../services/auth-services';
+import { CustomerLogin, handleFacebookLogin, handleGoogleLogin } from '../../services/auth-services';
 import { Link, useNavigate } from 'react-router-dom';
+import FacebookLogin from '@greatsumini/react-facebook-login';
+import { GoogleLogin } from '@react-oauth/google';
 const LoginPage = () => {
 
     const [email, setEmail] = useState('');
@@ -13,6 +15,34 @@ const LoginPage = () => {
             navigate('/');
         } catch (error) {
             console.error('Login failed:', error);
+        }
+    };
+
+    //Google Login
+    const handleClickGoogleLogin = async (credentialResponse: any) => {
+        const result = await handleGoogleLogin(credentialResponse);
+        if (result.isSuccess) {
+            navigate('/');
+            //dùng tạm alert
+            alert("Đăng nhập thành công");
+        }
+        else {
+            //dùng tạm alert
+            alert("Đăng nhập thất bại");
+        }
+    };
+
+    //Facebook Login 
+    const handleClickFacebookLogin = async (credentialResponse: any) => {
+        const result = await handleFacebookLogin(credentialResponse);
+        if (result.isSuccess) {
+            navigate('/');
+            //dùng tạm alert
+            alert("Đăng nhập thành công");
+        }
+        else {
+            //dùng tạm alert
+            alert("Đăng nhập thất bại");
         }
     };
 
@@ -73,11 +103,48 @@ const LoginPage = () => {
                                         </button>
                                     </div>
                                 </form>
+                                {/* GOOGLE LOGIN */}
                                 <div className="border-top m-3"></div>
                                 <div className="text-center mt-2">
-                                    <button className="btn btn-primary">
-                                        <i className="bi bi-google"></i> Đăng nhập bằng Google
-                                    </button>
+                                    <div className="d-flex justify-content-center">
+                                        <GoogleLogin
+                                            onSuccess={credentialResponse => {
+                                                handleClickGoogleLogin(credentialResponse);
+                                                console.log(credentialResponse);
+                                            }}
+                                            onError={() => {
+                                                alert('Login Failed!');
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="text-center mt-2">
+                                    <div className="d-flex justify-content-center">
+                                        <FacebookLogin
+                                            appId="972871797990372"
+                                            onSuccess={(response) => {
+                                                console.log('Login Success!', response);
+                                                // alert('Login Success!');
+                                            }}
+                                            onFail={(error) => {
+                                                console.log('Login Failed!', error);
+                                                alert('Login Success!');
+                                            }}
+                                            onProfileSuccess={(response) => {
+                                                handleClickFacebookLogin(response);
+                                                console.log('Get Profile Success!', response.email);
+                                            }}
+                                            style={{
+                                                backgroundColor: '#4267b2',
+                                                color: '#fff',
+                                                fontSize: '16.5px',
+                                                padding: '9px 26px',
+                                                border: 'none',
+                                                borderRadius: '4px',
+                                            }}
+                                        />
+
+                                    </div>
                                 </div>
                             </div>
                         </div>

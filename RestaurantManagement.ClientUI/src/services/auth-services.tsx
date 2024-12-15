@@ -63,3 +63,37 @@ export const CustomerChangePassword = async (oldPassword: string, newPassword: s
         });
     return res;
 }
+
+
+// /api/account/google-login/{token}
+export const handleGoogleLogin = async (credentialResponse: any) => {
+    const token = credentialResponse.credential;
+    try {
+        const res = await baseUrl.post(`${Account}/google-login/${token}`);
+        // Lưu token vào sessionStorage
+        sessionStorage.setItem('token', res.data.value.token);
+        return res.data;
+    }
+    catch (error: any) {
+        console.error('Login failed:', error);
+        return error.response.data;
+    }
+};
+// /api/account/facebook-login
+export const handleFacebookLogin = async (userInfo: any) => {
+
+    const email: string = userInfo.email;
+    const userName: string = userInfo.name;
+    const imageUrl: string = userInfo.picture.data.url;
+
+    try {
+        const res = await baseUrl.post(`${Account}/facebook-login`, { email, userName, imageUrl });
+        // Lưu token vào sessionStorage
+        sessionStorage.setItem('token', res.data.value.token);
+        return res.data;
+    }
+    catch (error: any) {
+        console.error('Login failed:', error.data);
+        return error.response.data;
+    }
+};
