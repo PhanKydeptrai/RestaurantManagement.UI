@@ -6,7 +6,7 @@ const DeleteAccountResultPage = () => {
         <>
             <Result
                 icon={<FrownOutlined />}
-                title="Xóa tài khoản không thành công! Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi."
+                title="Xóa tài khoản thành công! Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi."
             />
         </>
     )
