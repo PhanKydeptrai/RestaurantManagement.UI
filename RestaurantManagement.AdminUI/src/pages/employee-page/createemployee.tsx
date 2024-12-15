@@ -94,15 +94,15 @@ const CreateEmployeePage = () => {
         const response = await CreateEmployee(formData);
         if (response && response.isSuccess) {
             notification.success({
-                message: 'Thành công',
-                description: 'Tạo nhân viên thành công! Đang chuyển hướng về trang danh sách nhân viên...',
+                message: 'Tạo mới nhân viên thành công',
+                description: 'Nhân viên đã được tạo thành công! Đang chuyển hướng về trang danh sách nhân viên...',
             });
             setTimeout(() => {
                 navigate('/employees');
             }, 2000);
         } else {
             notification.error({
-                message: 'Lỗi',
+                message: 'Tạo mới nhân viên thất bại',
                 description: 'Vui lòng kiểm tra lại thông tin!',
             });
         }
