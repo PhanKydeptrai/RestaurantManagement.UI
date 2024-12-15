@@ -4,7 +4,7 @@ import { OrderDto, OrderDetailDto } from '../../models/orderDto';
 import { GetAllMeals } from '../../services/meal-services';
 import { CreateOrder } from '../../services/order-services';
 import { toast, ToastContainer } from 'react-toastify';
-import { Input, Button, Row, Col, Card, Typography, Spin, Form, Breadcrumb, Pagination } from 'antd';
+import { Input, Button, Row, Col, Card, Typography, Spin, Form, Breadcrumb, Pagination, notification } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
@@ -94,8 +94,10 @@ const CreateOrderPage = () => {
   const handleCreateOrder = async (mealId: string) => {
     const quantity = quantities[mealId] || 0;
     if (quantity === 0) {
-      alert('Quantity must be greater than 0');
-      return;
+      notification.error({
+        message: 'Thêm món thất bại',
+        description: 'Vui lòng chọn số lượng món ăn',
+      });
     }
     try {
       const token = sessionStorage.getItem('token');
