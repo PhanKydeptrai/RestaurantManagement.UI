@@ -6,7 +6,7 @@ import baseUrlDelete from "../apis/basedelete";
 
 export const Category = "category";
 
-
+//Gọi với các tham số lọc, tìm tên, sắp xếp, phân trang
 export const GetAllCategory = async (filter: string, searchTerm: string, sortColumn: string, sortOrder: string, pageSize: number, pageIndex: number) => {
     const res = await baseUrl.get<CategoryDto[]>(`${Category}?filter=${filter}&searchTerm=${searchTerm}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&page=${pageIndex}&pageSize=${pageSize}`)
         .then((response: AxiosResponse) => {
@@ -19,6 +19,7 @@ export const GetAllCategory = async (filter: string, searchTerm: string, sortCol
     return res;
 }
 
+//hàm gọi Api với các tham số pageSize,pageIndex
 export const GetCategory = async (pageSize: number, pageIndex: number) => {
     const res = await baseUrl.get<CategoryDto[]>(`${Category}?page=${pageIndex}&pageSize=${pageSize}`)
         .then((reponse: AxiosResponse) => {
@@ -41,7 +42,7 @@ export const GetCategorySearch = async (pageSize: number, pageIndex: number, sea
             console.log(error);
             return error;
         })
-    return res;
+    return res; 
 }
 export const GetCategoryFilter = async (pageSize: number, pageIndex: number, filter: string) => {
     const res = await baseUrl.get<CategoryDto[]>(`${Category}?filter=${filter}&page=${pageIndex}&pageSize=${pageSize}`)
