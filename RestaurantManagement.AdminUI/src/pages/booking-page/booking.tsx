@@ -5,6 +5,7 @@ import { BookDto } from "../../models/bookDto";
 import { Table, Button, Pagination, Space, notification, Tag, Select } from "antd";
 import { CheckOutlined, ContainerOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { ColumnsType } from "antd/es/table";  // Import ColumnsType for TypeScript
+import { set } from "@ant-design/plots/es/core/utils";
 
 const { Option } = Select;
 
@@ -25,25 +26,24 @@ const BookingPage = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                const results = await GetAllBooking(
-                    filterBookingStatus, filterPaymentStatus, searchTerm, sortColumn, sortOrder, pageIndex, pageSize
-                );
-                if (Array.isArray(results)) {
-                    setBookings(results);
-                    setHasNextPage(results.length === pageSize);
-                    setHasPreviousPage(pageIndex > 1);
-                    setTotalCount(results.length); // Update with the correct total count
-                } else {
-                    console.error("Dữ liệu không đúng định dạng:", results);
-                    setBookings([]);
-                }
-            } catch (error) {
-                notification.error({
-                    message: "Error",
-                    description: "Unable to load bookings.",
-                });
-            }
+
+            const results = await GetAllBooking(
+                filterBookingStatus, filterPaymentStatus, searchTerm, sortColumn, sortOrder, pageIndex, pageSize
+            );
+            setBookings(results.items);
+            setTotalCount(results.totalCount);
+            setHasNextPage(results.hasNextPage);
+            setHasPreviousPage(results.hasPreviousPage);
+            // if (Array.isArray(results)) {
+            //     setBookings(results);
+            //     setHasNextPage(results.length === pageSize);
+            //     setHasPreviousPage(pageIndex > 1);
+            //     setTotalCount(results.length); // Update with the correct total count
+            // } else {
+            //     console.error("Dữ liệu không đúng định dạng:", results);
+            //     setBookings([]);
+            // }
+
         };
 
         fetchData();

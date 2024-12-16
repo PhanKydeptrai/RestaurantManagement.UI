@@ -141,7 +141,6 @@ const BookFormOfNormal = () => {
 
     // Handle booking form submission
     const handleSubmit = async (e: React.FormEvent) => {
-
         // Modal.confirm({
         //     title: 'Xác nhận đặt bàn',
         //     okText: 'Đồng ý',
@@ -150,72 +149,196 @@ const BookFormOfNormal = () => {
         //     content: (
         //         <>
         //             <p> Bạn có chắc chắn muốn đặt bàn không? Bạn đã đọc và đồng ý với điều khoản của nhà hàng không?</p>
-
         //         </>
         //     ),
         //     onOk: async () => {
-        e.preventDefault();
-        if (!validationForm()) {
-            return;
-        }
+        //         e.preventDefault();
+        //         if (!validationForm()) {
+        //             return;
+        //         }
+        //         // Lấy thông tin từ form
+        //         const token = sessionStorage.getItem('token');
+        //         console.log('Token:', token);
 
+        //         const data2 = {
+        //             bookingDate,
+        //             bookingTime: `${bookingTime}:00`,
+        //             numberOfCustomers: numberOfCustomer,
+        //             note
+        //         }
+
+        //         if (token && isLoggedIn) {
+        //             const data = {
+        //                 bookingDate,
+        //                 bookingTime: `${bookingTime}:00`,
+        //                 numberOfCustomers: numberOfCustomer,
+        //                 note
+        //             }
+        //             console.log('Data:', data);
+        //             try {
+        //                 const book = await BookingSubcribe(data);
+        //                 console.log('Booking results:', book);
+        //                 if (book && book.isSucceess) {
+        //                     notification.success({
+        //                         message: 'Đăng ký đặt bàn thành công',
+        //                         description: 'Vui lòng kiểm tra email để xác nhận đơn đặt bàn',
+        //                     });
+        //                 } else {
+        //                     notification.error({
+        //                         message: 'Đăng ký đặt bàn thất bại',
+        //                         description: 'Vui lòng thử lại sau',
+        //                     });
+        //                 }
+        //             } catch (error) {
+        //                 console.error('Error during booking submission:', error);
+        //                 notification.error({
+        //                     message: 'Lỗi khi đặt bàn',
+        //                     description: 'Vui lòng thử lại sau',
+        //                 });
+        //             }
+
+        //         } else {
+        //             const data = {
+        //                 firstName,
+        //                 lastName,
+        //                 email,
+        //                 phoneNumber,
+        //                 bookingDate,
+        //                 bookingTime: `${bookingTime}:00`,
+        //                 numberOfCustomers: numberOfCustomer,
+        //                 note
+        //             };
+        //             console.log('Data:', data);
+        //             try {
+
+        //                 const results = await CreateBooking(data);
+        //                 if (results && results.isSucceess) {
+        //                     notification.success({
+        //                         message: 'Đặt bàn thành công',
+        //                         description: 'Vui lòng kiểm tra email để xác nhận đơn đặt bàn',
+        //                     });
+        //                 } else {
+        //                     notification.error({
+        //                         message: 'Đặt bàn thất bại',
+        //                         description: 'Vui lòng thử lại sau',
+        //                     });
+        //                 }
+        //             }
+        //             catch (error) {
+        //                 console.error('Error during booking submission:', error);
+        //                 notification.error({
+        //                     message: 'Lỗi khi đặt bàn',
+        //                     description: 'Vui lòng thử lại sau',
+        //                 });
+        //             }
+        //         }
+        //         // try {
+        //         //     if (!token) {
+        //         //         // Nếu chưa đăng nhập, gọi API tạo booking
+
+        //         //         const results = await CreateBooking(data);
+        //         //         if (results && results.isSucceess) {
+        //         //             notification.success({
+        //         //                 message: 'Đặt bàn thành công',
+        //         //                 description: 'Vui lòng kiểm tra email để xác nhận đơn đặt bàn',
+        //         //             });
+        //         //         } else {
+        //         //             notification.error({
+        //         //                 message: 'Đặt bàn thất bại',
+        //         //                 description: 'Vui lòng thử lại sau',
+        //         //             });
+        //         //         }
+
+        //         //     }
+        //         //     if (token) {
+        //         //         // Nếu đã đăng nhập, gọi API đăng ký booking
+
+        //         //         const book = await BookingSubcribe(data2);
+        //         //         console.log('Booking results:', book);
+        //         //         if (book && book.isSucceess) {
+        //         //             notification.success({
+        //         //                 message: 'Đăng ký đặt bàn thành công',
+        //         //                 description: 'Vui lòng kiểm tra email để xác nhận đơn đặt bàn',
+        //         //             });
+        //         //         } else {
+        //         //             notification.error({
+        //         //                 message: 'Đăng ký đặt bàn thất bại',
+        //         //                 description: 'Vui lòng thử lại sau',
+        //         //             });
+        //         //         }
+        //         //     }
+        //         // } catch (error) {
+        //         //     console.error('Error during booking submission:', error);
+        //         //     notification.error({
+        //         //         message: 'Lỗi khi đặt bàn',
+        //         //         description: 'Vui lòng thử lại sau',
+        //         //     });
+        //         // }
+        //     },
+        //     onCancel() {
+        //         console.log('Cancel booking');
+        //     }
+        // });
+        e.preventDefault();
+        console.log('submit');
 
         const token = sessionStorage.getItem('token');
-        const data = {
-            firstName,
-            lastName,
-            email,
-            phoneNumber,
-            bookingDate,
-            bookingTime: `${bookingTime}:00`,
-            numberOfCustomers: numberOfCustomer,
-            note
-        };
-
-        try {
-            if (!token) {
-                // Nếu chưa đăng nhập, gọi API tạo booking
-                const results = await CreateBooking(data);
-                if (results && results.isSucceess) {
-                    notification.success({
-                        message: 'Booking thành công',
-                        description: 'Vui lòng kiểm tra email để xác nhận booking',
-                    });
-                } else {
-                    notification.error({
-                        message: 'Booking thất bại',
-                        description: 'Vui lòng thử lại sau',
-                    });
-                }
-
-            } else {
-                // Nếu đã đăng nhập, gọi API đăng ký booking
-                const book = await BookingSubcribe(data);
-                console.log('Booking results:', book);
-                if (book && book.isSucceess) {
-                    notification.success({
-                        message: 'Đăng ký booking thành công',
-                        description: 'Vui lòng kiểm tra email để xác nhận booking',
-                    });
-                } else {
-                    notification.error({
-                        message: 'Đăng ký booking thất bại',
-                        description: 'Vui lòng thử lại sau',
-                    });
-                }
+        if (!token) {
+            const data = {
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                phoneNumber: phoneNumber,
+                bookingDate: bookingDate,
+                bookingTime: `${bookingTime}:00`,
+                numberOfCustomers: numberOfCustomer,
+                note: note
             }
-        } catch (error) {
-            console.error('Error during booking submission:', error);
-            notification.error({
-                message: 'Lỗi khi đặt bàn',
-                description: 'Vui lòng thử lại sau',
-            });
+            console.log("Data be sent: ", data);
+            try {
+                const res = await CreateBooking(data);
+                console.log("this is response: ", res);
+                if (res && res.isSuccess) {
+                    notification.success({
+                        message: 'Booking successfully',
+                        description: 'Please check your email to confirm the booking',
+                    });
+                } else {
+                    notification.error({
+                        message: 'Booking failed',
+                        description: 'Please try again later',
+                    });
+                }
+
+            } catch (error) {
+                console.log("this is error: ", error);
+            }
+        } else {
+            const dataSub = {
+                bookingDate: bookingDate,
+                bookingTime: `${bookingTime}:00`,
+                numberOfCustomers: numberOfCustomer,
+                note: note
+            }
+            console.log("Data be sent: ", dataSub);
+            try {
+                const res = await BookingSubcribe(dataSub);
+                console.log("this is response: ", res);
+                if (res && res.isSuccess) {
+                    notification.success({
+                        message: 'Booking successfully',
+                        description: 'Please check your email to confirm the booking',
+                    });
+                } else {
+                    notification.error({
+                        message: 'Booking failed',
+                        description: 'Please try again later',
+                    });
+                }
+            } catch (error) {
+                console.log("this is error: ", error);
+            }
         }
-        //},
-        // onCancel() {
-        //     console.log('Cancel booking');
-        // }
-        //   });
     };
 
 
@@ -482,7 +605,6 @@ const BookFormOfNormal = () => {
                                         value={note}
                                         onChange={(e) => setNote(e.target.value)}
                                     />
-
                                 </Form.Item>
 
                             </div>
