@@ -125,7 +125,8 @@ const CategoryPage = () => {
             }
         });
     };
-
+    //#endregion handle Delete
+    //#region handle Restore
     const handleRestore = async (id: string) => {
         Modal.confirm({
             title: 'Bạn có chắc chắn muốn khôi phục loại món này không?',
@@ -164,7 +165,7 @@ const CategoryPage = () => {
         });
     };
     //#endregion
-
+    //#region column
     const columns: TableColumnsType<CategoryDto> = [
         {
             title: 'No.',
@@ -205,6 +206,7 @@ const CategoryPage = () => {
             )
         },
     ];
+    //#endregion
 
     return (
         <>
