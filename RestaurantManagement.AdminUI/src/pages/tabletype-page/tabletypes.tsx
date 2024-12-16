@@ -8,17 +8,17 @@ import { DeleteOutlined, EditOutlined, FormOutlined, RedoOutlined } from "@ant-d
 import { Link } from "react-router-dom";
 
 const TableTypesPage = () => {
-    const [tableTypes, setTableTypes] = useState<TableTypeDto[]>([]);
-    const [pageIndex, setPageIndex] = useState(1);
-    const [pageSize, setPageSize] = useState(8);
-    const [hasNextPage, setHasNextPage] = useState(false);
-    const [hasPreviousPage, setHasPreviousPage] = useState(false);
-    const [totalCount, setTotalCount] = useState(0);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [filterStatus, setFilterStatus] = useState('');
-    const [sortColumn, setSortColumn] = useState('');
-    const [sortOrder, setSortOrder] = useState('');
-    useEffect(() => {
+    const [tableTypes, setTableTypes] = useState<TableTypeDto[]>([]); // lấy lại modelDto
+    const [pageIndex, setPageIndex] = useState(1); // set trang index bắt đầu luôn luôn =1
+    const [pageSize, setPageSize] = useState(8); // page size tối đa =8
+    const [hasNextPage, setHasNextPage] = useState(false); // kiểm tra có trang tiếp theo kh
+    const [hasPreviousPage, setHasPreviousPage] = useState(false); // kiểm tra có trang trc kh
+    const [totalCount, setTotalCount] = useState(0); // đếm tổng số lượng của table type
+    const [searchTerm, setSearchTerm] = useState('');// dùng để xử hàm search
+    const [filterStatus, setFilterStatus] = useState(''); // xử lí filtẻ
+    const [sortColumn, setSortColumn] = useState('');// sort column
+    const [sortOrder, setSortOrder] = useState(''); // sort index
+    useEffect(() => { // lấy ra thông tin khi rendẻ component
         const fetchData = async () => {
             const results = await GetAllTableType(searchTerm, filterStatus, sortColumn, sortOrder, pageIndex, pageSize);
             setTableTypes(results.items);
