@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { VoucherDto } from "../../../models/voucherDto";
 import { GetAllVoucher, VoucherCustomer } from "../../../services/voucher-services";
-import { Card, Col, Row, Input, Button, Select, Tag, Space, Pagination } from "antd";
+import { Card, Col, Row, Input, Button, Select, Tag, Space, Pagination, Result } from "antd";
 import { SearchOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
@@ -16,7 +16,7 @@ const VoucherPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState('');
     const [filterType, setFilterType] = useState('');
-
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -46,7 +46,12 @@ const VoucherPage = () => {
         filterStatus,
         filterType,
     ]);
-
+    useEffect(() => {
+        const token = sessionStorage.getItem('token');
+        if (token) {
+            setIsLoggedIn(true);
+        }
+    }, []);
     const handleSearch = (value: string) => {
         setSearchTerm(value);
         setPageIndex(1); // Reset to first page when searching
@@ -85,60 +90,72 @@ const VoucherPage = () => {
     return (
         <>
             <div className="container">
-                <div className="row">
-                    <Row gutter={[8, 8]} style={{ marginBottom: 20 }}>
-                        <Col xs={24} sm={8}>
-                            <Card>
-                                <h3>Filters</h3>
-                                <Space direction="vertical" style={{ width: '100%' }}>
-                                    <Input
-                                        placeholder="Search by Voucher Name or Code"
-                                        value={searchTerm}
-                                        onChange={(e) => handleSearch(e.target.value)}
-                                        prefix={<SearchOutlined />}
-                                    />
-                                    <Select
-                                        placeholder="Select Status"
-                                        value={filterStatus}
-                                        onChange={handleStatusChange}
-                                        style={{ width: '100%' }}
-                                    >
-                                        <Option value="">All</Option>
-                                        <Option value="Active">Active</Option>
-                                        <Option value="Inactive">Inactive</Option>
-                                    </Select>
-                                    {/* <Select
-                                        placeholder="Select Type"
-                                        value={filterType}
-                                        onChange={handleTypeChange}
-                                        style={{ width: '100%' }}
-                                    >
-                                        <Option value="">All</Option>
-                                        <Option value="Type1">Type 1</Option>
-                                        <Option value="Type2">Type 2</Option>
-                                    </Select> */}
-                                </Space>
-                            </Card>
-                        </Col>
-                    </Row>
+                {
+                    isLoggedIn ? (<div className="row">
+                        <Row gutter={[8, 8]} style={{ marginBottom: 20 }}>
+                            <Col xs={24} sm={8}>
+                                <Card>
+                                    <h3>Filters</h3>
+                                    <Space direction="vertical" style={{ width: '100%' }}>
+                                        <Input
+                                            placeholder="Tìm kiếm bằng Voucher Code"
+                                            value={searchTerm}
+                                            onChange={(e) => handleSearch(e.target.value)}
+                                            prefix={<SearchOutlined />}
+                                        />
+                                        <Select
+                                            placeholder="Trạng thái voucher"
+                                            value={filterStatus}
+                                            onChange={handleStatusChange}
+                                            style={{ width: '100%' }}
+                                        >
+                                            <Option value="">All</Option>
+                                            <Option value="Active">Hoạt động</Option>
+                                            <Option value="Inactive">Ngừng hoạt động</Option>
+                                        </Select>
+                                        {/* <Select
+                                            placeholder="Select Type"
+                                            value={filterType}
+                                            onChange={handleTypeChange}
+                                            style={{ width: '100%' }}
+                                        >
+                                            <Option value="">All</Option>
+                                            <Option value="Type1">Type 1</Option>
+                                            <Option value="Type2">Type 2</Option>
+                                        </Select> */}
+                                    </Space>
+                                </Card>
+                            </Col>
+                        </Row>
 
-                    <h1>Your Vouchers</h1>
-                    <Row gutter={[8, 8]}>
-                        {renderVoucherCards()}
-                    </Row>
+                        <h1>Your Vouchers</h1>
+                        <Row gutter={[8, 8]}>
+                            {renderVoucherCards()}
+                        </Row>
 
-                    <Pagination
-                        current={pageIndex}
-                        pageSize={pageSize}
-                        total={totalCount}
-                        onChange={(page, pageSize) => {
-                            setPageIndex(page);
-                            setPageSize(pageSize);
-                        }}
-                        style={{ marginTop: 20, textAlign: 'center' }}
-                    />
-                </div>
-            </div>
+                        <Pagination
+                            current={pageIndex}
+                            pageSize={pageSize}
+                            total={totalCount}
+                            onChange={(page, pageSize) => {
+                                setPageIndex(page);
+                                setPageSize(pageSize);
+                            }}
+                            style={{ marginTop: 20, textAlign: 'center' }}
+                        />
+                    </div>
+                    ) : (
+                        <Result
+                            status="warning"
+                            title={<>
+                                < h3 className="text-center">Bạn cần đăng nhập để sử dụng các chương trình ưu đãi của chúng tôi</h3>
+                            </>}
+
+                        />
+
+                    )
+                }
+            </div >
         </>
     );
 };
