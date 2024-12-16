@@ -8,7 +8,7 @@ import { UploadOutlined } from '@ant-design/icons';
 
 const UpdateCategoryPage = () => {
     const { categoryId } = useParams<{ categoryId: string }>(); // lấy id của category lên url
-    const [categoryName, setCategoryName] = useState<string>(''); 
+    const [categoryName, setCategoryName] = useState<string>('');
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const [errors, setErrors] = useState<{ categoryName?: string }>({});
@@ -78,7 +78,7 @@ const UpdateCategoryPage = () => {
         if (!categoryName) {
             newErrors.categoryName = "Vui lòng nhập tên loại món";
         }
-        if(categoryName.length < 50){
+        if (categoryName.length > 50) {
             newErrors.categoryName = "Tên loại món không được quá 50 ký tự";
         }
         setErrors(newErrors);
@@ -104,7 +104,7 @@ const UpdateCategoryPage = () => {
                 console.log('Category updated successfully:', response);
                 if (response.isSuccess) {
                     notification.success({
-                        message:  "Cập nhật thành công",
+                        message: "Cập nhật thành công",
                         description: "Loại món đã đưọc cập nhật thành công!"
                     })
                     setTimeout(() => {
@@ -115,7 +115,7 @@ const UpdateCategoryPage = () => {
                     notification.error({
                         message: "Cập nhật thất bại",
                         description: "Xin lỗi, chúng tôi không thể cập nhật loại món này. Vui lòng thử lại sau."
-                        });
+                    });
                     console.log("Failed");
                     notifyError();
                 }
