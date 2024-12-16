@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import axios from 'axios';
 import { useEffect, useState, useRef } from "react";
-import { Form, Input, Button, Row, Col, notification, Upload, Avatar, Image } from "antd";
+import { Form, Input, Button, Row, Col, notification, Upload, Avatar, Image, Select } from "antd";
 import { UploadOutlined } from '@ant-design/icons';
 import { CustomerDto } from "../../models/customerDto";
 import { UpdateAccountCus } from "../../services/auth-services";
@@ -196,6 +196,7 @@ const AccountPage = () => {
                                                     rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}
                                                 >
                                                     <Input
+                                                        type="number"
                                                         placeholder="Nhập số điện thoại"
                                                         onChange={(e) => handleChange(e, 'phoneNumber')}
                                                     />
@@ -208,15 +209,20 @@ const AccountPage = () => {
                                                 <Form.Item
                                                     label="Gender"
                                                     name="gender"
-                                                    rules={[{ required: true, message: 'Vui lòng nhập giới tính' }]}
+                                                    rules={[{ required: true, message: 'Vui lòng chọn giới tính' }]}
                                                 >
-                                                    <Input
+                                                    <Select
                                                         placeholder="Chọn giới tính"
-                                                        onChange={(e) => handleChange(e, 'gender')}
-                                                    />
+                                                        onChange={(value) => handleChange(value, 'gender')}
+                                                    >
+                                                        <Select.Option value="Male">Nam</Select.Option>
+                                                        <Select.Option value="Female">Nữ</Select.Option>
+                                                        <Select.Option value="Other">Khác</Select.Option>
+                                                    </Select>
                                                 </Form.Item>
                                             </Col>
                                         </Row>
+
 
                                         <Row gutter={35}>
                                             <div className="row mt-5">
