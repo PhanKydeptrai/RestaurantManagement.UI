@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { Form, Input, Button, Row, Col, notification, Upload, Avatar, Image } from "antd";
 import { UploadOutlined } from '@ant-design/icons';
 import { CustomerDto } from "../../models/customerDto";
+import { UpdateAccountCus } from "../../services/auth-services";
 
 const AccountPage = () => {
     const [userDetails, setUserDetails] = useState<CustomerDto | null>(null);
@@ -67,9 +68,10 @@ const AccountPage = () => {
         try {
             if (userDetails) {
                 const formData = new FormData();
-                formData.append('firstName', values.firstName);
                 formData.append('lastName', values.lastName);
+                formData.append('firstName', values.firstName);
                 formData.append('phoneNumber', values.phoneNumber);
+                formData.append('gender', values.gender);
 
                 if (userDetails.userImage && userDetails.userImage !== values.userImage) {
                     const imageFile = fileInputRef.current?.files?.[0];
@@ -78,6 +80,20 @@ const AccountPage = () => {
                     }
                 }
                 console.log(formData);
+                const updateCus = await UpdateAccountCus(formData, userDetails.userId);
+                if (updateCus) {
+                    notification.success({
+                        message: 'Cập nhật thành công',
+                        description: 'Trang cá nhân của bạn đã được cập nhật thành công',
+                    });
+                    setUserDetails(updateCus);
+                    window.location.reload();
+                } else {
+                    notification.error({
+                        message: 'Cập nhật thất bại',
+                        description: 'Cập nhật trang cá nhân thất bại. Vui lòng thử lại',
+                    });
+                }
             }
         } catch (error) {
             console.error('Error during submission:', error);
