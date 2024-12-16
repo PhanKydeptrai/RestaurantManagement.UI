@@ -9,17 +9,38 @@ const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+
     const handleLogin = async (event: React.FormEvent) => {
         event.preventDefault();
+        if (!validateForm()) {
+            return;
+        }
         try {
-            await CustomerLogin(email, password);
-            navigate('/');
-            notification.success({ message: 'Đăng nhập thành công', description: 'Chào mừng bạn đã đến với hệ thống của chúng tôi' });
+            const token = await CustomerLogin(email, password);
+            console.log('Token:', token);
+            if (token && (token.isSuccess === true || token.response === '200')) {
+                navigate('/');
+                notification.success({ message: 'Đăng nhập thành công', description: 'Chào mừng bạn đã đến với hệ thống của chúng tôi' });
+            } else {
+                notification.error({ message: 'Đăng nhập thất bại', description: 'Email hoặc mật khẩu không đúng.' });
+            }
         } catch (error) {
             console.error('Login failed:', error);
         }
     };
-
+    const validateForm = () => {
+        const newErrors: { [key: string]: string } = {};
+        if (!email) {
+            newErrors.email = 'Vui lòng nhập email hoặc số điện thoại';
+        }
+        if (!password) {
+            newErrors.password = 'Vui lòng nhập mật khẩu';
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
     //Google Login
     const handleClickGoogleLogin = async (credentialResponse: any) => {
         const result = await handleGoogleLogin(credentialResponse);
@@ -75,6 +96,7 @@ const LoginPage = () => {
                                             onChange={(e) => setEmail(e.target.value)}
                                             placeholder="Nhập email hoặc số điện thoại"
                                         />
+                                        {errors.email && <div className="text-danger">{errors.email}</div>}
                                     </div>
 
                                     <div className="mb-2">
@@ -91,6 +113,7 @@ const LoginPage = () => {
                                             placeholder="Nhập mật khẩu"
                                             autoComplete="current-password"
                                         />
+                                        {errors.password && <div className="text-danger">{errors.password}</div>}
                                     </div>
                                     <Link to="/forgotpassword" className="card-link text-secondary">Quên mật khẩu</Link>
                                     {/* <a href="#" className="card-link text-success">

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { VoucherDto } from "../../../models/voucherDto";
-import { GetAllVoucher } from "../../../services/voucher-services";
+import { GetAllVoucher, VoucherCustomer } from "../../../services/voucher-services";
 import { Card, Col, Row, Input, Button, Select, Tag, Space, Pagination } from "antd";
 import { SearchOutlined } from '@ant-design/icons';
 
@@ -19,11 +19,24 @@ const VoucherPage = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const result = await GetAllVoucher(filterStatus, filterType, searchTerm, '', '', pageIndex, pageSize);
-            setVoucher(result.items);
-            setHasNextPage(result.hasNextPage);
-            setHasPreviousPage(result.haspreviousPage);
-            setTotalCount(result.totalCount);
+            try {
+                const token = sessionStorage.getItem('token');
+                if (token) {
+                    const result = await VoucherCustomer(filterStatus, filterType, searchTerm, '', '', pageIndex, pageSize);
+                    setVoucher(result.items);
+                    setHasNextPage(result.hasNextPage);
+                    setHasPreviousPage(result.haspreviousPage);
+                    setTotalCount(result.totalCount);
+                } else {
+                    const result = await GetAllVoucher(filterStatus, filterType, searchTerm, '', '', pageIndex, pageSize);
+                    setVoucher(result.items);
+                    setHasNextPage(result.hasNextPage);
+                    setHasPreviousPage(result.haspreviousPage);
+                    setTotalCount(result.totalCount);
+                }
+            } catch (error) {
+                console.log(error);
+            }
         };
         fetchData();
     }, [

@@ -13,7 +13,7 @@ export const CustomerLogin = async (loginString: string, passWord: string) => {
             console.log(response.data.value.token);
             // Lưu token vào sessionStorage
             sessionStorage.setItem('token', response.data.value.token);
-
+            return response.data;
         }).catch((error) => {
             console.log(error);
             return error;
