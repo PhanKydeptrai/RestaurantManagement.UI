@@ -7,8 +7,8 @@ import { Breadcrumb, Button, Col, Row, Image } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
 const UpdateCategoryPage = () => {
-    const { categoryId } = useParams<{ categoryId: string }>();
-    const [categoryName, setCategoryName] = useState<string>('');
+    const { categoryId } = useParams<{ categoryId: string }>(); // lấy id của category lên url
+    const [categoryName, setCategoryName] = useState<string>(''); 
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const [errors, setErrors] = useState<{ categoryName?: string }>({});
@@ -77,6 +77,9 @@ const UpdateCategoryPage = () => {
         const newErrors: { categoryName?: string } = {}
         if (!categoryName) {
             newErrors.categoryName = "Vui lòng nhập tên loại món";
+        }
+        if(categoryName.length < 50){
+            newErrors.categoryName = "Tên loại món không được quá 50 ký tự";
         }
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
