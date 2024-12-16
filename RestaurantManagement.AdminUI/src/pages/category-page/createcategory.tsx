@@ -6,8 +6,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { CreateCategory } from "../../services/category-service";
 import { Breadcrumb, Col, Row, Image, Button, Input } from "antd";
 
-
-
 const CreateCategoryPage = () => {
     const [name, setName] = useState(''); // Tên loại món
     const [imageUrl, setImageUrl] = useState<string | null>(null); // Ảnh loại món
@@ -32,18 +30,6 @@ const CreateCategoryPage = () => {
         }
     };
 
-    const notifySucess = () => {
-        toast.success('Thành công!', {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored"
-        });
-    }
 
     const notifyError = () => {
         toast.error('Vui lòng kiểm tra lại!', {
@@ -62,17 +48,20 @@ const CreateCategoryPage = () => {
         if (!name) {
             newErrors.name = "Vui lòng nhập tên loại món";
         }
+        if(name.length > 50){
+            newErrors.name = "Tên loại món không được vượt quá 50 ký tự";
+        }
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
 
     }
 
     const handleSubmit = async (event: React.FormEvent) => {
-        event.preventDefault();
+        event.preventDefault(); // ngăn chặn sự kiện mặc định của form 
         if (!validateForm()) {
             notifyError();
             return;
-        }
+        } // hiển thị thông báo khi lỗi 
         const formData = new FormData();
         formData.append('name', name);
         //formData.append('description', description);
