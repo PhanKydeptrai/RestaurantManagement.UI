@@ -3,6 +3,7 @@ import { CustomerLogin, handleFacebookLogin, handleGoogleLogin } from '../../ser
 import { Link, useNavigate } from 'react-router-dom';
 import FacebookLogin from '@greatsumini/react-facebook-login';
 import { GoogleLogin } from '@react-oauth/google';
+import { notification } from 'antd';
 const LoginPage = () => {
 
     const [email, setEmail] = useState('');
@@ -22,13 +23,13 @@ const LoginPage = () => {
     const handleClickGoogleLogin = async (credentialResponse: any) => {
         const result = await handleGoogleLogin(credentialResponse);
         if (result.isSuccess) {
+            notification.success({ message: 'Đăng nhập thành công', description: 'Chào mừng bạn đã đến với hệ thống của chúng tôi' });
             navigate('/');
-            //dùng tạm alert
-            alert("Đăng nhập thành công");
+
         }
         else {
             //dùng tạm alert
-            alert("Đăng nhập thất bại");
+            notification.error({ message: 'Đăng nhập thất bại', description: 'Vui lòng kiểm tra lại thông tin đăng nhập' });
         }
     };
 
@@ -38,11 +39,11 @@ const LoginPage = () => {
         if (result.isSuccess) {
             navigate('/');
             //dùng tạm alert
-            alert("Đăng nhập thành công");
+            notification.success({ message: 'Đăng nhập thành công', description: 'Chào mừng bạn đã đến với hệ thống của chúng tôi' });
         }
         else {
             //dùng tạm alert
-            alert("Đăng nhập thất bại");
+            notification.error({ message: 'Đăng nhập thất bại', description: 'Vui lòng kiểm tra lại thông tin đăng nhập' });
         }
     };
 
