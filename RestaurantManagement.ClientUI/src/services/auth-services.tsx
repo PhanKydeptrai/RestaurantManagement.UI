@@ -1,9 +1,10 @@
 import { AxiosResponse } from "axios";
 import baseUrl from "../apis/base";
+import baseUrlPost from "../apis/basepost";
 
 
 export const Account = "account";
-
+export const Customner = "customer";
 // /api/account/employee-login
 export const CustomerLogin = async (loginString: string, passWord: string) => {
     //console.log(`${baseUrl}/${Account}/employee-login`);
@@ -12,7 +13,7 @@ export const CustomerLogin = async (loginString: string, passWord: string) => {
             console.log(response.data.value.token);
             // Lưu token vào sessionStorage
             sessionStorage.setItem('token', response.data.value.token);
-
+            return response.data;
         }).catch((error) => {
             console.log(error);
             return error;
@@ -97,3 +98,13 @@ export const handleFacebookLogin = async (userInfo: any) => {
         return error.response.data;
     }
 };
+export const UpdateAccountCus = async (formData: FormData, customerId: string) => {
+    try {
+        const res = await baseUrlPost.putForm(`${Customner}/${customerId}`, formData);
+        console.log(res.data);
+        return res.data;
+    } catch (error: any) {
+        console.log(error.response.data);
+        return error.response.data;
+    }
+}

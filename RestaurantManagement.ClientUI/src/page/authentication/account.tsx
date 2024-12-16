@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import axios from 'axios';
 import { useEffect, useState, useRef } from "react";
-import { Form, Input, Button, Row, Col, notification, Upload, Avatar, Image } from "antd";
+import { Form, Input, Button, Row, Col, notification, Upload, Avatar, Image, Select } from "antd";
 import { UploadOutlined } from '@ant-design/icons';
 import { CustomerDto } from "../../models/customerDto";
+import { UpdateAccountCus } from "../../services/auth-services";
 
 const AccountPage = () => {
     const [userDetails, setUserDetails] = useState<CustomerDto | null>(null);
@@ -67,9 +68,10 @@ const AccountPage = () => {
         try {
             if (userDetails) {
                 const formData = new FormData();
-                formData.append('firstName', values.firstName);
                 formData.append('lastName', values.lastName);
+                formData.append('firstName', values.firstName);
                 formData.append('phoneNumber', values.phoneNumber);
+                formData.append('gender', values.gender);
 
                 if (userDetails.userImage && userDetails.userImage !== values.userImage) {
                     const imageFile = fileInputRef.current?.files?.[0];
@@ -78,6 +80,20 @@ const AccountPage = () => {
                     }
                 }
                 console.log(formData);
+                const updateCus = await UpdateAccountCus(formData, userDetails.userId);
+                if (updateCus) {
+                    notification.success({
+                        message: 'Cập nhật thành công',
+                        description: 'Trang cá nhân của bạn đã được cập nhật thành công',
+                    });
+                    setUserDetails(updateCus);
+                    window.location.reload();
+                } else {
+                    notification.error({
+                        message: 'Cập nhật thất bại',
+                        description: 'Cập nhật trang cá nhân thất bại. Vui lòng thử lại',
+                    });
+                }
             }
         } catch (error) {
             console.error('Error during submission:', error);
@@ -180,6 +196,7 @@ const AccountPage = () => {
                                                     rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}
                                                 >
                                                     <Input
+                                                        type="number"
                                                         placeholder="Nhập số điện thoại"
                                                         onChange={(e) => handleChange(e, 'phoneNumber')}
                                                     />
@@ -192,15 +209,20 @@ const AccountPage = () => {
                                                 <Form.Item
                                                     label="Gender"
                                                     name="gender"
-                                                    rules={[{ required: true, message: 'Vui lòng nhập giới tính' }]}
+                                                    rules={[{ required: true, message: 'Vui lòng chọn giới tính' }]}
                                                 >
-                                                    <Input
+                                                    <Select
                                                         placeholder="Chọn giới tính"
-                                                        onChange={(e) => handleChange(e, 'gender')}
-                                                    />
+                                                        onChange={(value) => handleChange(value, 'gender')}
+                                                    >
+                                                        <Select.Option value="Male">Nam</Select.Option>
+                                                        <Select.Option value="Female">Nữ</Select.Option>
+                                                        <Select.Option value="Other">Khác</Select.Option>
+                                                    </Select>
                                                 </Form.Item>
                                             </Col>
                                         </Row>
+
 
                                         <Row gutter={35}>
                                             <div className="row mt-5">

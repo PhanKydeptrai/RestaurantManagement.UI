@@ -6,7 +6,10 @@ import { GetAllMeal } from "../../../services/meal-services";
 
 const { Option } = Select;
 const { Title } = Typography;
-
+export interface CategoryInfo {
+    categoryId: string;
+    categoryName: string;
+}
 const MenuPage = () => {
     const [meals, setMeals] = useState<MealDto[]>([]);
     const [pageIndex, setPageIndex] = useState(1);
@@ -20,6 +23,10 @@ const MenuPage = () => {
     const [sortColumn, setSortColumn] = useState('');
     const [sortOrder, setSortOrder] = useState('');
 
+    const [categoryId, setCategoryId] = useState('');
+    const [categoryName, setCategoryName] = useState('');
+    const [categoryinfo, setCategoryInfo] = useState<CategoryInfo[]>([]);
+
     useEffect(() => {
         const fetchData = async () => {
             const result = await GetAllMeal(filterCategory, filterSellStatus, filterMealStatus, searchTerm, '0', '0', pageIndex, pageSize);
@@ -28,7 +35,17 @@ const MenuPage = () => {
         };
         fetchData();
     }, [filterCategory, filterSellStatus, filterMealStatus, searchTerm, pageIndex, pageSize]);
-
+    useEffect(() => {
+        fetch('https://restaurantmanagement.azurewebsites.net/api/category/category-info')
+            .then(response => response.json())
+            .then(data => setCategoryInfo(data.value))
+            .catch(error => console.log(error));
+    }, []);
+    const handleCategoryChange = (value: string) => {
+        const selectedCategory = categoryinfo.find(category => category.categoryId === value);
+        setCategoryId(value);
+        setCategoryName(selectedCategory ? selectedCategory.categoryName : '');
+    };
     const handleFilterCategory = async (value: string) => {
         const results = await GetAllMeal(value, filterSellStatus, filterMealStatus, searchTerm, '0', '0', pageIndex, pageSize);
         setMeals(results.items);
@@ -71,8 +88,11 @@ const MenuPage = () => {
                             placeholder="Select Category"
                         >
                             <Option value="">All Categories</Option>
-                            <Option value="Category1">Category 1</Option>
-                            <Option value="Category2">Category 2</Option>
+                            {categoryinfo.map((category) => (
+                                <Select.Option key={category.categoryId} value={category.categoryName}>
+                                    {category.categoryName}
+                                </Select.Option>
+                            ))}
                         </Select>
 
                         {/* Search Input */}

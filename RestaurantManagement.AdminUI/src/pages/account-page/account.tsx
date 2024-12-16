@@ -88,14 +88,18 @@ const AccountPage = () => {
                 if (updatedUser) {
                     notification.success({
                         message: 'Cập nhật thành công',
-                        description: 'Thông tin của bạn đã được cập nhật thành công.',
+
+                        description: 'Trang cá nhân của bạn đã được cập nhật thành công.',
+
                     });
                     setUserDetails(updatedUser);  // Update state with the updated user details
                     window.location.reload();
                 } else {
                     notification.error({
                         message: 'Cập nhật thất bại',
-                        description: 'Có lỗi xảy ra trong quá trình cập nhật thông tin. Vui lòng thử lại.',
+
+                        description: 'Cập nhật trang cá nhân thất bại .Vui lòng thử lại.',
+
                     });
                 }
             }
