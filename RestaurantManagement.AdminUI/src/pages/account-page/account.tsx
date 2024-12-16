@@ -54,6 +54,7 @@ const AccountPage = () => {
             reader.readAsDataURL(file);
         }
     };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>, field: keyof EmployeeDto) => {
         if (userDetails) {
             setUserDetails({
@@ -62,8 +63,6 @@ const AccountPage = () => {
             });
         }
     };
-
-
 
     // Handle form submission
     const handleSubmit = async (values: any) => {
@@ -76,30 +75,25 @@ const AccountPage = () => {
                 formData.append('lastName', values.lastName);
                 formData.append('phoneNumber', values.phoneNumber);
 
-
                 // If there's an updated image, append it as well
                 if (fileInputRefs && fileInputRefs.files) {
                     formData.append('userImage', fileInputRefs.files[0]);
                 }
-                console.log(formData);
+
                 // Call the update API
                 const updatedUser = await UpdateAccountEmp(formData, userDetails.userId);
 
                 if (updatedUser) {
                     notification.success({
                         message: 'Cập nhật thành công',
-
                         description: 'Trang cá nhân của bạn đã được cập nhật thành công.',
-
                     });
                     setUserDetails(updatedUser);  // Update state with the updated user details
                     window.location.reload();
                 } else {
                     notification.error({
                         message: 'Cập nhật thất bại',
-
                         description: 'Cập nhật trang cá nhân thất bại .Vui lòng thử lại.',
-
                     });
                 }
             }
@@ -112,7 +106,6 @@ const AccountPage = () => {
         }
     };
 
-
     // If user details are not loaded
     if (!userDetails) {
         return <h1>Loading...</h1>;
@@ -120,7 +113,6 @@ const AccountPage = () => {
 
     return (
         <>
-
             <div className="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <div className="col">
                     <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4">
@@ -137,35 +129,6 @@ const AccountPage = () => {
             <div className="row">
                 <div className="col-12" key={userDetails?.userId}>
                     <div className="row">
-                        <div className="col-md-3 border-right">
-                            <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-                                <Image
-                                    width={150}  // Reduced size for smaller screens
-                                    src={
-                                        userImage || userDetails?.userImage ||
-                                        "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"
-                                    }
-                                    alt="Employee"
-                                    style={{ borderRadius: "50%" }}
-                                />
-                                <Button
-                                    type="primary"
-                                    icon={<UploadOutlined />}
-                                    onClick={() => fileInputRefs?.click()}
-                                >
-                                    Upload Image
-                                </Button>
-                                {/* Hidden file input */}
-                                <input
-                                    ref={setfileInputRef}
-                                    type="file"
-                                    style={{ display: 'none' }}  // Hide the input
-                                    onChange={handleFileChange}
-                                />
-
-
-                            </div>
-                        </div>
                         <div className="col-md-9 border-right">
                             <div className="p-3 py-5">
                                 <Form
@@ -173,114 +136,141 @@ const AccountPage = () => {
                                     initialValues={userDetails}
                                     onFinish={handleSubmit}
                                 >
-                                    <Row gutter={16}>
-                                        <Col span={12}>
-                                            <Form.Item
-                                                label="First Name"
-                                                name="firstName"
-                                                rules={[{ required: true, message: 'Please enter your first name!' }]}
-                                            >
-                                                <Input
-                                                    placeholder="Enter first name"
-                                                    onChange={(e) => handleChange(e, 'firstName')}
+                                    <div className="row">
+                                        <div className="col-md-3 border-right">
+                                            <div className="d-flex flex-column align-items-center text-center p-3 py-5">
+                                                <Image
+                                                    width={150}  // Reduced size for smaller screens
+                                                    src={
+                                                        userImage || userDetails?.userImage ||
+                                                        "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"
+                                                    }
+                                                    alt="Employee"
+                                                    style={{ borderRadius: "50%" }}
                                                 />
-                                            </Form.Item>
-                                        </Col>
-                                        <Col span={12}>
-                                            <Form.Item
-                                                label="Last Name"
-                                                name="lastName"
-                                                rules={[{ required: true, message: 'Please enter your last name!' }]}
-                                            >
-                                                <Input
-                                                    placeholder="Enter last name"
-                                                    onChange={(e) => handleChange(e, 'lastName')}
-                                                />
-                                            </Form.Item>
-                                        </Col>
-                                    </Row>
-
-                                    <Row gutter={16}>
-                                        <Col span={24}>
-                                            <Form.Item
-                                                label="Email"
-                                                name="email"
-                                                rules={[{ required: true, message: 'Please enter your email!' }]}
-                                            >
-                                                <Input
-                                                    placeholder="Enter email"
-                                                    onChange={(e) => handleChange(e, 'email')} readOnly
-                                                />
-                                            </Form.Item>
-                                        </Col>
-                                        <Col span={24}>
-                                            <Form.Item
-                                                label="Phone Number"
-                                                name="phoneNumber"
-                                                rules={[{ required: true, message: 'Please enter your phone number!' }]}
-                                            >
-                                                <Input
-                                                    placeholder="Enter phone number"
-                                                    type="number"
-                                                    onChange={(e) => handleChange(e, 'phoneNumber')}
-                                                />
-                                            </Form.Item>
-                                        </Col>
-                                    </Row>
-
-                                    <Row gutter={16}>
-                                        <Col span={12}>
-                                            <Form.Item
-                                                label="Gender"
-                                                name="gender"
-                                                rules={[{ required: true, message: 'Please enter your gender!' }]}
-                                            >
-                                                <Input
-                                                    placeholder="Enter gender"
-                                                    onChange={(e) => handleChange(e, 'gender')} readOnly
-                                                />
-                                            </Form.Item>
-                                        </Col>
-                                        <Col span={12}>
-                                            <Form.Item
-                                                label="Role"
-                                                name="role"
-                                                rules={[{ required: true, message: 'Please enter your role!' }]}
-                                            >
-                                                <Input
-                                                    placeholder="Enter role"
-                                                    onChange={(e) => handleChange(e, 'role')} readOnly
-                                                />
-                                            </Form.Item>
-                                        </Col>
-                                    </Row>
-
-                                    <Row gutter={35}>
-                                        <div className="row mt-5">
-                                            <Col span={24}>
-                                                <Form.Item>
-                                                    <Button type="primary" htmlType="submit" className="profile-button" block>
-                                                        Save Profile
-                                                    </Button>
-                                                </Form.Item>
-                                            </Col>
-                                        </div>
-
-                                        <div className="row mt-5">
-                                            <Col span={24}>
-                                                <Button type="primary">
-                                                    <Link to="/account/changePassword" style={{ textDecoration: 'none' }}>Change Password</Link>
+                                                <Button
+                                                    type="primary"
+                                                    icon={<UploadOutlined />}
+                                                    onClick={() => fileInputRefs?.click()}
+                                                >
+                                                    Upload Image
                                                 </Button>
-                                            </Col>
+                                                {/* Hidden file input */}
+                                                <input
+                                                    ref={setfileInputRef}
+                                                    type="file"
+                                                    style={{ display: 'none' }}  // Hide the input
+                                                    onChange={handleFileChange}
+                                                />
+                                            </div>
                                         </div>
-                                    </Row>
+                                        <div className="col-md-2"></div>
+                                        <div className="col-md-7">
+                                            <Row gutter={16}>
+                                                <Col span={12}>
+                                                    <Form.Item
+                                                        label="First Name"
+                                                        name="firstName"
+                                                        rules={[{ required: true, message: 'Please enter your first name!' }]}>
+                                                        <Input
+                                                            placeholder="Enter first name"
+                                                            onChange={(e) => handleChange(e, 'firstName')}
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={12}>
+                                                    <Form.Item
+                                                        label="Last Name"
+                                                        name="lastName"
+                                                        rules={[{ required: true, message: 'Please enter your last name!' }]}>
+                                                        <Input
+                                                            placeholder="Enter last name"
+                                                            onChange={(e) => handleChange(e, 'lastName')}
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                            </Row>
+
+                                            <Row gutter={16}>
+                                                <Col span={24}>
+                                                    <Form.Item
+                                                        label="Email"
+                                                        name="email"
+                                                        rules={[{ required: true, message: 'Please enter your email!' }]}>
+                                                        <Input
+                                                            placeholder="Enter email"
+                                                            onChange={(e) => handleChange(e, 'email')} readOnly
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={24}>
+                                                    <Form.Item
+                                                        label="Phone Number"
+                                                        name="phoneNumber"
+                                                        rules={[{ required: true, message: 'Please enter your phone number!' }]}>
+                                                        <Input
+                                                            placeholder="Enter phone number"
+                                                            type="number"
+                                                            onChange={(e) => handleChange(e, 'phoneNumber')}
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                            </Row>
+
+                                            <Row gutter={16}>
+                                                <Col span={12}>
+                                                    <Form.Item
+                                                        label="Gender"
+                                                        name="gender"
+                                                        rules={[{ required: true, message: 'Please enter your gender!' }]}>
+                                                        <Input
+                                                            placeholder="Enter gender"
+                                                            onChange={(e) => handleChange(e, 'gender')} readOnly
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={12}>
+                                                    <Form.Item
+                                                        label="Role"
+                                                        name="role"
+                                                        rules={[{ required: true, message: 'Please enter your role!' }]}>
+                                                        <Input
+                                                            placeholder="Enter role"
+                                                            onChange={(e) => handleChange(e, 'role')} readOnly
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                            </Row>
+
+                                            <Row gutter={35}>
+                                                <div className="row mt-5">
+                                                    <Col span={24}>
+                                                        <Form.Item>
+                                                            <Button type="primary" htmlType="submit" className="profile-button" block>
+                                                                Save Profile
+                                                            </Button>
+                                                        </Form.Item>
+                                                    </Col>
+                                                </div>
+
+                                                <div className="row mt-5">
+                                                    <Col span={24}>
+                                                        <Button type="primary">
+                                                            <Link to="/account/changePassword" style={{ textDecoration: 'none' }}>Change Password</Link>
+                                                        </Button>
+                                                    </Col>
+                                                </div>
+                                            </Row>
+                                        </div>
+                                    </div>
                                 </Form>
                             </div>
                         </div>
+
+
                     </div>
                 </div>
             </div>
-
         </>
     );
 };
