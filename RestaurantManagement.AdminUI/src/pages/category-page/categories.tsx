@@ -8,18 +8,18 @@ import { ContainerOutlined, DeleteOutlined, EditOutlined, FormOutlined, LeftOutl
 const { Option } = Select;
 
 const CategoryPage = () => {
-    const [categories, setCategories] = useState<CategoryDto[]>([]); // Đây lấy về categories DTO của model Dto
-    const [pageIndex, setPageIndex] = useState(1);  // trang mặt định là 1
-    const [pageSize] = useState(8); // Số lượng mặt định là 8
-    const [hasNextPage, setHasNextPage] = useState(false); // Mặc định không có trang tiếp theo
-    const [hasPreviousPage, setHasPreviousPage] = useState(false); // Mặc định không có trang trước
-    const [totalCount, setTotalCount] = useState(0); // Mặc định tổng số mục là 0
+    const [categories, setCategories] = useState<CategoryDto[]>([]); 
+    const [pageIndex, setPageIndex] = useState(1);  
+    const [pageSize] = useState(8); 
+    const [hasNextPage, setHasNextPage] = useState(false); 
+    const [hasPreviousPage, setHasPreviousPage] = useState(false); 
+    const [totalCount, setTotalCount] = useState(0); 
 
-    const [searchTerm, setSearchTerm] = useState(''); // Mặc định không có từ khóa tìm kiếm
-    const [filter, setFilter] = useState(''); // Mặc định không có bộ lọc
-    const [sortColumn, setSortColumn] = useState(''); // Mặc định không có cột sắp xếp
-    const [sortOrder, setSortOrder] = useState(''); // Mặc định không có thứ tự sắp xếp
-    const [loading, setLoading] = useState(false); // Mặc định không có trạng thái tải
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filter, setFilter] = useState(''); 
+    const [sortColumn, setSortColumn] = useState(''); 
+    const [sortOrder, setSortOrder] = useState(''); 
+    const [loading, setLoading] = useState(false); 
 
     // use Effect tải dữ liệu từ API - cụ thể ở đây là GetAllCategory
     useEffect(() => {
@@ -31,7 +31,7 @@ const CategoryPage = () => {
             setTotalCount(result.totalCount);
         };
         fetchData();
-    }, [pageIndex, pageSize, filter, searchTerm, sortColumn, sortOrder]); // Include pageSize in the dependency array
+    }, [pageIndex, pageSize, filter, searchTerm, sortColumn, sortOrder]); 
 
     //#region Filter
     // Hàm xử lý thay đổi trạng thái bộ lọc (Active, InActive, All)
