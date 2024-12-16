@@ -148,7 +148,6 @@ const AddvoucherForBill = () => {
                                         <Button
                                             type="primary"
                                             htmlType="submit"
-                                            disabled={!isFormValid}
                                         >
                                             {isFormValid ? 'Add Voucher' : 'Next'}
                                         </Button>
