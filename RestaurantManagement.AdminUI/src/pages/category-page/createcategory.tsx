@@ -48,6 +48,9 @@ const CreateCategoryPage = () => {
         if (!name) {
             newErrors.name = "Vui lòng nhập tên loại món";
         }
+        if(name.length > 50){
+            newErrors.name = "Tên loại món không được vượt quá 50 ký tự";
+        }
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
 
