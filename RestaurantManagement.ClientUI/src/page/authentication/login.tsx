@@ -14,6 +14,7 @@ const LoginPage = () => {
         try {
             await CustomerLogin(email, password);
             navigate('/');
+            notification.success({ message: 'Đăng nhập thành công', description: 'Chào mừng bạn đã đến với hệ thống của chúng tôi' });
         } catch (error) {
             console.error('Login failed:', error);
         }
