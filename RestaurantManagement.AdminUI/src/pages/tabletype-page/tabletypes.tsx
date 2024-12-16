@@ -28,7 +28,7 @@ const TableTypesPage = () => {
         };
         fetchData();
     }, [pageIndex, pageSize, searchTerm, filterStatus, sortColumn, sortOrder]);
-
+    //#region  handle delete
     const handleDelete = async (id: string) => {
         Modal.confirm({
             title: 'Bạn có thực sự muốn xoá loại bàn này?',
@@ -62,7 +62,7 @@ const TableTypesPage = () => {
             }
         });
     }
-
+    //#endregion 
     const handleRestore = async (id: string) => {
         Modal.confirm({
             title: 'Bạn có muốn khôi phục loại bàn này?',
