@@ -98,6 +98,12 @@ const BookFormOfNormal = () => {
         if (!numberOfCustomer) {
             newErrors.numberOfCustomer = 'Vui lòng chọn số lượng khách';
         }
+        if (Number(numberOfCustomer) < 0) {
+            newErrors.numberOfCustomer = 'Số lượng khách không thể là số âm';
+        }
+        if (!/^\d+$/.test(numberOfCustomer.toString())) {
+            newErrors.numberOfCustomer = 'Số lượng khách phải là số';
+        }
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
