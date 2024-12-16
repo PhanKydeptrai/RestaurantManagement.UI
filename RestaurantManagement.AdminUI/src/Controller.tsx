@@ -155,7 +155,7 @@ function Controller() {
                     </ProtectedRoute>
                 } />
                 <Route path="/account" element={
-                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Receptionist', 'Waiter', 'Cashier']}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Receptionist', 'Waiter', 'Carshier']}>
                         <AccountPage />
                     </ProtectedRoute>
                 } />
@@ -176,7 +176,7 @@ function Controller() {
                     </ProtectedRoute>
                 } />
                 <Route path="/vouchers" element={
-                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Receptionist', 'Waiter', 'Cashier']}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Receptionist', 'Waiter', 'Carshier']}>
                         <VoucherPage />
                     </ProtectedRoute>
                 } />
@@ -202,12 +202,12 @@ function Controller() {
                     </ProtectedRoute>
                 } />
                 <Route path="/tableorder/:tableId" element={
-                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Waiter', 'Cashier']}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Waiter', 'Carshier']}>
                         <OrderDetailPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/orders" element={
-                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Waiter', 'Cashier']}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Waiter', 'Carshier']}>
                         <OrderPage />
                     </ProtectedRoute>
                 } />
@@ -217,17 +217,17 @@ function Controller() {
                     </ProtectedRoute>
                 } />
                 <Route path="/orders/:tableId" element={
-                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Waiter', 'Cashier']}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Waiter', 'Carshier']}>
                         <OrderDetailPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/addvoucher/:tableId" element={
-                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Cashier']}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Carshier']}>
                         <AddvoucherForBill />
                     </ProtectedRoute>
                 } />
                 <Route path="/paymentInfo/:tableId" element={
-                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Cashier']}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Carshier']}>
                         <TransactionPage />
                     </ProtectedRoute>
                 } />
@@ -237,17 +237,17 @@ function Controller() {
                     </ProtectedRoute>
                 } />
                 <Route path="/bills" element={
-                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Cashier']}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Carshier']}>
                         <BillPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/bill/detailbill/:billId" element={
-                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Cashier']}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Carshier']}>
                         <BillDetailPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/account/changePassword" element={
-                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Waiter', 'Receptionist', 'Cashier']}>
+                    <ProtectedRoute requiredRoles={['Boss', 'Manager', 'Waiter', 'Receptionist', 'Carshier']}>
                         <ChangePasswordPage />
                     </ProtectedRoute>
                 } />

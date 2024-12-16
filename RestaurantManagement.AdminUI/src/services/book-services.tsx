@@ -6,16 +6,15 @@ import baseUrlDelete from "../apis/basedelete";
 export const Booking = "booking";
 
 export const GetAllBooking = async (filterBookingStatus: string, filterPaymentStatus: string, searchTerm: string, sortColumn: string, sortOrder: string, page: number, pageSize: number) => {
-    try {
-        const response: AxiosResponse = await baseUrl.get(`${Booking}?filterBookingStatus=${filterBookingStatus}&filterPaymentStatus=${filterPaymentStatus}&searchTerm=${searchTerm}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&page=${page}&pageSize=${pageSize}`);
-        console.log(response.data);
-
-        // Ensure response.data.value is always an array
-        return response.data.value.items || [];
-    } catch (error) {
-        console.error("Error fetching bookings:", error);
-        return []; // Return an empty array on error to avoid mapping issues
-    }
+    const res = await baseUrl.get<BookDto[]>(`${Booking}?filterBookingStatus=${filterBookingStatus}&filterPaymentStatus=${filterPaymentStatus}&searchTerm=${searchTerm}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&page=${page}&pageSize=${pageSize}`)
+        .then((response: AxiosResponse) => {
+            console.log(response.data.value)
+            return response.data.value;
+        }).catch((error) => {
+            console.log(error);
+            return error;
+        })
+    return res
 };
 
 export const GetBookingById = async (bookId: string) => {
