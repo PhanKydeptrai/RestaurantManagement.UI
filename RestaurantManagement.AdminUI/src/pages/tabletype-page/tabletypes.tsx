@@ -63,6 +63,7 @@ const TableTypesPage = () => {
         });
     }
     //#endregion 
+    //#region handle restore 
     const handleRestore = async (id: string) => {
         Modal.confirm({
             title: 'Bạn có muốn khôi phục loại bàn này?',
@@ -96,6 +97,7 @@ const TableTypesPage = () => {
             }
         });
     }
+    //#endregion
 
     const columns: TableColumnsType<TableTypeDto> = [
         {
