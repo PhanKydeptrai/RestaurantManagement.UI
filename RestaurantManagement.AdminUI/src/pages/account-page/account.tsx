@@ -87,15 +87,15 @@ const AccountPage = () => {
 
                 if (updatedUser) {
                     notification.success({
-                        message: 'Profile Updated Successfully',
-                        description: 'Your profile details have been updated.',
+                        message: 'Cập nhật thành công',
+                        description: 'Thông tin của bạn đã được cập nhật thành công.',
                     });
                     setUserDetails(updatedUser);  // Update state with the updated user details
                     window.location.reload();
                 } else {
                     notification.error({
-                        message: 'Update Failed',
-                        description: 'There was an issue updating your profile. Please try again.',
+                        message: 'Cập nhật thất bại',
+                        description: 'Có lỗi xảy ra trong quá trình cập nhật thông tin. Vui lòng thử lại.',
                     });
                 }
             }
@@ -217,6 +217,7 @@ const AccountPage = () => {
                                             >
                                                 <Input
                                                     placeholder="Enter phone number"
+                                                    type="number"
                                                     onChange={(e) => handleChange(e, 'phoneNumber')}
                                                 />
                                             </Form.Item>
