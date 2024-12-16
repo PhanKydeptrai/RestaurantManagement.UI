@@ -181,7 +181,7 @@ const RegisterPage = () => {
 
                     {/* Image Column */}
                     <div className="col-md-6 d-none d-md-block">
-                        {/* <img src="https://skillking.fpt.edu.vn/wp-content/uploads/2020/11/FSK_poster-448x900-01.jpg" alt="Descriptive Alt Text" className="img-fluid h-100 w-100" style={{ objectFit: 'cover' }} /> */}
+                        <img src="https://res.cloudinary.com/dv7cigihm/image/upload/v1734382290/g1qns3zx9jm5ul5tw0vg.jpg" alt="Descriptive Alt Text" className="img-fluid h-100 w-100" style={{ objectFit: 'cover' }} />
                     </div>
                 </div>
             </div>
