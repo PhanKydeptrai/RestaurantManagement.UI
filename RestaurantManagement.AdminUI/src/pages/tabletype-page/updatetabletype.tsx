@@ -5,7 +5,7 @@ import { Breadcrumb, Col, Row, Image, Button, notification, Select, Form, Input 
 import { UploadOutlined } from '@ant-design/icons';
 const { Option } = Select;
 const UpdateTableTypePage = () => {
-    const { tableTypeId } = useParams<{ tableTypeId: string }>();
+    const { tableTypeId } = useParams<{ tableTypeId: string }>();// 
     const [tableTypeName, setTableTypeName] = useState<string>('');
     const [tableCapacity, setTableCapacity] = useState<number>(0);
     const [imageUrl, setImageUrl] = useState<string | null>(null);

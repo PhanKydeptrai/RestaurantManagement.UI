@@ -3,12 +3,12 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import { GetDetailCategory, UpdateCategory } from '../../services/category-service';
-import { Breadcrumb, Button, Col, Row, Image } from 'antd';
+import { Breadcrumb, Button, Col, Row, Image, notification, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
 const UpdateCategoryPage = () => {
-    const { categoryId } = useParams<{ categoryId: string }>();
-    const [categoryName, setCategoryName] = useState<string>('');
+    const { categoryId } = useParams<{ categoryId: string }>(); // lấy id của category lên url
+    const [categoryName, setCategoryName] = useState<string>(''); 
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const [errors, setErrors] = useState<{ categoryName?: string }>({});
@@ -78,6 +78,9 @@ const UpdateCategoryPage = () => {
         if (!categoryName) {
             newErrors.categoryName = "Vui lòng nhập tên loại món";
         }
+        if(categoryName.length < 50){
+            newErrors.categoryName = "Tên loại món không được quá 50 ký tự";
+        }
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     }
@@ -100,12 +103,19 @@ const UpdateCategoryPage = () => {
                 const response = await UpdateCategory(categoryId, formData);
                 console.log('Category updated successfully:', response);
                 if (response.isSuccess) {
-                    console.log("Success");
+                    notification.success({
+                        message:  "Cập nhật thành công",
+                        description: "Loại món đã đưọc cập nhật thành công!"
+                    })
                     setTimeout(() => {
                         navigate('/categories'); // Redirect to category list after success
                     }, 2000);
                     notifySucess();
                 } else {
+                    notification.error({
+                        message: "Cập nhật thất bại",
+                        description: "Xin lỗi, chúng tôi không thể cập nhật loại món này. Vui lòng thử lại sau."
+                        });
                     console.log("Failed");
                     notifyError();
                 }

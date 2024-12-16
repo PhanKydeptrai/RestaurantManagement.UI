@@ -88,14 +88,18 @@ const AccountPage = () => {
                 if (updatedUser) {
                     notification.success({
                         message: 'Cập nhật thành công',
+
                         description: 'Trang cá nhân của bạn đã được cập nhật thành công.',
+
                     });
                     setUserDetails(updatedUser);  // Update state with the updated user details
                     window.location.reload();
                 } else {
                     notification.error({
                         message: 'Cập nhật thất bại',
+
                         description: 'Cập nhật trang cá nhân thất bại .Vui lòng thử lại.',
+
                     });
                 }
             }
@@ -217,6 +221,7 @@ const AccountPage = () => {
                                             >
                                                 <Input
                                                     placeholder="Enter phone number"
+                                                    type="number"
                                                     onChange={(e) => handleChange(e, 'phoneNumber')}
                                                 />
                                             </Form.Item>
