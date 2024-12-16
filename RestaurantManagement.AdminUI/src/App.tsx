@@ -30,7 +30,7 @@ function App() {
   const isTransactionPage = ['/deleteaccount', '/notimeemail', '/notime', '/donetransaction', '/errortransaction', '/forgotpassword', '/verifyaccount', '/verifyaccountcomplete', '/changepasswordresult', '/transactionresult'].includes(location.pathname);
   return (
     <>
-      {!isLoginPage && !isTransactionPage && <Header />}
+      {/* {!isLoginPage && !isTransactionPage && <Header />} */}
       {!isLoginPage && !isTransactionPage && (
         <div className="">
           <SliderBar />

@@ -8,7 +8,7 @@ import { UpdateAccountCus } from "../../services/auth-services";
 
 const AccountPage = () => {
     const [userDetails, setUserDetails] = useState<CustomerDto | null>(null);
-    const fileInputRef = useRef<HTMLInputElement | null>(null); // useRef for file input
+    const [fileInputRefs, setfileInputRef] = useState<HTMLInputElement | null>(null); // useRef for file input
     const [firstName, setFirstName] = useState<string>('');
     const [lastName, setLastName] = useState<string>('');
     const [phoneNumber, setPhoneNumber] = useState<string>('');
@@ -44,6 +44,19 @@ const AccountPage = () => {
         fetchUserInfo();
     }, []);
 
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setUserImage(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>, field: keyof CustomerDto) => {
         if (userDetails) {
             setUserDetails({
@@ -53,16 +66,6 @@ const AccountPage = () => {
         }
     };
 
-    const handleImageChange = (file: any) => {
-        if (file) {
-            console.log('Image file selected:', file);
-            setUserDetails({
-                ...userDetails!,
-                userImage: URL.createObjectURL(file) // Just for demo
-            });
-        }
-        return false; // Prevents auto-upload behavior
-    };
 
     const handleSubmit = async (values: any) => {
         try {
@@ -73,12 +76,11 @@ const AccountPage = () => {
                 formData.append('phoneNumber', values.phoneNumber);
                 formData.append('gender', values.gender);
 
-                if (userDetails.userImage && userDetails.userImage !== values.userImage) {
-                    const imageFile = fileInputRef.current?.files?.[0];
-                    if (imageFile) {
-                        formData.append('userImage', imageFile);
-                    }
+                // If there's an updated image, append it as well
+                if (fileInputRefs && fileInputRefs.files) {
+                    formData.append('image', fileInputRefs.files[0]);
                 }
+                console.log(userDetails.userImage);
                 console.log(formData);
                 const updateCus = await UpdateAccountCus(formData, userDetails.userId);
                 if (updateCus) {
@@ -115,61 +117,61 @@ const AccountPage = () => {
                 <div className="row">
                     <div className="col-12" key={userDetails?.userId}>
                         <div className="row">
-                            <div className="col-md-3 border-right">
-                                <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-                                    <Image
-                                        width={150}  // Reduced size for smaller screens
-                                        src={
-                                            userDetails?.userImage ||
-                                            "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"
-                                        }
-                                        alt="Employee"
-                                        style={{ borderRadius: "50%" }}
-                                    />
-                                    <Upload
-                                        ref={fileInputRef}
-                                        accept="image/*"
-                                        showUploadList={false}
-                                        beforeUpload={handleImageChange}
-                                    >
-                                        <Button
-                                            type="primary"
-                                            icon={<UploadOutlined />}
-                                            style={{ marginTop: '10px' }}
-                                        >
-                                            Change Image
-                                        </Button>
-                                    </Upload>
-                                </div>
-                            </div>
-                            <div className="col-md-9 border-right">
-                                <div className="p-3 py-5">
-                                    <Form
-                                        layout="vertical"
-                                        initialValues={userDetails}
-                                        onFinish={handleSubmit}
-                                    >
+                            <Form
+                                layout="vertical"
+                                initialValues={userDetails}
+                                onFinish={handleSubmit}
+                            >
+                                <div className="row">
+                                    <div className="col-md-3 border-right">
+                                        <div className="d-flex flex-column align-items-center text-center p-3 py-5">
+                                            <Image
+                                                width={150}  // Reduced size for smaller screens
+                                                src={
+                                                    userImage || userDetails?.userImage ||
+                                                    "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"
+                                                }
+                                                alt="Customer"
+                                                style={{ borderRadius: "50%" }}
+                                            />
+                                            <Button
+                                                type="primary"
+                                                icon={<UploadOutlined />}
+                                                onClick={() => fileInputRefs?.click()}
+                                            >
+                                                Upload Image
+                                            </Button>
+                                            {/* Hidden file input */}
+                                            <input
+                                                ref={(input) => setfileInputRef(input)}  // Hoặc sử dụng useRef thay vì useState
+                                                type="file"
+                                                style={{ display: 'none' }}
+                                                onChange={handleFileChange}
+                                            />
+
+                                        </div>
+                                    </div>
+                                    <div className="col-md-2"></div>
+                                    <div className="col-md-7">
                                         <Row gutter={16}>
-                                            <Col xs={24} sm={12}>
+                                            <Col span={12}>
                                                 <Form.Item
                                                     label="First Name"
                                                     name="firstName"
-                                                    rules={[{ required: true, message: 'Vui lòng nhập tên của bạn' }]}
-                                                >
+                                                    rules={[{ required: true, message: 'Please enter your first name!' }]}>
                                                     <Input
-                                                        placeholder="Nhập tên"
+                                                        placeholder="Enter first name"
                                                         onChange={(e) => handleChange(e, 'firstName')}
                                                     />
                                                 </Form.Item>
                                             </Col>
-                                            <Col xs={24} sm={12}>
+                                            <Col span={12}>
                                                 <Form.Item
                                                     label="Last Name"
                                                     name="lastName"
-                                                    rules={[{ required: true, message: 'Vui lòng nhập họ của bạn' }]}
-                                                >
+                                                    rules={[{ required: true, message: 'Please enter your last name!' }]}>
                                                     <Input
-                                                        placeholder="Nhập họ"
+                                                        placeholder="Enter last name"
                                                         onChange={(e) => handleChange(e, 'lastName')}
                                                     />
                                                 </Form.Item>
@@ -181,10 +183,9 @@ const AccountPage = () => {
                                                 <Form.Item
                                                     label="Email"
                                                     name="email"
-                                                    rules={[{ required: true, message: 'Vui lòng nhập email' }]}
-                                                >
+                                                    rules={[{ required: true, message: 'Please enter your email!' }]}>
                                                     <Input
-                                                        placeholder="Nhập email"
+                                                        placeholder="Enter email"
                                                         onChange={(e) => handleChange(e, 'email')} readOnly
                                                     />
                                                 </Form.Item>
@@ -193,11 +194,10 @@ const AccountPage = () => {
                                                 <Form.Item
                                                     label="Phone Number"
                                                     name="phoneNumber"
-                                                    rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}
-                                                >
+                                                    rules={[{ required: true, message: 'Please enter your phone number!' }]}>
                                                     <Input
+                                                        placeholder="Enter phone number"
                                                         type="number"
-                                                        placeholder="Nhập số điện thoại"
                                                         onChange={(e) => handleChange(e, 'phoneNumber')}
                                                     />
                                                 </Form.Item>
@@ -223,7 +223,6 @@ const AccountPage = () => {
                                             </Col>
                                         </Row>
 
-
                                         <Row gutter={35}>
                                             <div className="row mt-5">
                                                 <Col span={24}>
@@ -238,20 +237,21 @@ const AccountPage = () => {
                                             <div className="row mt-5">
                                                 <Col span={24}>
                                                     <Button type="primary">
-                                                        <Link to="/changePassword" style={{ textDecoration: 'none' }}>Change Password</Link>
+                                                        <Link to="/account/changePassword" style={{ textDecoration: 'none' }}>Change Password</Link>
                                                     </Button>
                                                 </Col>
                                             </div>
                                         </Row>
-                                    </Form>
+                                    </div>
                                 </div>
-                            </div>
+                            </Form>
                         </div>
+
                     </div>
                 </div>
 
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 

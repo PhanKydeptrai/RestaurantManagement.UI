@@ -5,7 +5,10 @@ import { Link } from "react-router-dom";
 import { ContainerOutlined, DeleteOutlined, EditOutlined, FormOutlined, LeftOutlined, RedoOutlined, RightOutlined } from '@ant-design/icons';
 import { Button, Input, Select, Space, Table, Pagination, Row, Col, Breadcrumb, Tag, notification, TableColumnsType, Modal } from "antd";
 const { Option } = Select;
-
+export interface CategoryInfo {
+    categoryId: string;
+    categoryName: string;
+}
 const MealPage = () => {
     const [meals, setMeals] = useState<MealDto[]>([]);
     const [pageIndex, setPageIndex] = useState(1);
@@ -21,6 +24,9 @@ const MealPage = () => {
     const [filterMealStatus, setFilterMealStatus] = useState('');
     const [loading, setLoading] = useState(false);
 
+    const [categoryId, setCategoryId] = useState('');
+    const [categoryName, setCategoryName] = useState('');
+    const [categoryinfo, setCategoryInfo] = useState<CategoryInfo[]>([]);
     useEffect(() => {
         const fetchData = async () => {
             const result = await GetAllMeal(filterCategory, filterSellStatus, filterMealStatus, searchTerm, sortColumn, sortOrder, pageIndex, pageSize);
@@ -31,7 +37,17 @@ const MealPage = () => {
         };
         fetchData();
     }, [pageIndex, pageSize]);
-
+    useEffect(() => {
+        fetch('https://restaurantmanagement.azurewebsites.net/api/category/category-info')
+            .then(response => response.json())
+            .then(data => setCategoryInfo(data.value))
+            .catch(error => console.log(error));
+    }, []);
+    const handleCategoryChange = (value: string) => {
+        const selectedCategory = categoryinfo.find(category => category.categoryId === value);
+        setCategoryId(value);
+        setCategoryName(selectedCategory ? selectedCategory.categoryName : '');
+    };
     //#region Filter
 
     const handleFilterMealStatus = async (value: string) => {
@@ -59,19 +75,13 @@ const MealPage = () => {
         }
     };
     //#endregion
-    const handleSearchCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setFilterCategory(event.target.value);
+    const handleFilterCategory = async (value: string) => {
+        const results = await GetAllMeal(value, filterSellStatus, filterMealStatus, searchTerm, '0', '0', pageIndex, pageSize);
+        setMeals(results.items);
+        setFilterCategory(value);
+        setPageIndex(1);
+        setTotalCount(results.totalCount);
     };
-    const handleSearchCategorySubmit = async (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
-            const results = await FilterCategory(filterCategory, pageIndex, pageSize);
-            setPageIndex(1);
-            setMeals(results.items);
-            setHasNextPage(results.hasNextPage);
-            setHasPreviousPage(results.haspreviousPage);
-            setTotalCount(results.totalCount);
-        }
-    }
 
     //#region Delete and Restore
     const handleDelete = async (id: string) => {
@@ -217,12 +227,19 @@ const MealPage = () => {
                     </Select>
                 </div>
                 <div className="col-md-3">
-                    <Input
-                        placeholder="Search by Category"
-                        value={filterCategory}
-                        onChange={handleSearchCategoryChange}
-                        onKeyDown={handleSearchCategorySubmit}
-                    />
+                    <Select
+                        defaultValue=""
+                        style={{ width: '100%' }}
+                        onChange={handleFilterCategory}
+                        placeholder="Select Category"
+                    >
+                        <Option value="">All Categories</Option>
+                        {categoryinfo.map((category) => (
+                            <Select.Option key={category.categoryId} value={category.categoryName}>
+                                {category.categoryName}
+                            </Select.Option>
+                        ))}
+                    </Select>
                 </div>
                 <div className="col-md-3">
                     <Input
