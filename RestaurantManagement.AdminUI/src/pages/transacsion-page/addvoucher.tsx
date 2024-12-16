@@ -148,6 +148,7 @@ const AddvoucherForBill = () => {
                                         <Button
                                             type="primary"
                                             htmlType="submit"
+                                            onClick={handleAddVoucher}
                                         >
                                             {isFormValid ? 'Add Voucher' : 'Next'}
                                         </Button>
