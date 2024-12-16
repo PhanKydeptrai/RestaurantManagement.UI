@@ -71,13 +71,13 @@ const Login = () => {
                                 <form onSubmit={handleLogin}>
                                     <div className="mb-2">
                                         <label htmlFor="exampleInputEmail1" className="form-label">
-                                            Nhập email hoặc số điện thoại
+                                            Nhập email
                                         </label>
                                         <input
 
                                             className="form-control"
                                             onChange={(e) => setEmail(e.target.value)}
-                                            placeholder="Nhập email hoặc số điện thoại"
+                                            placeholder="Nhập email"
                                         />
                                         {errors.email && <div className="text-danger">{errors.email}</div>}
                                     </div>
