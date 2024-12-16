@@ -17,7 +17,7 @@ const AddvoucherForBill = () => {
     const navigate = useNavigate();
     const [voucherCode, setVoucherCode] = useState<string>('');
     const [phoneNumber, setPhoneNumber] = useState<string>('');
-
+    const isFormValid = voucherCode.trim() !== '' || phoneNumber.trim() !== '';
     // Lấy dữ liệu order detail khi page load
     useEffect(() => {
         const fetchData = async () => {
@@ -95,7 +95,7 @@ const AddvoucherForBill = () => {
                     <Col>
                         <Breadcrumb>
                             <Breadcrumb.Item>
-                                <Link to="/"><td>Dashboard</td></Link>
+                                <Link to="/dashboard"><td>Dashboard</td></Link>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>
                                 <Link to={`/orders/${tableId}`}>Order Detail</Link>
@@ -145,7 +145,13 @@ const AddvoucherForBill = () => {
                                         />
                                     </Form.Item>
                                     <Form.Item>
-                                        <Button type="primary" htmlType="submit">Add Voucher</Button>
+                                        <Button
+                                            type="primary"
+                                            htmlType="submit"
+                                            disabled={!isFormValid}
+                                        >
+                                            {isFormValid ? 'Add Voucher' : 'Next'}
+                                        </Button>
                                     </Form.Item>
                                 </Form>
                             </Card>

@@ -43,7 +43,7 @@ const ChangePasswordPage = () => {
                 <Col>
                     <Breadcrumb>
                         <Breadcrumb.Item>
-                            <Link to="/">Dashboard</Link>
+                            <Link to="/dashboard">Dashboard</Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
                             <Link to="/account">Account</Link>

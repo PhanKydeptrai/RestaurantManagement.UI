@@ -108,7 +108,7 @@ const MenuPage = () => {
                                             description={
                                                 <>
                                                     <div>Category: {meal.categoryName}</div>
-                                                    <div>Price: {meal.price}</div>
+                                                    <div>Price: {meal.price}đ</div>
                                                     {meal.sellStatus === 'Inactive' && (
                                                         <Tag color="red">Not Available</Tag>
                                                     )}

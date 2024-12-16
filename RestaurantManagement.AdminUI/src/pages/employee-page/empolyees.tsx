@@ -205,7 +205,7 @@ const EmployeePage = () => {
                 <Col>
                     <Breadcrumb>
                         <Breadcrumb.Item>
-                            <Link to="/"><td>Dashboard</td></Link>
+                            <Link to="/dashboard"><td>Dashboard</td></Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>Employees</Breadcrumb.Item>
                     </Breadcrumb>

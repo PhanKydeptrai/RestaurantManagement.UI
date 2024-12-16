@@ -122,7 +122,7 @@ const AccountPage = () => {
                     <nav aria-label="breadcrumb" className="bg-body-tertiary rounded-3 p-3 mb-4">
                         <ol className="breadcrumb mb-0">
                             <li className="breadcrumb-item">
-                                <Link to="/"><dt>Dashboard</dt></Link>
+                                <Link to="/dashboard"><dt>Dashboard</dt></Link>
                             </li>
                             <li className="breadcrumb-item" aria-current="page">Account</li>
                         </ol>
@@ -232,7 +232,7 @@ const AccountPage = () => {
                                             >
                                                 <Input
                                                     placeholder="Enter gender"
-                                                    onChange={(e) => handleChange(e, 'gender')}
+                                                    onChange={(e) => handleChange(e, 'gender')} readOnly
                                                 />
                                             </Form.Item>
                                         </Col>
@@ -244,7 +244,7 @@ const AccountPage = () => {
                                             >
                                                 <Input
                                                     placeholder="Enter role"
-                                                    onChange={(e) => handleChange(e, 'role')}
+                                                    onChange={(e) => handleChange(e, 'role')} readOnly
                                                 />
                                             </Form.Item>
                                         </Col>

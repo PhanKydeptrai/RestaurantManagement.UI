@@ -53,7 +53,7 @@ const BillDetailPage = () => {
             <Row gutter={16} style={{ marginBottom: 24 }}>
                 <Col>
                     <Breadcrumb>
-                        <Breadcrumb.Item><Link to="/">Dashboard</Link></Breadcrumb.Item>
+                        <Breadcrumb.Item><Link to="/dashboard">Dashboard</Link></Breadcrumb.Item>
                         <Breadcrumb.Item><Link to="/bills">Bill</Link></Breadcrumb.Item>
                         <Breadcrumb.Item>Detail</Breadcrumb.Item>
                     </Breadcrumb>
