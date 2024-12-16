@@ -57,11 +57,11 @@ const CreateCategoryPage = () => {
     }
 
     const handleSubmit = async (event: React.FormEvent) => {
-        event.preventDefault();
+        event.preventDefault(); // ngăn chặn sự kiện mặc định của form 
         if (!validateForm()) {
             notifyError();
             return;
-        }
+        } // hiển thị thông báo khi lỗi 
         const formData = new FormData();
         formData.append('name', name);
         //formData.append('description', description);
