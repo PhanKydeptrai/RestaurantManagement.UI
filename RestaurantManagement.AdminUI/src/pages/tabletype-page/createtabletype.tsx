@@ -6,15 +6,15 @@ import { Button, Form, Image, Input, notification, Select } from "antd";
 import TextArea from "antd/es/input/TextArea";
 const { Option } = Select;
 const CreateTableTypePage = () => {
-    const [tableTypeName, setTableTypeName] = useState('');
+    const [tableTypeName, setTableTypeName] = useState(''); 
     const [status, setStatus] = useState('');
     const [tablePrice, setTablePrice] = useState('');
     const [description, setDescription] = useState('');
     const [tableCapacity, setTableCapacity] = useState('');
     const [imageUrl, setImageUrl] = useState<string | null>(null);
-    const navigate = useNavigate();
+    const navigate = useNavigate(); // chuyển trang
     const [errors, setErrors] = useState<{ tableTypeName?: string, status?: string, tablePrice?: string, tableCapacity?: string }>();
-
+    // dùng để trả thông báo trên form input
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,6 +59,9 @@ const CreateTableTypePage = () => {
         if (!tableTypeName) {
             newErrors.tableTypeName = 'Vui lòng nhập tên loại bàn!';
         }
+        if(tableTypeName.length > 50){
+            newErrors.tableTypeName = 'Tên loại bàn không hợp lệ';
+        }
         if (!tablePrice) {
             newErrors.tablePrice = 'Vui lòng nhập giá bàn!';
         }
@@ -82,7 +85,7 @@ const CreateTableTypePage = () => {
     };
 
     const handleSubmit = async (event: React.FormEvent) => {
-        event.preventDefault();
+        event.preventDefault(); // ngăn chặn hành động mặc định của form 
         if (!validationForm()) {
             notifyError();
             return;
