@@ -292,7 +292,7 @@ const BookFormOfNormal = () => {
                             <div className="card-body">
                                 <h5 className="card-title text-center">Phí đặt bàn</h5>
                                 <p className="card-text">
-                                    Đặt bàn sẽ tính phí, thành toán 50% phí đặt bàn khi đặt bàn trên website.
+                                    Đặt bàn sẽ tính phí, thành toán 50% phí đặt bàn khi đặt bàn trên website. Phí đặt bàn sẽ không hoàn lại nếu quý khách hủy đặt bàn.
                                 </p>
                             </div>
                         </div>
@@ -302,7 +302,7 @@ const BookFormOfNormal = () => {
                             <div className="card-body">
                                 <h5 className="card-title text-center">Đổi bàn</h5>
                                 <p className="card-text">
-                                    Nhà hàng chỉ hỗ trợ khách đổi bàn sang loại bàn có nhiều người hơn.
+                                    Nhà hàng chỉ hỗ trợ khách đổi bàn sang loại bàn có nhiều người hơn. Không hỗ trợ đổi bàn sang loại bàn ít người hơn. Và nếu có bất kì lỗi hay vấn đề gì từ bàn của nhà hàng, nhà hàng sẽ hỗ trợ đổi bàn cho khách hàng.
                                 </p>
                             </div>
                         </div>
@@ -310,9 +310,9 @@ const BookFormOfNormal = () => {
                     <div className="col-md-3 mb-4">
                         <div className="card h-100">
                             <div className="card-body">
-                                <h5 className="card-title text-center">Ưu đãi</h5>
+                                <h5 className="card-title text-center">Số khách</h5>
                                 <p className="card-text">
-                                    Đặt nhiều hơn 5 bàn giảm 20% phí.
+                                    Đặt bàn trực tuyến chỉ áp dụng cho đơn đặt bàn dưới 20 người. Để đặt bàn trên 20 người, vui lòng liên hệ hotline (+84) 984009581.
                                 </p>
                             </div>
                         </div>
