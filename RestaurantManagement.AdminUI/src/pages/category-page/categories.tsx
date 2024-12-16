@@ -8,9 +8,9 @@ import { ContainerOutlined, DeleteOutlined, EditOutlined, FormOutlined, LeftOutl
 const { Option } = Select;
 
 const CategoryPage = () => {
-    const [categories, setCategories] = useState<CategoryDto[]>([]); 
-    const [pageIndex, setPageIndex] = useState(1);  
-    const [pageSize] = useState(8); 
+    const [categories, setCategories] = useState<CategoryDto[]>([]); // Lưu trữ danh sách các Categories sẽ được hiển thị
+    const [pageIndex, setPageIndex] = useState(1);  // Lưu trữ chỉ số trang hiện tại (bắt đầu từ 1)
+    const [pageSize] = useState(8); // Lưu trữ số lượng danh mục hiển thị trên mỗi trang
     const [hasNextPage, setHasNextPage] = useState(false); 
     const [hasPreviousPage, setHasPreviousPage] = useState(false); 
     const [totalCount, setTotalCount] = useState(0); 

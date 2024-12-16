@@ -73,7 +73,7 @@ const CreateCategoryPage = () => {
         const response = await CreateCategory(formData);
         console.log(response);
 
-        //Show toast success
+        //Hiển thị thông báo khi tạo thành công
         if (response.isSuccess) {
             notification.success({
                 message: "Thành công",
