@@ -85,7 +85,7 @@ const LoginPage = () => {
                                     <div className="mb-2">
 
                                         <label htmlFor="exampleInputEmail1" className="form-label">
-                                            Nhập email hoặc số điện thoại
+                                            Nhập email
                                         </label>
                                         <input
                                             type="email"
@@ -94,7 +94,7 @@ const LoginPage = () => {
                                             aria-describedby="emailHelp"
                                             // value="email" Tầm bậy
                                             onChange={(e) => setEmail(e.target.value)}
-                                            placeholder="Nhập email hoặc số điện thoại"
+                                            placeholder="Nhập email"
                                         />
                                         {errors.email && <div className="text-danger">{errors.email}</div>}
                                     </div>
