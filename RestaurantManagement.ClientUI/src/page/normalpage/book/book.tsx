@@ -281,64 +281,76 @@ const BookFormOfNormal = () => {
         // });
         e.preventDefault();
         console.log('submit');
+        Modal.confirm({
+            title: 'Xác nhận đặt bàn',
+            okText: 'Đồng ý',
+            okType: 'primary',
+            cancelText: 'Huỷ',
+            content: (
+                <>
+                    <p> Bạn có chắc chắn muốn đặt bàn không? Bạn đã đọc và đồng ý với điều khoản của nhà hàng không?</p>
+                </>
+            ),
+            onOk: async () => {
+                const token = sessionStorage.getItem('token');
+                if (!token) {
+                    const data = {
+                        firstName: firstName,
+                        lastName: lastName,
+                        email: email,
+                        phoneNumber: phoneNumber,
+                        bookingDate: bookingDate,
+                        bookingTime: `${bookingTime}:00`,
+                        numberOfCustomers: numberOfCustomer,
+                        note: note
+                    }
+                    console.log("Data be sent: ", data);
+                    try {
+                        const res = await CreateBooking(data);
+                        console.log("this is response: ", res);
+                        if (res && res.isSuccess) {
+                            notification.success({
+                                message: 'Đặt bàn thành công',
+                                description: 'Vui lòng kiểm tra email để xác nhận đơn đặt bàn',
+                            });
+                        } else {
+                            notification.error({
+                                message: 'Đặt bàn thát bại',
+                                description: 'Vui lòng thử lại sau',
+                            });
+                        }
 
-        const token = sessionStorage.getItem('token');
-        if (!token) {
-            const data = {
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                phoneNumber: phoneNumber,
-                bookingDate: bookingDate,
-                bookingTime: `${bookingTime}:00`,
-                numberOfCustomers: numberOfCustomer,
-                note: note
-            }
-            console.log("Data be sent: ", data);
-            try {
-                const res = await CreateBooking(data);
-                console.log("this is response: ", res);
-                if (res && res.isSuccess) {
-                    notification.success({
-                        message: 'Booking successfully',
-                        description: 'Please check your email to confirm the booking',
-                    });
+                    } catch (error) {
+                        console.log("this is error: ", error);
+                    }
                 } else {
-                    notification.error({
-                        message: 'Booking failed',
-                        description: 'Please try again later',
-                    });
+                    const dataSub = {
+                        bookingDate: bookingDate,
+                        bookingTime: `${bookingTime}:00`,
+                        numberOfCustomers: numberOfCustomer,
+                        note: note
+                    }
+                    console.log("Data be sent: ", dataSub);
+                    try {
+                        const res = await BookingSubcribe(dataSub);
+                        console.log("this is response: ", res);
+                        if (res && res.isSuccess) {
+                            notification.success({
+                                message: 'Đặt bàn thành công',
+                                description: 'Kiểm tra lại email để xác nhận đơn đặt bàn',
+                            });
+                        } else {
+                            notification.error({
+                                message: 'Đặt bàn thất bại',
+                                description: 'Vui lòng thử lại sau',
+                            });
+                        }
+                    } catch (error) {
+                        console.log("this is error: ", error);
+                    }
                 }
-
-            } catch (error) {
-                console.log("this is error: ", error);
             }
-        } else {
-            const dataSub = {
-                bookingDate: bookingDate,
-                bookingTime: `${bookingTime}:00`,
-                numberOfCustomers: numberOfCustomer,
-                note: note
-            }
-            console.log("Data be sent: ", dataSub);
-            try {
-                const res = await BookingSubcribe(dataSub);
-                console.log("this is response: ", res);
-                if (res && res.isSuccess) {
-                    notification.success({
-                        message: 'Booking successfully',
-                        description: 'Please check your email to confirm the booking',
-                    });
-                } else {
-                    notification.error({
-                        message: 'Booking failed',
-                        description: 'Please try again later',
-                    });
-                }
-            } catch (error) {
-                console.log("this is error: ", error);
-            }
-        }
+        });
     };
 
 
